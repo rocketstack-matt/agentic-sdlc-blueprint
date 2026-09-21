@@ -19,6 +19,8 @@ jobs:
         with: { node-version: 22, cache: npm }
       - run: npm ci
       - run: npm run typecheck
+      # The labs are the source of truth for the talk. Replay every printed command and assert its outcome.
+      - run: bash labs/verify.sh
       - name: Resolve spec from PR body ("Spec: SPEC-001") or commit trailer
         run: echo "SPEC=$(printf '%s' "$PR_BODY" | grep -oE 'SPEC-[0-9]+' | head -1)" >> "$GITHUB_ENV"
       # SDLC-PREV-010 Secret Detection
