@@ -133,10 +133,82 @@
       <aside class="notes">Speaker: Aaron. The five stations, which are also the five labs in the repo. Read them once. Then the handover: "Matthew built this. Matthew, walk us round the loop." Everything from here to the evidence slide is Matthew.</aside>
     </section>
 
-    <section data-station="none">
-      <h2>Capture smoke test</h2>
-      <pre class="term" data-capture="clean-gates"></pre>
-      <aside class="notes">Speaker: Matthew. Temporary.</aside>
+    <section class="section-slide" data-background-image="img/background.png" data-background-size="cover">
+      <h2>1. Model</h2>
+      <p>The architecture is the context.</p>
+      <aside class="notes">Speaker: Matthew. Station one. An agent is only as good as its context, and the missing context is how you want something built. That already exists if your architecture is code.</aside>
+    </section>
+
+    <section data-station="model">
+      <h2>Six nodes, five relationships</h2>
+      <div class="cols">
+        <div class="wide"><img class="hub-shot" src="img/hub-model.png" alt="The trade capture architecture rendered by CALM Hub"></div>
+        <div>
+          <p><strong>Three things make it enforceable</strong></p>
+          <dl class="kv">
+            <dt>source-path</dt><dd>ties a directory of code to a node</dd>
+            <dt>env-binding</dt><dd>names how code binds to an interface</dd>
+            <dt>criticality-tier<br>data-classification</dt><dd>the SDLC-PREV-013 inventory attributes, and review policy inputs later</dd>
+          </dl>
+          <p class="small muted">architecture/trade-capture.architecture.json, CALM 1.2</p>
+        </div>
+      </div>
+      <aside class="notes">Speaker: Matthew. This is the real model, rendered by CALM Hub. Trader, trade-api, position-service, two stores, one system. Point at position-store: confidential, tier one, and it carries its own control. The three metadata items on the right are what turn a diagram into something a pipeline can check: a path so we know which code belongs to which node, an env name so we know how code connects, and the inventory attributes the catalog already asks for under SDLC-PREV-013.</aside>
+    </section>
+
+    <section data-station="model">
+      <h2>Controls as data</h2>
+      <div class="cols">
+        <div>
+<pre class="code">"position-store": {
+  "controls": {
+    "sdlc-prev-017-service-dependency": {
+      "requirement-url": ".../sdlc-prev-017...requirement.json",
+      "config": {
+        "catalog-id": "SDLC-PREV-017",
+        "enforced-by": "gates/drift-check.mjs",
+        "allowed-sources": ["position-service"]
+      }
+    }
+  }
+}</pre>
+          <p class="small">Plus a pattern: every service must carry a source path, a tier and a classification, and the system its four controls.</p>
+        </div>
+        <div>
+          <p class="small muted">Delete <code>source-path</code> from trade-api and validate:</p>
+          <pre class="term" data-capture="lab1-break-pattern"></pre>
+        </div>
+      </div>
+      <p class="statement small">A control in a catalog is prose. A control on a CALM node is data with a schema, an owner and an enforcement point.</p>
+      <aside class="notes">Speaker: Matthew. Left: the control block on position-store. It names the catalog id, the gate that enforces it, and the one fact that matters: only position-service may connect. Its config is validated against a requirement schema, so a half-configured control is a build failure. Right: the pattern goes further. Delete the source path from a service and validation fails, because without it the drift gate would go blind to that service. This is lab one.</aside>
+    </section>
+
+    <section class="section-slide" data-background-image="img/background.png" data-background-size="cover">
+      <h2>2. Spec</h2>
+      <p>Say what you want in terms of the model.</p>
+      <aside class="notes">Speaker: Matthew. Station two. "What you want" is easy. "How you want it" is the hard, auditable part, and the model already knows it.</aside>
+    </section>
+
+    <section data-station="spec">
+      <h2>SPEC-001 pins itself to the model</h2>
+      <div class="cols">
+        <div>
+<pre class="code">---
+id: SPEC-001
+title: Account summary endpoint
+status: approved
+calm-nodes: [trade-api, position-service]
+calm-relationships: [trade-api-to-position-service]
+---</pre>
+          <p class="small">The front matter fixes the scope an agent may touch. The body repeats, in words, the one constraint most likely to be violated.</p>
+        </div>
+        <div>
+          <p class="small muted">What the agent receives, over MCP or the CLI:</p>
+          <pre class="term" data-capture="context"></pre>
+        </div>
+      </div>
+      <p class="statement small">Context engineering becomes a lookup, not a prompt-writing skill.</p>
+      <aside class="notes">Speaker: Matthew. The spec names the nodes and the relationship it may use. Ask the model what that implies and you get this: trade-api may connect to position-service and the trade store, and must not connect to position-store, because only position-service may. This JSON is exactly what the agent gets before it writes a line. A spec that names a node that does not exist is rejected before any agent sees it. Lab two.</aside>
     </section>
 
   </div>
