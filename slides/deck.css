@@ -70,7 +70,9 @@
 .reveal .facts > div { flex: 1 1 0; }
 .reveal .facts > div:last-child { flex: 1.7 1 0; }
 .reveal .facts strong { color: var(--blue); }
-/* The evidence bundle's two-column row runs the full slide width by default; its right-hand JSON
-   pane is tall enough on this one slide to reach the ring's corner, so reserve room on the right
-   of the row (shrinking both columns slightly) rather than letting the pane and ring overlap. */
-.reveal .cols.ring-clear { padding-right: 260px; }
+/* The evidence bundle's right-hand JSON pane is tall enough on this one slide to reach the ring's
+   corner. Cap the pane itself, not its flex column: both columns share flex-grow, so narrowing
+   the column (via padding/margin/max-width on it) only hands the freed space to the other,
+   uncapped column, shrinking it too (regression seen previously: the left pane's filename wrapped
+   mid-word). Capping the pre's own width leaves both flex columns, and the left pane, untouched. */
+.reveal pre.ring-clear { max-width: calc(100% - 260px); }
