@@ -41,6 +41,7 @@
 .reveal pre.term .fail, .reveal pre.term .bad { color: var(--amber); font-weight: 700; }
 .reveal pre.term .dim { color: #9a9a9a; }
 .reveal pre.term.missing { border: 4px solid var(--amber); }
+.reveal pre.term.dense { font-size: 22px; max-height: 840px; }
 .reveal pre.code { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 26px; line-height: 1.35; background: #f4f5f7; color: var(--ink); padding: 28px 32px; border-radius: 12px; width: 100%; box-sizing: border-box; box-shadow: none; white-space: pre-wrap; }
 .reveal .live { display: inline-block; font-size: 24px; color: var(--amber); border: 3px solid var(--amber); border-radius: 999px; padding: 4px 18px; margin-left: 16px; vertical-align: middle; }
 

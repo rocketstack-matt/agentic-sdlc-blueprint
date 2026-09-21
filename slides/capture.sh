@@ -61,7 +61,7 @@ git apply labs/patches/attempt-b-conformant.patch
 git add -A && git commit -q -m "Add account summary endpoint" -m "Spec: SPEC-001"
 cap evidence "CHANGE_AUTHOR_KIND=agent CHANGE_AUTHOR_ID=my-coding-agent npm run evidence"
 BUNDLE=$(ls evidence/out/*.json | head -1)
-cap evidence-json "node -e \"const b=JSON.parse(require('fs').readFileSync('$BUNDLE'));const g=b.gates.map(x=>({gate:x.gate,passed:x.passed,controls:x.controls}));console.log(JSON.stringify({schema:b.schema,subject:{commit:b.subject.commit.slice(0,12)+'...',spec:b.subject.spec,architectureSha256:b.subject.architectureSha256.slice(0,16)+'...'},author:b.author,admissible:b.admissible,review:{requiredMode:b.review.requiredMode,authorMayNotReview:b.review.authorMayNotReview},controls:b.controls,gates:g,sha256:b.sha256.slice(0,16)+'...'},null,2))\""
+cap evidence-json "node -e \"const b=JSON.parse(require('fs').readFileSync('$BUNDLE'));const g=b.gates.map(x=>x.gate+': '+(x.passed?'PASS':'FAIL')+(x.gate==='tests'?' ('+x.tests.pass+' passed)':''));const review=b.review.requiredMode+(b.review.authorMayNotReview?' (author may not review)':'');console.log(JSON.stringify({subject:{commit:b.subject.commit.slice(0,12)+'...',spec:b.subject.spec,architectureSha256:b.subject.architectureSha256.slice(0,16)+'...'},author:b.author,admissible:b.admissible,review:review,controls:b.controls.join(', '),gates:g,sha256:b.sha256.slice(0,16)+'...'},null,2))\""
 
 mv "$TMP" "$OUT"
 echo "wrote $OUT ($(grep -c 'window.CAPTURES\[' "$OUT") captures)"
