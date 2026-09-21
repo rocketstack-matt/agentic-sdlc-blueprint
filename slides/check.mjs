@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // The deck's test. Parses index.html and captures.js and fails on structural defects.
-import { readFileSync, existsSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { readFileSync, existsSync, readdirSync } from 'node:fs';
+import { dirname, join, relative, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const dir = dirname(fileURLToPath(import.meta.url));
@@ -23,7 +23,24 @@ sections.forEach((s, i) => {
   if (!isTitle && !isSection && !station) problems.push(`slide ${n}: content slide needs data-station`);
 });
 
-if (/\u2014/.test(html)) problems.push('index.html contains an em-dash');
+// No em-dashes anywhere authored under slides/, skipping vendored and generated output.
+const TEXT_EXTS = new Set(['.html', '.css', '.js', '.mjs', '.sh', '.md']);
+const SKIP_DIRS = new Set(['vendor', 'qa']);
+function findTextFiles(base) {
+  const out = [];
+  for (const entry of readdirSync(base, { withFileTypes: true })) {
+    if (entry.isDirectory()) {
+      if (SKIP_DIRS.has(entry.name)) continue;
+      out.push(...findTextFiles(join(base, entry.name)));
+    } else if (TEXT_EXTS.has(extname(entry.name))) {
+      out.push(join(base, entry.name));
+    }
+  }
+  return out;
+}
+for (const file of findTextFiles(dir)) {
+  if (/\u2014/.test(readFileSync(file, 'utf8'))) problems.push(`${relative(dir, file)} contains an em-dash`);
+}
 
 const keys = [...html.matchAll(/data-capture="([^"]+)"/g)].map((m) => m[1]);
 if (keys.length) {
