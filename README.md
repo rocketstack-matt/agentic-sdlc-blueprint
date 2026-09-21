@@ -34,8 +34,13 @@ exists if your architecture is code. So:
 
 Needs Node 22+ and git. No API key, no cloud account, no containers.
 
+**Fork first.** This repository is a template you take away, not a project you send changes to. Fork it, clone
+your fork, and raise pull requests against your fork. The workflow in `.github/workflows/governed-sdlc.yml`
+runs there, on your changes, and writes your evidence. Pull requests to this repository are only for fixing
+the blueprint itself: the labs, the gates, the docs.
+
 ```sh
-git clone https://github.com/rocketstack-matt/agentic-sdlc-blueprint && cd agentic-sdlc-blueprint
+git clone https://github.com/<you>/agentic-sdlc-blueprint && cd agentic-sdlc-blueprint
 npm install
 npm test
 npm run gates                                   # ADMISSIBLE on a clean tree
@@ -45,7 +50,8 @@ npm test                                        # still green
 SPEC=SPEC-001 npm run gates                     # BLOCKED: drift, and a control breach
 ```
 
-Then work through the labs:
+Then work through the labs. To see the pipeline run on your own changes, enable Actions on your fork
+(GitHub disables workflows on forks until you do) and open a pull request there.
 
 | Lab | Station | You will |
 | --- | --- | --- |
@@ -94,5 +100,7 @@ AGENTS.md       the instructions any coding agent gets
 
 ## Contributing
 
-Issues and pull requests welcome. Licensed under Apache 2.0. If a control here looks wrong, the better fix is usually
-upstream in the [catalog](https://github.com/finos-labs/SDLC-Controls-Framework).
+Your own work belongs in your fork. Issues and pull requests here are for the blueprint itself: a lab that does not
+run as printed, a gate that misses something, a control mapped to the wrong catalog entry. `labs/verify.sh` replays
+every lab command and must stay green on `main`. Licensed under Apache 2.0. If a control here looks wrong, the better
+fix is usually upstream in the [catalog](https://github.com/finos-labs/SDLC-Controls-Framework).
