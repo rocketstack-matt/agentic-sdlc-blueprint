@@ -63,6 +63,10 @@ export const changedFiles = (base = changeBase()) => {
   return [...new Set([...tracked, ...untracked])].filter(Boolean).sort();
 };
 
+/** The spec this change is made under: SPEC env var, or a `Spec: SPEC-nnn` trailer on the last commit. */
+export const currentSpecId = () =>
+  process.env.SPEC || git('log', '-1', '--format=%B').match(/^Spec:\s*(SPEC-\d+)/m)?.[1] || undefined;
+
 export const gitInfo = () => ({
   commit: git('rev-parse', 'HEAD'),
   branch: process.env.GITHUB_HEAD_REF || process.env.GITHUB_REF_NAME || git('rev-parse', '--abbrev-ref', 'HEAD'),

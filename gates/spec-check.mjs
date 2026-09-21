@@ -7,8 +7,7 @@
 //    An agent that wanders outside its spec is stopped here, before review.
 //
 // Control: SDLC-PREV-004 Requirements Repository.
-import { execFileSync } from 'node:child_process';
-import { ROOT, loadArchitecture, loadSpecs, nodeById, nodeForPath, changedFiles, report } from './lib/calm.mjs';
+import { loadArchitecture, loadSpecs, nodeById, nodeForPath, changedFiles, currentSpecId, report } from './lib/calm.mjs';
 
 const arch = loadArchitecture();
 const specs = loadSpecs();
@@ -22,11 +21,7 @@ for (const s of specs) {
 }
 
 const touched = [...new Set(changedFiles().map((f) => nodeForPath(arch, f)?.['unique-id']).filter(Boolean))];
-let specId = process.env.SPEC;
-if (!specId) {
-  const msg = execFileSync('git', ['log', '-1', '--format=%B'], { cwd: ROOT, encoding: 'utf8' });
-  specId = msg.match(/^Spec:\s*(SPEC-\d+)/m)?.[1];
-}
+const specId = currentSpecId();
 
 if (touched.length) {
   const spec = specs.find((s) => s.id === specId);

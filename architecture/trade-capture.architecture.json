@@ -279,6 +279,7 @@
               "calm-validate",
               "spec-check",
               "drift-check",
+              "model-diff",
               "tests",
               "review-router"
             ]

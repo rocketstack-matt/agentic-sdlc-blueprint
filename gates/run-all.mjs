@@ -24,6 +24,7 @@ const runners = {
   },
   'spec-check': () => gateScript('spec-check'),
   'drift-check': () => gateScript('drift-check'),
+  'model-diff': () => gateScript('model-diff'),
   tests: () => {
     // TAP is requested explicitly: Node 23+ defaults to the spec reporter even off a TTY, which would leave the counts below at 0.
     const r = run('npx', ['--no-install', 'tsx', '--test', '--test-reporter=tap', ...readdirSync(join(ROOT, 'test')).filter((f) => f.endsWith('.test.ts')).map((f) => `test/${f}`)]);
