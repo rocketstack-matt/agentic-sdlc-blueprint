@@ -1,6 +1,6 @@
 # Talk deck design: Governing the Agentic SDLC
 
-Date: 21 September 2026. Status: approved design, awaiting implementation plan.
+Date: 21 September 2026. Status: approved.
 
 ## Goal
 
@@ -22,7 +22,7 @@ and every terminal pane shows output the repository produces today.
 
 ## Narrative and slide list
 
-Twenty eight slides. Speaker shown in the notes only.
+Twenty seven slides. Speaker shown in the notes only.
 
 ### Aaron opens (1 to 6, about 7 minutes)
 
@@ -33,7 +33,7 @@ Twenty eight slides. Speaker shown in the notes only.
 5. **The missing piece.** Controls must be machine-enforceable when the developer is an agent. CALM is the key. One diagram: CALM, the catalog and the AI Governance Framework composing rather than competing, with what each governs (the system, the change, the agent).
 6. **The loop.** Five stations: model, spec, agent, gate, evidence, as a ring. The repo URL. Handover.
 
-### Matthew runs the loop (7 to 23, about 20 minutes)
+### Matthew runs the loop (7 to 22, about 20 minutes)
 
 7. **Section: Model.** "The architecture is the context."
 8. **The model.** CALM Hub screenshot of the trade capture architecture (six nodes, five relationships) beside the three things that make it enforceable: `source-path`, `env-binding`, and criticality tier plus data classification, which are the SDLC-PREV-013 inventory attributes.
@@ -51,15 +51,14 @@ Twenty eight slides. Speaker shown in the notes only.
 20. **Section: Evidence.** "Answer the examiner in one file."
 21. **The bundle.** JSON excerpt: spec, architecture hash, each gate with its control ids, review mode and inputs, sha256. Live moment three.
 22. **In CI.** The workflow steps mapped to control ids (secret detection, dependency scan, SBOM, gates, evidence) and the published site serving the schemas at their ids.
-23. **Honest limitations.** The README's list, verbatim.
 
-### Aaron closes (24 to 28, about 5 minutes)
+### Aaron closes (23 to 27, about 5 minutes)
 
-24. **Section: build it once, together, in the open.**
-25. **Candidate controls.** Architecture conformance, agent task scoping, agent attribution and context provenance. Drafts to start a conversation, with their reference implementations named.
-26. **Where to contribute.** Catalog (controls), CALM (modelling gaps, the pattern), AIGF (agent mitigations). Links to each.
-27. **Make it yours.** Fork, then three steps: model your estate, wire it into your agent, contribute. Repo URL, site URL, hub links.
-28. **Thank you.** Names, URLs.
+23. **Section: build it once, together, in the open.**
+24. **Candidate controls.** Architecture conformance, agent task scoping, agent attribution and context provenance. Drafts to start a conversation, with their reference implementations named.
+25. **Where to contribute.** Catalog (controls), CALM (modelling gaps, the pattern), AIGF (agent mitigations, already seeded as an ai-governance controls domain in CALM Hub). Links to each.
+26. **Make it yours.** Fork, then three steps: model your estate, wire it into your agent, contribute. Repo URL, site URL, hub links.
+27. **Thank you.** Names, URLs.
 
 ## Visual design
 
