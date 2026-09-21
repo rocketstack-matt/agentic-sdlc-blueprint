@@ -35,7 +35,7 @@ git checkout -q architecture/
 cap context "npm run calm:context -- --spec SPEC-001 2>&1 | node -e \"let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{const j=JSON.parse(s.slice(s.indexOf('{')));const t=j.scope[0];console.log(JSON.stringify({node:t.node.id,mayConnectTo:t.mayConnectTo.map(m=>m.node),mustNotConnectTo:t.mustNotConnectTo,rule:j.rule},null,2))})\""
 
 git apply labs/patches/attempt-a-shortcut.patch
-cap attempt-a-tests "npm test 2>&1 | grep -E '^(✔|✖|ℹ (tests|pass|fail)|ok |not ok |# (tests|pass|fail))'"
+cap attempt-a-tests "{ npm test 2>&1 | grep -E '^(✔|✖|ℹ (tests|pass|fail)|ok |not ok |# (tests|pass|fail))'; } && npm run typecheck >/dev/null 2>&1 && echo 'typecheck: clean'"
 cap attempt-a-gates "SPEC=SPEC-001 npm run gates 2>&1 | grep -vE '^ +INFO '"
 git checkout -q -- . && git clean -fdq services test
 

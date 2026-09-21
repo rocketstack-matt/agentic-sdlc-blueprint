@@ -47,6 +47,9 @@
 
 /* The five-station ring: the one repeated motif. */
 .reveal .ring { position: absolute; right: 40px; bottom: 30px; width: 300px; height: 90px; }
+/* A full-width paragraph that trails a two-column block sits low enough on some slides to reach
+   the ring's column; cap its width so it stays clear instead of overlapping. */
+.reveal section.content .cols + p { max-width: 1400px; }
 .reveal .ring text { font-family: Arial, Helvetica, sans-serif; font-size: 18px; fill: var(--muted); }
 .reveal .ring circle { fill: #d9dbe1; }
 .reveal .ring .on circle { fill: var(--blue); }
@@ -67,3 +70,7 @@
 .reveal .facts > div { flex: 1 1 0; }
 .reveal .facts > div:last-child { flex: 1.7 1 0; }
 .reveal .facts strong { color: var(--blue); }
+/* The evidence bundle's two-column row runs the full slide width by default; its right-hand JSON
+   pane is tall enough on this one slide to reach the ring's corner, so reserve room on the right
+   of the row (shrinking both columns slightly) rather than letting the pane and ring overlap. */
+.reveal .cols.ring-clear { padding-right: 260px; }
