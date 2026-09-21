@@ -92,13 +92,13 @@
       },
       "controls": {
         "sdlc-prev-017-service-dependency": {
-          "description": "Only position-service may connect to the position store. Any other source is architectural drift (risk SDLC-OP-007).",
+          "description": "Only position-service may connect to the position store. SDLC-PREV-017 asks that service dependencies be mapped and kept current with every change; drift-check enforces that the code matches this map (risk SDLC-OP-007). The allowed-sources list goes further than the catalog: see candidate control 1 in docs/CANDIDATE-CONTROLS.md.",
           "requirements": [
             {
               "requirement-url": "https://rocketstack-matt.github.io/agentic-sdlc-blueprint/controls/sdlc-prev-017-service-dependency.requirement.json",
               "config": {
                 "catalog-id": "SDLC-PREV-017",
-                "catalog-url": "https://finos-labs.github.io/SDLC-Controls-Framework/",
+                "catalog-url": "https://finos-labs.github.io/SDLC-Controls-Framework/mitigations/mi-17_service-dependency-control.html",
                 "enforced-by": "gates/drift-check.mjs",
                 "allowed-sources": [
                   "position-service"
