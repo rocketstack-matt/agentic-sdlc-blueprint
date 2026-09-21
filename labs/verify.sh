@@ -59,7 +59,7 @@ edit_json() { node -e "const fs=require('fs');const p=process.argv[1];const a=JS
 echo "== Clean tree"
 lab "npm test";                 expect_rc 0; expect "pass 2"
 lab "npm run typecheck";        expect_rc 0
-lab "npm run gates";            expect_rc 0; expect "ADMISSIBLE"; expect "2 passed, 0 failed"; expect "governed-service pattern"
+lab "npm run gates";            expect_rc 0; expect "ADMISSIBLE"; expect "2 passed, 0 failed"; expect "governed-service pattern"; expect "PASS  model-diff"
 
 # --- Lab 1: Model --------------------------------------------------------------------------------
 echo "== Lab 1"
@@ -106,6 +106,7 @@ lab "git checkout -- . && git clean -fd services test"; expect_rc 0
 lab "git apply labs/patches/attempt-c-edit-the-model.patch"; expect_rc 0
 lab "SPEC=SPEC-001 npm run gates"; expect_nonzero; expect "BLOCKED"
   expect_not "DRIFT:"; expect "CONTROL BREACH: position-store only permits [position-service]"
+  expect "FAIL  model-diff"; expect "UNDECLARED MODEL CHANGE: SPEC-001 does not declare [trade-api-to-position-store]"
   expect "Required review mode: HUMAN"; expect "architecture/trade-capture.architecture.json: Control plane"
 lab "git checkout -- . && git clean -fd services test"; expect_rc 0
 lab "git apply labs/patches/attempt-b-conformant.patch"; expect_rc 0

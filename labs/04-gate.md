@@ -21,8 +21,11 @@ approved cognitive review engines. It needs policy inputs. The architecture has 
    git apply labs/patches/attempt-c-edit-the-model.patch
    SPEC=SPEC-001 npm run gates
    ```
-   Two things happen. The drift error disappears but the node-level control still blocks it, and the review mode
-   jumps to `HUMAN` because `architecture/` is control plane. Reset and re-apply attempt B before Lab 5.
+   Three things happen. The drift error disappears, because the code now matches the model. The node-level control
+   still blocks it. And `model-diff` blocks it too: the CALM CLI's own `calm diff` shows a relationship was added, and
+   SPEC-001 does not declare any model change. The review mode also jumps to `HUMAN` because `architecture/` is control
+   plane. A model change is made by a human first, under a spec that declares it, and only then does the agent
+   implement. Reset and re-apply attempt B before Lab 5.
 
 **Takeaway.** Without a gate every other control is advisory (SDLC-PREV-012). With the model as policy input, the
 expensive reviewers are spent only where the architecture says the risk is.

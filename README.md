@@ -70,7 +70,7 @@ Then work through the labs. To see the pipeline run on your own changes, enable 
 | SDLC-PREV-012 | Deployment Gating | system | `gates/run-all.mjs` (the blocking gate list lives in the model) |
 | SDLC-PREV-014 | Test Evidence Retention | system | `gates/evidence.mjs` |
 | SDLC-PREV-016 | Test Execution and Sign-Off | n/a | `tests` gate |
-| SDLC-PREV-017 | Service Dependency Control | `position-store` node | `gates/drift-check.mjs` |
+| SDLC-PREV-017 | Service Dependency Control | `position-store` node | `gates/drift-check.mjs`, `gates/model-diff.mjs` (a model change must be declared by its spec) |
 | SDLC-PREV-007, -009, -010 | Dependency scanning, SBOM, secret detection | n/a | `.github/workflows/governed-sdlc.yml` |
 
 Risks in view: SDLC-OP-007 Configuration Drift, SDLC-SEC-008 Unauthorised Change, SDLC-RC-005 Audit and Compliance
@@ -83,7 +83,7 @@ architecture/   CALM 1.2 model, the pattern it must satisfy, control requirement
 specs/          version-controlled requirements, pinned to CALM nodes
 services/       two tiny Node/TypeScript services (no framework, no database server)
 agent/          CALM context for agents: shared logic, a CLI, a read-only MCP server, AIGF mapping
-gates/          dependency-free Node scripts: spec-check, drift-check, review-router, run-all, evidence
+gates/          dependency-free Node scripts: spec-check, drift-check, model-diff, review-router, run-all, evidence
 labs/           five labs and three pre-recorded agent attempts
 docs/           candidate controls to take back to the catalog
 AGENTS.md       the instructions any coding agent gets
