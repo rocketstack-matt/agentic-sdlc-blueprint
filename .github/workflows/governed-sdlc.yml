@@ -29,8 +29,12 @@ jobs:
       # SDLC-PREV-007 Dependency scanning
       - run: npm audit --audit-level=high
       # SDLC-PREV-009 Component Inventory
-      # Written beside the evidence bundle: an untracked file at the root would count as part of the change under review.
-      - run: mkdir -p evidence/out && npm sbom --sbom-format cyclonedx > evidence/out/sbom.cdx.json
+      # Reports go beside the evidence bundle. An untracked file at the root would count as part of the change under review.
+      - name: Collect the secret scan report and the SBOM with the evidence
+        run: |
+          mkdir -p evidence/out
+          [ -f results.sarif ] && mv results.sarif evidence/out/gitleaks.sarif
+          npm sbom --sbom-format cyclonedx > evidence/out/sbom.cdx.json
       # SDLC-PREV-012 gating + SDLC-PREV-014 evidence. Fails the job if any blocking gate fails.
       - run: npm run evidence
       - name: Publish the review decision
