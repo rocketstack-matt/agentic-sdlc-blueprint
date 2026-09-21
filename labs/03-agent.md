@@ -24,9 +24,10 @@ Keep attempt B applied for Labs 4 and 5.
 
 ### Optional: do it live with your own agent
 Reset to a clean tree, point any MCP-capable agent at this repo (`.mcp.json` registers the `calm-context` server,
-and `AGENTS.md` is picked up by most agents), and prompt it with only: `Implement SPEC-001.`
-Agents without MCP can use `npm run calm:context` as `AGENTS.md` describes. Then try again after renaming `AGENTS.md`
-and removing `.mcp.json`, and compare.
+and `AGENTS.md` is picked up by most agents; `CLAUDE.md` is a one-line import of it), and prompt it with only:
+`Implement SPEC-001.` Agents without MCP can use `npm run calm:context` as `AGENTS.md` describes. Then try again after
+removing `AGENTS.md`, `CLAUDE.md` and `.mcp.json`, and compare. Two such runs, with the agent's diffs, gate output
+and handover, are recorded in [`docs/live-runs/`](../docs/live-runs/README.md). Neither drifted; read why.
 
 **Takeaway.** Drift happens one reasonable assumption at a time. The agent governs itself better with context
 (AIR-PREV-018 and AIR-PREV-019 in `agent/GUARDRAILS.md`), and the gate catches it when it does not.
