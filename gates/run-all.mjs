@@ -25,7 +25,8 @@ const runners = {
   'spec-check': () => gateScript('spec-check'),
   'drift-check': () => gateScript('drift-check'),
   tests: () => {
-    const r = run('npx', ['--no-install', 'tsx', '--test', ...readdirSync(join(ROOT, 'test')).filter((f) => f.endsWith('.test.ts')).map((f) => `test/${f}`)]);
+    // TAP is requested explicitly: Node 23+ defaults to the spec reporter even off a TTY, which would leave the counts below at 0.
+    const r = run('npx', ['--no-install', 'tsx', '--test', '--test-reporter=tap', ...readdirSync(join(ROOT, 'test')).filter((f) => f.endsWith('.test.ts')).map((f) => `test/${f}`)]);
     const count = (k) => Number(r.stdout.match(new RegExp(`# ${k} (\\d+)`))?.[1] ?? 0);
     return { gate: 'tests', controls: ['SDLC-PREV-016', 'SDLC-PREV-014'], passed: r.status === 0, findings: r.status === 0 ? [] : [{ level: 'error', message: 'Test failures. Run `npm test`.' }], tests: { pass: count('pass'), fail: count('fail') }, summary: `${count('pass')} passed, ${count('fail')} failed.` };
   },

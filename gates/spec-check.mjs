@@ -46,5 +46,5 @@ report({
   findings,
   spec: specId ?? null,
   touchedNodes: touched,
-  summary: `${specs.length} spec(s) valid against the model. Change touches ${touched.length ? touched.join(', ') : 'no code nodes'}${specId ? ` under ${specId}` : ''}.`,
+  summary: `${specs.length} spec(s) checked against the model. Change touches ${touched.length ? touched.join(', ') : 'no code nodes'}${specId ? ` under ${specId}` : ''}.`,
 });
