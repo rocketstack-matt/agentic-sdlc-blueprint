@@ -16,8 +16,8 @@ and every terminal pane shows output the repository produces today.
 | Format | HTML deck, reveal.js vendored into the repo, no build step, works offline from disk |
 | Demo mode | Pre-rendered terminal panes in the deck; three optional live moments the presenter can cut to |
 | Speaker split | Aaron opens (problem, catalog) and closes (contribution); Matthew runs the loop |
-| Diagrams of the model | Screenshots from a local CALM Hub, not hand-drawn |
-| Artefact links | The deck links to the architecture, pattern and control requirements on the FINOS-hosted CALM Hub once published there |
+| Diagrams of the model | Screenshots from a local CALM Hub run from the architecture-as-code checkout, not hand-drawn |
+| Artefact links | The deck links to the architecture, pattern and control requirements on the FINOS-hosted CALM Hub, published by a PR to finos/architecture-as-code |
 | Location | `slides/` in the repo, published at `/agentic-sdlc-blueprint/slides/` |
 
 ## Narrative and slide list
@@ -93,24 +93,32 @@ records the stdout of each printed command under a key (`clean-gates`, `lab1-bre
 
 ## CALM Hub screenshots
 
-Local hub: the FINOS `calm-hub/deploy/docker-compose.yml` default profile (`finos/calm-hub:latest` with a MongoDB
-sidecar, `no-auth` Quarkus profile). Steps, scripted in `slides/hub-screenshots.sh` so they can be repeated:
+Local hub: the `finos/architecture-as-code` checkout next to this repository, run in standalone mode from
+`calm-hub/` with `../mvnw quarkus:dev -Pstandalone` (NitriteDB, no auth, no Mongo, UI already built there). Steps,
+scripted in `slides/hub-screenshots.sh` so they can be repeated:
 
-1. Start the hub, create a namespace, push a copy of the architecture and the pattern with `calm hub push`. The CLI
-   requires a full document `$id`; the copy gets one, the repository model is not changed by this.
+1. With the hub up on port 8080, create the namespace and push a copy of the architecture, the pattern and the five
+   control requirements with `calm hub push`. The CLI requires a full document `$id`; the copies get one, the
+   repository's own files are not changed by this.
 2. Open the architecture in the hub's visualiser with a browser at 2x device pixel ratio and save the screenshots the
    deck uses: the whole model, and the model with `position-store` selected showing its control.
 3. Stop the hub.
 
-If the local hub's rendering is not usable for the deck (unreadable at slide size, or the visualiser needs manual
-layout), fall back to an inline SVG drawn from the model file and say so in `slides/README.md`.
+If the hub's rendering is not usable at slide size, or the visualiser needs manual layout, fall back to an inline SVG
+drawn from the model file and say so in `slides/README.md`.
 
 ## FINOS-hosted CALM Hub
 
-The hosted hub's API rejects writes (405 on POST to the public API), so publication there is a FINOS-side step,
-owned by Matthew. The deck holds the hub links in one place at the top of `index.html` (`HUB_LINKS`), pointing at the
-repository's published site until the hub versions exist. Once the architecture, pattern and control requirements
-are on the hosted hub, those five values change and nothing else does.
+The hosted hub's content is managed in `finos/architecture-as-code`: namespaces and documents are seeded by
+`calm-hub/mongo/init-mongo.js` (Mongo deployments) and `calm-hub/nitrite/init-nitrite.sh` (standalone and the
+read-only images), and control requirements live under `calm-hub/mongo/controls/<domain>/`. Publication is therefore a
+pull request to that repository adding a namespace for this blueprint with the architecture, the pattern and the
+control requirements, kept in step in both seeders. That PR is a separate piece of work from the deck; Matthew owns
+it. The namespace and document ids chosen for the local push in `hub-screenshots.sh` are the ones the PR will use, so
+the deck's links are right the moment the PR lands.
+
+The deck holds the hub links in one place at the top of `index.html` (`HUB_LINKS`), pointing at the repository's
+published site until the hub versions exist. Once they do, those values change and nothing else does.
 
 ## Publishing
 
