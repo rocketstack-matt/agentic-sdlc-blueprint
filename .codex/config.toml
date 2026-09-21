@@ -1,0 +1,4 @@
+# Codex reads AGENTS.md on its own. This registers the read-only CALM context server for it.
+[mcp_servers.calm-context]
+command = "node"
+args = ["agent/mcp/calm-context-server.mjs"]

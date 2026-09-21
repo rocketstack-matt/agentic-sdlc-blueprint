@@ -23,10 +23,12 @@ SPEC=SPEC-001 npm run gates        # ADMISSIBLE
 Keep attempt B applied for Labs 4 and 5.
 
 ### Optional: do it live with your own agent
-Reset to a clean tree, point any MCP-capable agent at this repo (`.mcp.json` registers the `calm-context` server,
-and `AGENTS.md` is picked up by most agents; `CLAUDE.md` is a one-line import of it), and prompt it with only:
-`Implement SPEC-001.` Agents without MCP can use `npm run calm:context` as `AGENTS.md` describes. Then try again after
-removing `AGENTS.md`, `CLAUDE.md` and `.mcp.json`, and compare. Two such runs, with the agent's diffs, gate output
+Reset to a clean tree, point any MCP-capable agent at this repo, and prompt it with only: `Implement SPEC-001.`
+`AGENTS.md` is read by Claude Code, Codex, Copilot and Cursor; `CLAUDE.md` is a one-line import of it, and
+`.gemini/settings.json` points Gemini CLI at it. The `calm-context` MCP server is registered for each tool where it
+looks: `.mcp.json` (Claude Code, Copilot agent), `.vscode/mcp.json`, `.cursor/mcp.json`, `.codex/config.toml` and
+`.gemini/settings.json`. Agents without MCP can use `npm run calm:context` as `AGENTS.md` describes. Then try again
+after removing `AGENTS.md`, `CLAUDE.md` and every MCP registration, and compare. Two such runs, with the agent's diffs, gate output
 and handover, are recorded in [`docs/live-runs/`](../docs/live-runs/README.md). Neither drifted; read why.
 
 **Takeaway.** Drift happens one reasonable assumption at a time. The agent governs itself better with context

@@ -1,0 +1,5 @@
+{
+  "mcpServers": {
+    "calm-context": { "command": "node", "args": ["agent/mcp/calm-context-server.mjs"] }
+  }
+}
