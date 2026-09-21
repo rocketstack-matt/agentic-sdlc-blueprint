@@ -455,7 +455,9 @@ for (const s of document.querySelectorAll('section[data-station]')) {
   s.insertAdjacentHTML('afterbegin', '<div class="corner-logo"><img src="img/logo.svg" alt=""></div>');
   const on = s.dataset.station;
   const nodes = STATIONS.map((name, i) => `<g class="${name === on ? 'on' : ''}"><circle cx="${30 + i * 60}" cy="30" r="12"/><text x="${30 + i * 60}" y="70" text-anchor="middle">${name}</text></g>`).join('');
-  s.insertAdjacentHTML('beforeend', `<svg class="ring" viewBox="0 0 300 90" aria-hidden="true"><line x1="30" y1="30" x2="270" y2="30"/>${nodes}</svg>`);
+  // viewBox is wider than the 0..270 span the circles occupy so the anchor-middle text of the first
+  // ("model") and last ("evidence") labels, which overhangs its circle's centre, has room either side.
+  s.insertAdjacentHTML('beforeend', `<svg class="ring" viewBox="-20 0 340 90" aria-hidden="true"><line x1="30" y1="30" x2="270" y2="30"/>${nodes}</svg>`);
 }
 for (const a of document.querySelectorAll('a[data-hub]')) { a.href = HUB_LINKS[a.dataset.hub]; if (!a.textContent.trim()) a.textContent = a.href; }
 
