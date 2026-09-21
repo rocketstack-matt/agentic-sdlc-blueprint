@@ -58,7 +58,7 @@ Then work through the labs. To see the pipeline run on your own changes, enable 
 | [01](labs/01-model.md) | Model | Read the CALM model, validate it, break a control config on purpose |
 | [02](labs/02-spec.md) | Spec | See how a spec pins itself to the model and what context that yields |
 | [03](labs/03-agent.md) | Agent | Replay two agent attempts at one spec, or run your own agent live |
-| [04](labs/04-gate.md) | Gate | Watch the architecture pick the review mode, and catch an agent editing the model |
+| [04](labs/04-gate.md) | Gate | Watch the architecture pick the review mode, catch an agent editing the model, then see the right path for a model change |
 | [05](labs/05-evidence.md) | Evidence | Produce the evidence bundle, then make the blueprint yours |
 
 ## What enforces what
@@ -84,7 +84,7 @@ specs/          version-controlled requirements, pinned to CALM nodes
 services/       two tiny Node/TypeScript services (no framework, no database server)
 agent/          CALM context for agents: shared logic, a CLI, a read-only MCP server, AIGF mapping
 gates/          dependency-free Node scripts: spec-check, drift-check, model-diff, review-router, run-all, evidence
-labs/           five labs and three pre-recorded agent attempts
+labs/           five labs, four pre-recorded agent attempts and one human model change
 docs/           candidate controls to take back to the catalog
 AGENTS.md       the instructions any coding agent gets
 ```

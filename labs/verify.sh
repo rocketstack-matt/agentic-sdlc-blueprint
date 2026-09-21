@@ -108,7 +108,15 @@ lab "SPEC=SPEC-001 npm run gates"; expect_nonzero; expect "BLOCKED"
   expect_not "DRIFT:"; expect "CONTROL BREACH: position-store only permits [position-service]"
   expect "FAIL  model-diff"; expect "UNDECLARED MODEL CHANGE: SPEC-001 does not declare [trade-api-to-position-store]"
   expect "Required review mode: HUMAN"; expect "architecture/trade-capture.architecture.json: Control plane"
-lab "git checkout -- . && git clean -fd services test"; expect_rc 0
+echo "== Lab 4, the right path: SPEC-002 declares its model change"
+lab "git checkout -- . && git clean -fd services test specs"; expect_rc 0
+lab "git apply labs/patches/spec-002-model-change.patch"; expect_rc 0
+lab "SPEC=SPEC-002 npm run gates"; expect_rc 0; expect "ADMISSIBLE"; expect "STALE MODEL? position-service-to-trade-api"
+  expect "PASS  model-diff     Model changed against HEAD: +1 -0 ~1."; expect "Required review mode: HUMAN"
+lab "git apply labs/patches/attempt-d-spec-002.patch"; expect_rc 0
+lab "SPEC=SPEC-002 npm run gates"; expect_rc 0; expect "ADMISSIBLE"; expect "4 connection(s) observed in code, 4 modelled in CALM"
+  expect "5 passed, 0 failed"; expect "Required review mode: HUMAN"
+lab "git checkout -- . && git clean -fd services test specs"; expect_rc 0
 lab "git apply labs/patches/attempt-b-conformant.patch"; expect_rc 0
 
 # --- Lab 5: Evidence -----------------------------------------------------------------------------
