@@ -42,6 +42,20 @@ for (const file of findTextFiles(dir)) {
   if (/\u2014/.test(readFileSync(file, 'utf8'))) problems.push(`${relative(dir, file)} contains an em-dash`);
 }
 
+// Words that must appear somewhere in specific captures, so the terminal panes keep showing the
+// outcome the surrounding slide talks about even after captures.js is regenerated.
+const REQUIRED_WORDS = {
+  'clean-gates': ['ADMISSIBLE'],
+  'lab1-break-pattern': ['source-path'],
+  'attempt-a-gates': ['BLOCKED', 'DRIFT:', 'CONTROL BREACH:'],
+  'attempt-b-gates': ['ADMISSIBLE', 'COGNITIVE'],
+  'review-human': ['HUMAN'],
+  'attempt-c-gates': ['UNDECLARED MODEL CHANGE:'],
+  'spec-002-model': ['STALE MODEL?'],
+  'spec-002-impl': ['ADMISSIBLE'],
+  'evidence': ['evidence written'],
+};
+
 const keys = [...html.matchAll(/data-capture="([^"]+)"/g)].map((m) => m[1]);
 if (keys.length) {
   const capturesPath = join(dir, 'captures.js');
@@ -50,7 +64,13 @@ if (keys.length) {
     const w = {};
     new Function('window', readFileSync(capturesPath, 'utf8'))(w);
     const captures = w.CAPTURES ?? {};
-    for (const k of new Set(keys)) if (!(k in captures)) problems.push(`capture "${k}" is referenced but not in captures.js`);
+    for (const k of new Set(keys)) {
+      if (!(k in captures)) { problems.push(`capture "${k}" is referenced but not in captures.js`); continue; }
+      if (captures[k].trim() === '') problems.push(`capture "${k}" is empty`);
+      for (const word of REQUIRED_WORDS[k] ?? []) {
+        if (!captures[k].includes(word)) problems.push(`capture "${k}" is missing "${word}"`);
+      }
+    }
   }
 }
 

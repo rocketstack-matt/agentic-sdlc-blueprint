@@ -21,42 +21,7 @@ try {
   await page.getByRole('button', { name: 'fit view' }).click();
   await page.waitForTimeout(500);
   await canvas.screenshot({ path: 'slides/img/hub-model.png' });
-
-  const node = page.getByText('Position Store', { exact: false }).first();
-  const found = (await node.count()) > 0;
-  if (found) {
-    await node.click();
-    await page.waitForTimeout(800);
-    // Selecting a node opens a metadata panel to the right of the canvas and narrows the canvas to
-    // make room for it; re-fit so the narrower canvas still shows the whole model.
-    await page.getByRole('button', { name: 'fit view' }).click();
-    await page.waitForTimeout(500);
-
-    // The panel lives outside the .react-flow element. A page-level clip spanning the canvas and the
-    // panel is fragile (it previously pulled in the breadcrumb, tabs and URL bar that also sit in
-    // that x/y range), so instead: screenshot only the panel's nearest bounded ancestor, and only use
-    // that shot if it is a properly sized card (under half the viewport tall, not an oversized
-    // wrapper); otherwise fall back to a screenshot of the diagram container alone, which never
-    // includes any page chrome.
-    const heading = page.getByRole('heading', { name: 'Node', exact: true });
-    let cardPath = null;
-    if (await heading.count()) {
-      const card = heading.locator('xpath=ancestor::*[2]');
-      const cardBox = (await card.count()) ? await card.boundingBox() : null;
-      const viewportHeight = page.viewportSize().height;
-      if (cardBox && cardBox.height < viewportHeight / 2) {
-        cardPath = card;
-      }
-    }
-    if (cardPath) {
-      await cardPath.screenshot({ path: 'slides/img/hub-position-store.png' });
-      console.log('hub-position-store.png: metadata card shot (bounded ancestor under half the viewport)');
-    } else {
-      await canvas.screenshot({ path: 'slides/img/hub-position-store.png' });
-      console.log('hub-position-store.png: diagram container shot (metadata card was not properly bounded)');
-    }
-  }
-  console.log('wrote slides/img/hub-model.png' + (found ? ' and hub-position-store.png' : ' (position-store selection not found; retake by hand)'));
+  console.log('wrote slides/img/hub-model.png');
 } finally {
   await browser.close();
 }

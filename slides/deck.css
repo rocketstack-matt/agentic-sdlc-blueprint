@@ -35,7 +35,7 @@
 .reveal .cols > * { flex: 1 1 0; min-width: 0; }
 .reveal .cols > .wide { flex: 1.6 1 0; }
 
-/* Terminal panes: real output, dark, coloured by deck.js at load. */
+/* Terminal panes: real output, dark, coloured by the inline script in index.html at load. */
 .reveal pre.term { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 26px; line-height: 1.35; background: var(--term); color: #e6e6e6; padding: 28px 32px; border-radius: 12px; width: 100%; box-sizing: border-box; box-shadow: none; margin: 0.4em 0; white-space: pre-wrap; max-height: 720px; overflow: hidden; }
 .reveal pre.term .pass, .reveal pre.term .ok { color: var(--teal); font-weight: 700; }
 .reveal pre.term .fail, .reveal pre.term .bad { color: var(--amber); font-weight: 700; }
