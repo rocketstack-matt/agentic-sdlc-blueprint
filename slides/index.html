@@ -160,16 +160,12 @@
       <h2>Controls as data</h2>
       <div class="cols">
         <div>
-<pre class="code">"position-store": {
-  "controls": {
-    "sdlc-prev-017-service-dependency": {
-      "requirement-url": ".../sdlc-prev-017...requirement.json",
-      "config": {
-        "catalog-id": "SDLC-PREV-017",
-        "enforced-by": "gates/drift-check.mjs",
-        "allowed-sources": ["position-service"]
-      }
-    }
+          <p class="small muted">On the position-store node:</p>
+<pre class="code">"sdlc-prev-017-service-dependency": {
+  "config": {
+    "catalog-id": "SDLC-PREV-017",
+    "enforced-by": "gates/drift-check.mjs",
+    "allowed-sources": ["position-service"]
   }
 }</pre>
           <p class="small">Plus a pattern: every service must carry a source path, a tier and a classification, and the system its four controls.</p>
