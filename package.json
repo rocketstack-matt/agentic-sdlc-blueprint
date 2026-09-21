@@ -11,7 +11,7 @@
     "start:trades": "tsx services/trade-api/src/server.ts",
     "test": "tsx --test test/*.test.ts",
     "typecheck": "tsc --noEmit",
-    "calm:validate": "calm validate -a architecture/trade-capture.architecture.json -u architecture/url-mapping.json -f pretty",
+    "calm:validate": "calm validate -p architecture/governed-service.pattern.json -a architecture/trade-capture.architecture.json -u architecture/url-mapping.json -f pretty",
     "calm:context": "node agent/calm-context.mjs",
     "gate:spec": "node gates/spec-check.mjs",
     "gate:drift": "node gates/drift-check.mjs",

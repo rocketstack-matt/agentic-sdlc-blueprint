@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rocketstack-matt.github.io/agentic-sdlc-blueprint/patterns/governed-service.pattern.json",
+  "title": "Governed service pattern",
+  "description": "What every architecture in this estate must carry for the gates to work: the system-level catalog controls, and on every service node the source path, criticality tier and data classification that the gates read.",
+  "type": "object",
+  "properties": {
+    "nodes": {
+      "type": "array",
+      "items": {
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "node-type": {
+                  "enum": [
+                    "service",
+                    "database"
+                  ]
+                }
+              },
+              "required": [
+                "node-type"
+              ]
+            },
+            "then": {
+              "properties": {
+                "metadata": {
+                  "type": "object",
+                  "properties": {
+                    "criticality-tier": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 4
+                    },
+                    "data-classification": {
+                      "enum": [
+                        "public",
+                        "internal",
+                        "confidential",
+                        "restricted"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "criticality-tier",
+                    "data-classification"
+                  ]
+                }
+              },
+              "required": [
+                "metadata"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "node-type": {
+                  "const": "service"
+                }
+              },
+              "required": [
+                "node-type"
+              ]
+            },
+            "then": {
+              "properties": {
+                "metadata": {
+                  "type": "object",
+                  "properties": {
+                    "source-path": {
+                      "type": "string",
+                      "pattern": "^[^/].*[^/]$"
+                    }
+                  },
+                  "required": [
+                    "source-path"
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "relationships": {
+      "type": "array",
+      "description": "Unconstrained here. What a service may connect to is stated by the relationships themselves and by node-level controls, and checked against the code by gates/drift-check.mjs."
+    },
+    "controls": {
+      "type": "object",
+      "required": [
+        "sdlc-prev-001-code-review",
+        "sdlc-prev-004-requirements-repository",
+        "sdlc-prev-012-deployment-gating",
+        "sdlc-prev-014-test-evidence-retention"
+      ]
+    }
+  },
+  "required": [
+    "nodes",
+    "relationships",
+    "controls"
+  ]
+}
