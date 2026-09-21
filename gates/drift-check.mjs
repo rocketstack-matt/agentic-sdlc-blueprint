@@ -5,7 +5,7 @@
 //  1. Each CALM node with code declares `metadata.source-path`.
 //  2. Each CALM interface that code can bind to declares an `env-binding` (e.g. POSITION_STORE_PATH).
 //  3. We scan each service's source for `process.env.X` and for imports that reach into another node.
-//     Each hit is a connection the CODE makes.
+//     Each hit is a connection the CODE makes. An env name no interface declares is a binding the model does not know.
 //  4. Any connection the code makes that the MODEL does not contain as a `connects` relationship is drift.
 //     Any node-level SDLC-PREV-017 `allowed-sources` list is enforced too.
 //
@@ -27,7 +27,7 @@ for (const node of codeNodes(arch)) {
     readFileSync(file, 'utf8').split('\n').forEach((text, i) => {
       for (const m of text.matchAll(/process\.env\.([A-Z0-9_]+)|process\.env\[['"]([A-Z0-9_]+)['"]\]/g)) {
         const owner = bindings.get(m[1] ?? m[2]);
-        if (owner && owner !== id) observed.push({ source: id, destination: owner, file: rel(file), line: i + 1, via: `env ${m[1] ?? m[2]}` });
+        if (owner !== id) observed.push({ source: id, destination: owner ?? null, file: rel(file), line: i + 1, via: `env ${m[1] ?? m[2]}` });
       }
       const imp = text.match(/from\s+['"](\.{1,2}\/[^'"]+)['"]/);
       if (imp) {
@@ -42,6 +42,7 @@ for (const node of codeNodes(arch)) {
 const findings = [];
 for (const o of observed) {
   const where = `${o.file}:${o.line} (${o.via})`;
+  if (!o.destination) { findings.push({ level: 'error', message: `UNMODELLED BINDING: ${o.source} reads an env name no CALM interface declares. ${where}` }); continue; }
   if (!isModelled(o.source, o.destination)) {
     findings.push({ level: 'error', message: `DRIFT: code connects ${o.source} -> ${o.destination}, which is not in the CALM model. ${where}` });
   }
@@ -56,7 +57,7 @@ for (const e of modelled) {
     findings.push({ level: 'warn', message: `STALE MODEL? ${e.id} is modelled but no code evidence was found for ${e.source} -> ${e.destination}.` });
 }
 
-const edges = [...new Set(observed.map((o) => `${o.source} -> ${o.destination}`))];
+const edges = [...new Set(observed.filter((o) => o.destination).map((o) => `${o.source} -> ${o.destination}`))];
 report({
   gate: 'drift-check',
   controls: ['SDLC-PREV-017', 'SDLC-PREV-012'],
