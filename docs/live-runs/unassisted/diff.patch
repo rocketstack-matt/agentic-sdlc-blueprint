@@ -1,0 +1,66 @@
+diff --git a/services/trade-api/src/app.ts b/services/trade-api/src/app.ts
+index 35dacb3..608c5c4 100644
+--- a/services/trade-api/src/app.ts
++++ b/services/trade-api/src/app.ts
+@@ -44,6 +44,22 @@ export function createApp({ store, positionServiceUrl }: Deps): Server {
+         const trades = store.all().filter((t) => !account || t.account === account);
+         return send(res, 200, trades);
+       }
++      const summary = url.pathname.match(/^\/accounts\/([^/]+)\/summary$/);
++      if (req.method === 'GET' && summary) {
++        const account = decodeURIComponent(summary[1]!);
++        // Positions are owned by position-service. trade-api reads them over the modelled
++        // relationship `trade-api-to-position-service`, never from the position store.
++        let positions: Record<string, number>;
++        try {
++          const response = await fetch(`${positionServiceUrl}/positions/${encodeURIComponent(account)}`);
++          if (!response.ok) return send(res, 502, { error: 'position-service is unavailable' });
++          ({ positions } = (await response.json()) as { positions: Record<string, number> });
++        } catch {
++          return send(res, 502, { error: 'position-service is unavailable' });
++        }
++        const trades = store.all().filter((t) => t.account === account);
++        return send(res, 200, { account, trades, positions: positions ?? {} });
++      }
+       if (url.pathname === '/health') return send(res, 200, { status: 'ok' });
+       return send(res, 404, { error: 'not found' });
+     } catch (err) {
+diff --git a/test/trade-capture.test.ts b/test/trade-capture.test.ts
+index 89dcbd5..0ec1043 100644
+--- a/test/trade-capture.test.ts
++++ b/test/trade-capture.test.ts
+@@ -31,3 +31,34 @@ test('an invalid trade is rejected', async () => {
+   const res = await post({ account: 'ACC-1', security: 'VOD.L', side: 'HOLD', quantity: 1 });
+   assert.equal(res.status, 422);
+ });
++
++// SPEC-001 Account summary endpoint
++type Summary = { account: string; trades: unknown[]; positions: Record<string, number> };
++
++test('the summary returns the account trades together with its positions', async () => {
++  await post({ account: 'ACC-2', security: 'VOD.L', side: 'BUY', quantity: 100 });
++  await post({ account: 'ACC-2', security: 'VOD.L', side: 'SELL', quantity: 40 });
++
++  const res = await fetch(`${tradesUrl}/accounts/ACC-2/summary`);
++  assert.equal(res.status, 200);
++  const summary = await res.json() as Summary;
++  assert.equal(summary.account, 'ACC-2');
++  assert.equal(summary.trades.length, 2);
++  assert.deepEqual(summary.positions, { 'VOD.L': 60 });
++});
++
++test('the summary of an unknown account is empty', async () => {
++  const res = await fetch(`${tradesUrl}/accounts/NO-SUCH-ACCOUNT/summary`);
++  assert.equal(res.status, 200);
++  const summary = await res.json() as Summary;
++  assert.deepEqual(summary, { account: 'NO-SUCH-ACCOUNT', trades: [], positions: {} });
++});
++
++test('the summary is 502 when position-service is unavailable', async () => {
++  const offline = createTrades({ store: new TradeStore(tempFile('trades.json')), positionServiceUrl: 'http://localhost:1' });
++  const offlineUrl = await listen(offline);
++  after(() => offline.close());
++
++  const res = await fetch(`${offlineUrl}/accounts/ACC-1/summary`);
++  assert.equal(res.status, 502);
++});
