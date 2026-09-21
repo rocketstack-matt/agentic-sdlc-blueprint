@@ -1,0 +1,50 @@
+name: docs
+# Publishes the CALM model as a website with `calm docify`, and serves the control requirement schemas and the
+# pattern at the URLs the model references, so `requirement-url` and `$id` resolve. Nothing here is needed to run
+# the labs: attendees never install Docusaurus.
+on:
+  push:
+    branches: [main]
+    paths: [architecture/**, .github/workflows/docs.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency: { group: pages, cancel-in-progress: true }
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - name: Generate the site from the model
+        run: |
+          npx calm docify -a architecture/trade-capture.architecture.json -u architecture/url-mapping.json -o site
+          sed -i -e "s#title: 'My Docusaurus Docs'#title: 'Trade Capture architecture'#" \
+                 -e "s#url: 'http://localhost'#url: 'https://${GITHUB_REPOSITORY_OWNER}.github.io'#" \
+                 -e "s#baseUrl: '/'#baseUrl: '/${GITHUB_REPOSITORY#*/}/'#" \
+                 -e "s#organizationName: 'my-org'#organizationName: '${GITHUB_REPOSITORY_OWNER}'#" \
+                 -e "s#projectName: 'calm-docs'#projectName: '${GITHUB_REPOSITORY#*/}'#" site/docusaurus.config.js
+      - name: Serve the schemas and the pattern at their published URLs
+        run: |
+          mkdir -p site/static/controls site/static/patterns
+          cp architecture/controls/*.requirement.json site/static/controls/
+          cp architecture/*.pattern.json site/static/patterns/
+          cp architecture/trade-capture.architecture.json site/static/
+      - name: Build
+        working-directory: site
+        run: |
+          npm install --no-audit --no-fund
+          npm run build
+      - uses: actions/upload-pages-artifact@v3
+        with: { path: site/build }
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: { name: github-pages, url: "${{ steps.deployment.outputs.page_url }}" }
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
