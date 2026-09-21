@@ -44,6 +44,16 @@ export function createApp({ store, positionServiceUrl }: Deps): Server {
         const trades = store.all().filter((t) => !account || t.account === account);
         return send(res, 200, trades);
       }
+      const summary = url.pathname.match(/^\/accounts\/([^/]+)\/summary$/);
+      if (req.method === 'GET' && summary) {
+        const account = decodeURIComponent(summary[1]!);
+        // SPEC-001 + CALM: positions are owned by position-service. We reach them only over
+        // relationship trade-api-to-position-service, never by reading the position store.
+        const upstream = await fetch(`${positionServiceUrl}/positions/${encodeURIComponent(account)}`).catch(() => undefined);
+        if (!upstream?.ok) return send(res, 502, { error: 'position-service unavailable' });
+        const { positions } = (await upstream.json()) as { positions: Record<string, number> };
+        return send(res, 200, { account, trades: store.all().filter((t) => t.account === account), positions });
+      }
       if (url.pathname === '/health') return send(res, 200, { status: 'ok' });
       return send(res, 404, { error: 'not found' });
     } catch (err) {
