@@ -5,7 +5,7 @@ name: docs
 on:
   push:
     branches: [main]
-    paths: [architecture/**, .github/workflows/docs.yml]
+    paths: [architecture/**, slides/**, .github/workflows/docs.yml]
   workflow_dispatch:
 permissions:
   contents: read
@@ -34,6 +34,8 @@ jobs:
           cp architecture/controls/*.requirement.json site/static/controls/
           cp architecture/*.pattern.json site/static/patterns/
           cp architecture/trade-capture.architecture.json site/static/
+      - name: Publish the talk deck beside the docs
+        run: cp -R slides site/static/slides
       - name: Build
         working-directory: site
         run: |

@@ -14,6 +14,9 @@ compose into one operating model for AI-assisted delivery in a regulated firm:
 Companion to the talk *Governing the Agentic SDLC: Driving Agentic Development with FINOS CALM*
 (Open Source in Finance Forum, New York, November 2026. Matthew Bain and Aaron Searle).
 
+The talk's slides are in [`slides/`](slides/) and published at
+[rocketstack-matt.github.io/agentic-sdlc-blueprint/slides](https://rocketstack-matt.github.io/agentic-sdlc-blueprint/slides/).
+
 > **Status.** A teaching blueprint, not a product. The catalog controls it references are drafts and their ids may change.
 
 ## The idea in one minute
