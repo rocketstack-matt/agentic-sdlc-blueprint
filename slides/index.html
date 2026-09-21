@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Governing the Agentic SDLC</title>
+  <link rel="stylesheet" href="vendor/reveal/dist/reveal.css">
+  <link rel="stylesheet" href="vendor/reveal/dist/theme/white.css">
+  <link rel="stylesheet" href="deck.css">
+</head>
+<body>
+<div class="reveal">
+  <div class="slides">
+
+    <section class="title" data-background-image="img/background.png" data-background-size="cover">
+      <img class="logo" src="img/logo.svg" alt="Open Source in Finance Forum">
+      <div class="block">
+        <h1>Governing the Agentic SDLC</h1>
+        <p>Driving agentic development with FINOS CALM<br><span class="small">Matthew Bain and Aaron Searle<br>OSFF New York, 4 November 2026</span></p>
+      </div>
+      <aside class="notes">Speaker: Aaron. Welcome. Two of us: Aaron on the controls catalog and the contribution path, Matthew on CALM and the blueprint you can clone. Thirty five minutes, questions at the end.</aside>
+    </section>
+
+  </div>
+</div>
+
+<script src="vendor/reveal/dist/reveal.js"></script>
+<script src="vendor/reveal/dist/plugin/notes.js"></script>
+<script src="captures.js"></script>
+<script>
+// Links to the published artefacts. Point at the FINOS-hosted CALM Hub once the seeding PR lands; nothing else changes.
+const HUB_LINKS = {
+  repo: 'https://github.com/rocketstack-matt/agentic-sdlc-blueprint',
+  site: 'https://rocketstack-matt.github.io/agentic-sdlc-blueprint/',
+  architecture: 'https://rocketstack-matt.github.io/agentic-sdlc-blueprint/trade-capture.architecture.json',
+  pattern: 'https://rocketstack-matt.github.io/agentic-sdlc-blueprint/patterns/governed-service.pattern.json',
+  controls: 'https://rocketstack-matt.github.io/agentic-sdlc-blueprint/controls/',
+};
+
+// Fill terminal panes from captures.js and colour the words that matter.
+const colour = (text) => text
+  .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+  .replace(/^(PASS)\b/gm, '<span class="pass">$1</span>')
+  .replace(/^(FAIL)\b/gm, '<span class="fail">$1</span>')
+  .replace(/\b(ADMISSIBLE|ok \d+|# pass \d+|Errors: no)/g, '<span class="ok">$1</span>')
+  .replace(/\b(BLOCKED|ERROR|DRIFT:|CONTROL BREACH:|UNDECLARED MODEL CHANGE:|UNMODELLED BINDING:|Errors: yes)/g, '<span class="bad">$1</span>')
+  .replace(/\b(WARN|INFO)\b/g, '<span class="dim">$1</span>');
+for (const pre of document.querySelectorAll('pre.term[data-capture]')) {
+  const key = pre.dataset.capture;
+  const text = window.CAPTURES?.[key];
+  if (text === undefined) { pre.classList.add('missing'); pre.textContent = `capture missing: ${key}. Run slides/capture.sh`; }
+  else pre.innerHTML = colour(text.trimEnd());
+}
+
+// Stamp the corner logo and the five-station ring onto every content slide.
+const STATIONS = ['model', 'spec', 'agent', 'gate', 'evidence'];
+for (const s of document.querySelectorAll('section[data-station]')) {
+  s.classList.add('content');
+  s.insertAdjacentHTML('afterbegin', '<div class="corner-logo"><img src="img/logo.svg" alt=""></div>');
+  const on = s.dataset.station;
+  const nodes = STATIONS.map((name, i) => `<g class="${name === on ? 'on' : ''}"><circle cx="${30 + i * 60}" cy="30" r="12"/><text x="${30 + i * 60}" y="70" text-anchor="middle">${name}</text></g>`).join('');
+  s.insertAdjacentHTML('beforeend', `<svg class="ring" viewBox="0 0 300 90" aria-hidden="true"><line x1="30" y1="30" x2="270" y2="30"/>${nodes}</svg>`);
+}
+for (const a of document.querySelectorAll('a[data-hub]')) { a.href = HUB_LINKS[a.dataset.hub]; if (!a.textContent.trim()) a.textContent = a.href; }
+
+Reveal.initialize({ hash: true, width: 1920, height: 1080, margin: 0.04, minScale: 0.2, maxScale: 2, controls: false, progress: false, slideNumber: 'c/t', transition: 'none', plugins: [RevealNotes] });
+</script>
+</body>
+</html>

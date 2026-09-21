@@ -1,0 +1,63 @@
+/* Styling derived from the OSFF New York 2026 template: Arial, its theme palette, its blue network background. */
+:root {
+  --ink: #212121; --muted: #595959; --blue: #4285F4; --amber: #FFAB40; --teal: #0097A7; --paper: #ffffff; --term: #212121;
+}
+.reveal { font-family: Arial, Helvetica, sans-serif; color: var(--ink); font-size: 36px; }
+.reveal .slides section { text-align: left; padding: 0 120px; box-sizing: border-box; height: 100%; }
+.reveal h1, .reveal h2, .reveal h3 { font-family: Arial, Helvetica, sans-serif; text-transform: none; letter-spacing: 0; margin: 0 0 0.4em; }
+.reveal h1 { font-size: 104px; font-weight: 700; line-height: 1.1; }
+.reveal h2 { font-size: 72px; font-weight: 700; line-height: 1.15; }
+.reveal h3 { font-size: 56px; font-weight: 700; }
+.reveal p, .reveal li { font-size: 36px; line-height: 1.4; }
+.reveal ul { margin: 0 0 0 1em; }
+.reveal li { margin: 0.25em 0; }
+.reveal a { color: var(--blue); text-decoration: none; }
+.reveal .muted { color: var(--muted); }
+.reveal .amber { color: var(--amber); }
+.reveal .teal { color: var(--teal); }
+.reveal small, .reveal .small { font-size: 26px; }
+
+/* Title and section slides: the template's blue network background, white text, white logo. */
+.reveal section.title, .reveal section.section-slide { color: #fff; }
+.reveal section.title h1, .reveal section.section-slide h2, .reveal section.title p, .reveal section.section-slide p { color: #fff; }
+.reveal section.title .logo, .reveal section.section-slide .logo { position: absolute; left: 130px; top: 220px; width: 740px; }
+.reveal section.title .block { position: absolute; left: 960px; top: 240px; width: 880px; }
+.reveal section.title .block p { font-size: 44px; margin-top: 1em; }
+.reveal section.section-slide h2 { position: absolute; left: 120px; top: 440px; width: 1680px; }
+.reveal section.section-slide p { position: absolute; left: 120px; top: 620px; width: 1680px; font-size: 44px; }
+
+/* Content slides: white, small logo top left as the template places it, title top, station ring bottom right. */
+.reveal section.content { background: var(--paper); padding-top: 150px; }
+.reveal section.content .corner-logo { position: absolute; left: 12px; top: 12px; width: 130px; height: 120px; background: var(--blue); border-radius: 0 0 12px 0; padding: 12px; box-sizing: border-box; }
+.reveal section.content .corner-logo img { width: 100%; height: 100%; object-fit: contain; }
+.reveal section.content h2 { font-size: 60px; }
+.reveal .cols { display: flex; gap: 60px; align-items: flex-start; }
+.reveal .cols > * { flex: 1 1 0; min-width: 0; }
+.reveal .cols > .wide { flex: 1.6 1 0; }
+
+/* Terminal panes: real output, dark, coloured by deck.js at load. */
+.reveal pre.term { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 26px; line-height: 1.35; background: var(--term); color: #e6e6e6; padding: 28px 32px; border-radius: 12px; width: 100%; box-sizing: border-box; box-shadow: none; margin: 0.4em 0; white-space: pre-wrap; max-height: 720px; overflow: hidden; }
+.reveal pre.term .pass, .reveal pre.term .ok { color: var(--teal); font-weight: 700; }
+.reveal pre.term .fail, .reveal pre.term .bad { color: var(--amber); font-weight: 700; }
+.reveal pre.term .dim { color: #9a9a9a; }
+.reveal pre.term.missing { border: 4px solid var(--amber); }
+.reveal pre.code { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 26px; line-height: 1.35; background: #f4f5f7; color: var(--ink); padding: 28px 32px; border-radius: 12px; width: 100%; box-sizing: border-box; box-shadow: none; white-space: pre-wrap; }
+.reveal .live { display: inline-block; font-size: 24px; color: var(--amber); border: 3px solid var(--amber); border-radius: 999px; padding: 4px 18px; margin-left: 16px; vertical-align: middle; }
+
+/* The five-station ring: the one repeated motif. */
+.reveal .ring { position: absolute; right: 40px; bottom: 30px; width: 300px; height: 90px; }
+.reveal .ring text { font-family: Arial, Helvetica, sans-serif; font-size: 18px; fill: var(--muted); }
+.reveal .ring circle { fill: #d9dbe1; }
+.reveal .ring .on circle { fill: var(--blue); }
+.reveal .ring .on text { fill: var(--blue); font-weight: 700; }
+.reveal .ring line { stroke: #d9dbe1; stroke-width: 3; }
+
+/* Big statements */
+.reveal .statement { font-size: 64px; font-weight: 700; line-height: 1.2; margin-top: 0.4em; }
+.reveal table { font-size: 30px; border-collapse: collapse; }
+.reveal table th, .reveal table td { padding: 10px 24px; border-bottom: 2px solid #e3e5ea; text-align: left; }
+.reveal table th { color: var(--muted); font-weight: 700; }
+.reveal .kv { display: grid; grid-template-columns: max-content 1fr; gap: 10px 36px; font-size: 32px; }
+.reveal .kv dt { color: var(--muted); }
+.reveal .kv dd { margin: 0; }
+.reveal .hub-shot { width: 100%; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,.18); }
