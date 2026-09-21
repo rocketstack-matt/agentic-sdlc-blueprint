@@ -30,7 +30,7 @@ cap() {                       # cap KEY "<command>"   records stdout+stderr, min
 
 cap clean-gates "npm run gates"
 node -e "const fs=require('fs');const p='architecture/trade-capture.architecture.json';const a=JSON.parse(fs.readFileSync(p));delete a.nodes.find(n=>n['unique-id']==='trade-api').metadata['source-path'];fs.writeFileSync(p,JSON.stringify(a,null,2)+'\n')"
-cap lab1-break-pattern "npm run calm:validate 2>&1 | grep -vE '^\S*info' | sed -E 's/\x1b\[[0-9;]*m//g'"
+cap lab1-break-pattern "npm run calm:validate 2>&1 | grep -vE '^\S*info' | sed -E 's/\x1b\[[0-9;]*m//g' | grep -E \"^(- Errors|ERROR issues|  ERROR)\""
 git checkout -q architecture/
 cap context "npm run calm:context -- --spec SPEC-001 2>&1 | node -e \"let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{const j=JSON.parse(s.slice(s.indexOf('{')));const t=j.scope[0];console.log(JSON.stringify({node:t.node.id,mayConnectTo:t.mayConnectTo.map(m=>m.node),mustNotConnectTo:t.mustNotConnectTo,rule:j.rule},null,2))})\""
 
