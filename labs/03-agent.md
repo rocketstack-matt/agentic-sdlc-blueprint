@@ -29,6 +29,6 @@ Agents without MCP can use `npm run calm:context` as `AGENTS.md` describes. Then
 and removing `.mcp.json`, and compare.
 
 **Takeaway.** Drift happens one reasonable assumption at a time. The agent governs itself better with context
-(mi-18, mi-19 in `agent/GUARDRAILS.md`), and the gate catches it when it does not.
+(AIR-PREV-018 and AIR-PREV-019 in `agent/GUARDRAILS.md`), and the gate catches it when it does not.
 
 Next: [Lab 4](04-gate.md)

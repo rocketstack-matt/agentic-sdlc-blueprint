@@ -18,7 +18,7 @@ changes to code. **Reference implementation:** `gates/drift-check.mjs`.
 **Intent.** An AI agent's change must be bound to an approved requirement that declares, in advance, the architectural
 scope the agent may modify, and the change must be rejected if it exceeds that scope.
 **Mitigates.** SDLC-SEC-008 Unauthorised Change, SDLC-RC-005 Audit and Compliance Evidence Failure.
-**Relates to.** SDLC-PREV-004 Requirements Repository, AIGF mi-18. **Reference implementation:** `gates/spec-check.mjs`.
+**Relates to.** SDLC-PREV-004 Requirements Repository, AIGF AIR-PREV-018. **Reference implementation:** `gates/spec-check.mjs`.
 
 ## 3. Agent Attribution and Context Provenance
 **Intent.** For any agent-authored change the organisation can show which agent identity produced it, under which

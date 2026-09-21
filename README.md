@@ -74,7 +74,7 @@ Then work through the labs. To see the pipeline run on your own changes, enable 
 | SDLC-PREV-007, -009, -010 | Dependency scanning, SBOM, secret detection | n/a | `.github/workflows/governed-sdlc.yml` |
 
 Risks in view: SDLC-OP-007 Configuration Drift, SDLC-SEC-008 Unauthorised Change, SDLC-RC-005 Audit and Compliance
-Evidence Failure. Agent mitigations: AIGF mi-18 and mi-19, see [`agent/GUARDRAILS.md`](agent/GUARDRAILS.md).
+Evidence Failure. Agent mitigations: AIGF AIR-PREV-018 and AIR-PREV-019, see [`agent/GUARDRAILS.md`](agent/GUARDRAILS.md).
 
 ## Layout
 
