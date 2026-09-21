@@ -10,6 +10,7 @@ unset BASE_REF SPEC PR_BODY CHANGE_AUTHOR_KIND CHANGE_AUTHOR_ID
 export GIT_AUTHOR_NAME=lab-runner GIT_AUTHOR_EMAIL=lab-runner@example.invalid GIT_COMMITTER_NAME=lab-runner GIT_COMMITTER_EMAIL=lab-runner@example.invalid NODE_NO_WARNINGS=1
 
 WT=$(mktemp -d "${TMPDIR:-/tmp}/blueprint-capture.XXXXXX")
+WT=$(cd "$WT" && pwd -P)
 cleanup() { cd "$ROOT"; git worktree remove --force "$WT" >/dev/null 2>&1 || true; rm -rf "$WT"; }
 trap cleanup EXIT
 git worktree add --detach -q "$WT" HEAD
