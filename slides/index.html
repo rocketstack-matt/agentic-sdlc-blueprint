@@ -87,13 +87,14 @@
             <g font-family="Arial" font-size="30" text-anchor="middle">
               <rect x="250" y="40" width="300" height="130" rx="18" fill="#4285F4"/>
               <text x="400" y="95" fill="#fff" font-weight="700">FINOS CALM</text><text x="400" y="140" fill="#fff" font-size="24">governs the system</text>
-              <rect x="20" y="340" width="340" height="130" rx="18" fill="#0097A7"/>
-              <text x="190" y="395" fill="#fff" font-weight="700" font-size="24">SDLC Controls Catalog</text><text x="190" y="440" fill="#fff" font-size="22">governs the change</text>
-              <rect x="440" y="340" width="340" height="130" rx="18" fill="#FFAB40"/>
-              <text x="610" y="395" fill="#212121" font-weight="700" font-size="24">AI Governance Framework</text><text x="610" y="440" fill="#212121" font-size="22">governs the agent</text>
+              <rect x="0" y="340" width="380" height="130" rx="18" fill="#0097A7"/>
+              <text x="190" y="395" fill="#fff" font-weight="700" font-size="22">SDLC Common Controls Catalog</text><text x="190" y="440" fill="#fff" font-size="22">governs the change</text>
+              <rect x="440" y="340" width="340" height="130" rx="18" fill="#595959"/>
+              <text x="610" y="395" fill="#fff" font-weight="700" font-size="24">AI Governance Framework</text><text x="610" y="440" fill="#fff" font-size="22">governs the agent</text>
               <line x1="330" y1="170" x2="220" y2="340" stroke="#595959" stroke-width="4"/>
               <line x1="470" y1="170" x2="580" y2="340" stroke="#595959" stroke-width="4"/>
-              <line x1="360" y1="405" x2="440" y2="405" stroke="#595959" stroke-width="4"/>
+              <line x1="380" y1="405" x2="440" y2="405" stroke="#595959" stroke-width="4"/>
+              <rect x="150" y="256" width="500" height="48" fill="#fff"/>
               <text x="400" y="290" fill="#595959" font-size="26">controls attached to CALM nodes as data</text>
             </g>
           </svg>
@@ -106,7 +107,7 @@
       <h2>The loop</h2>
       <div class="cols">
         <div>
-          <svg viewBox="0 0 700 520" width="100%" aria-label="Five stations in a loop">
+          <svg viewBox="0 0 700 545" width="100%" aria-label="Five stations in a loop">
             <g font-family="Arial" font-size="30" font-weight="700" text-anchor="middle" fill="#fff">
               <circle cx="350" cy="80" r="72" fill="#4285F4"/><text x="350" y="90">Model</text>
               <circle cx="600" cy="230" r="72" fill="#4285F4"/><text x="600" y="240">Spec</text>
@@ -156,11 +157,11 @@
         <div>
           <p class="small muted">On the position-store node:</p>
 <pre class="code">"sdlc-prev-017-service-dependency": {
-  "config": {
+  "requirements": [{ "config": {
     "catalog-id": "SDLC-PREV-017",
     "enforced-by": "gates/drift-check.mjs",
     "allowed-sources": ["position-service"]
-  }
+  } }]
 }</pre>
           <p class="small">Plus a pattern: every service must carry a source path, a tier and a classification, and the system its four controls.</p>
         </div>
@@ -262,7 +263,7 @@ calm-relationships: [trade-api-to-position-service]
       <h2>The policy lives in the model</h2>
       <div class="cols">
         <div>
-<pre class="code">"sdlc-prev-001-code-review": { "config": {
+<pre class="code">"sdlc-prev-001-code-review": { "requirements": [{ "config": {
   "author-may-not-review": true,
   "default-mode": "human",
   "rules": [
@@ -271,7 +272,7 @@ calm-relationships: [trade-api-to-position-service]
       "data-classifications": ["confidential", "restricted"] },
     { "mode": "cognitive", "max-criticality-tier": 4, "paths": ["specs/", "test/"] },
     { "mode": "automated", "paths": ["README.md", "docs/", "labs/"] }
-  ] } }</pre>
+  ] } }] }</pre>
         </div>
         <div>
           <pre class="term" data-capture="review-cognitive"></pre>
@@ -402,6 +403,7 @@ calm-relationships: [trade-api-to-position-service]
             <dt>Site and deck</dt><dd><a data-hub="site"></a></dd>
             <dt>Architecture</dt><dd><a data-hub="architecture">on CALM Hub</a></dd>
             <dt>Pattern</dt><dd><a data-hub="pattern">on CALM Hub</a></dd>
+            <dt>Controls</dt><dd><a data-hub="controls">on CALM Hub</a></dd>
           </dl>
         </div>
       </div>
@@ -437,9 +439,10 @@ const HUB_LINKS = {
 const colour = (text) => text
   .replace(/&/g, '&amp;').replace(/</g, '&lt;')
   .replace(/^(PASS)\b/gm, '<span class="pass">$1</span>')
+  .replace(/\b(BLOCKED|ERROR|DRIFT:|CONTROL BREACH:|UNDECLARED MODEL CHANGE:|UNMODELLED BINDING:|Errors: yes|FAILED|FAIL)\b/g, '<span class="bad">$1</span>')
   .replace(/^(FAIL)\b/gm, '<span class="fail">$1</span>')
-  .replace(/\b(ADMISSIBLE|ok \d+|# pass \d+|Errors: no)/g, '<span class="ok">$1</span>')
-  .replace(/\b(BLOCKED|ERROR|DRIFT:|CONTROL BREACH:|UNDECLARED MODEL CHANGE:|UNMODELLED BINDING:|Errors: yes)/g, '<span class="bad">$1</span>')
+  .replace(/\b(ADMISSIBLE|ok \d+|# pass \d+|Errors: no|typecheck: clean)\b/g, '<span class="ok">$1</span>')
+  .replace(/^(ℹ pass \d+)$/gm, '<span class="ok">$1</span>')
   .replace(/\b(WARN|INFO)\b/g, '<span class="dim">$1</span>');
 for (const pre of document.querySelectorAll('pre.term[data-capture]')) {
   const key = pre.dataset.capture;
