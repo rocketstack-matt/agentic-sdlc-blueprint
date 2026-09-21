@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rocketstack-matt.github.io/agentic-sdlc-blueprint/controls/sdlc-prev-014-test-evidence-retention.requirement.json",
+  "title": "Test Evidence Retention",
+  "description": "CALM control requirement for FINOS SDLC Common Controls Catalog SDLC-PREV-014. Catalog entry: https://finos-labs.github.io/SDLC-Controls-Framework/mitigations/mi-14_test-evidence.html",
+  "type": "object",
+  "properties": {
+    "catalog-id": {
+      "const": "SDLC-PREV-014"
+    },
+    "catalog-url": {
+      "type": "string"
+    },
+    "enforced-by": {
+      "type": "string",
+      "description": "Repo path of the gate that enforces this control"
+    },
+    "bound-to": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "format": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "catalog-id",
+    "enforced-by",
+    "bound-to"
+  ]
+}

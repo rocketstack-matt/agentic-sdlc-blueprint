@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rocketstack-matt.github.io/agentic-sdlc-blueprint/controls/sdlc-prev-012-deployment-gating.requirement.json",
+  "title": "Deployment Gating",
+  "description": "CALM control requirement for FINOS SDLC Common Controls Catalog SDLC-PREV-012. Catalog entry: https://finos-labs.github.io/SDLC-Controls-Framework/mitigations/mi-12_deployment-gating.html",
+  "type": "object",
+  "properties": {
+    "catalog-id": {
+      "const": "SDLC-PREV-012"
+    },
+    "catalog-url": {
+      "type": "string"
+    },
+    "enforced-by": {
+      "type": "string",
+      "description": "Repo path of the gate that enforces this control"
+    },
+    "blocking-gates": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "catalog-id",
+    "enforced-by",
+    "blocking-gates"
+  ]
+}

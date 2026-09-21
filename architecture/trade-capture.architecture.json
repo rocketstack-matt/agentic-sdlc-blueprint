@@ -1,0 +1,314 @@
+{
+  "$schema": "https://calm.finos.org/release/1.2/meta/calm.json",
+  "unique-id": "trade-capture-architecture",
+  "name": "Trade Capture",
+  "description": "A deliberately small trade capture system used to demonstrate a governed agentic SDLC.",
+  "nodes": [
+    {
+      "unique-id": "trader",
+      "node-type": "actor",
+      "name": "Trader",
+      "description": "Submits trades and views blotters."
+    },
+    {
+      "unique-id": "trade-capture",
+      "node-type": "system",
+      "name": "Trade Capture System",
+      "description": "Captures trades and maintains positions."
+    },
+    {
+      "unique-id": "trade-api",
+      "node-type": "service",
+      "name": "Trade API",
+      "description": "Accepts and lists trades. Must obtain positions from position-service, never from the position store.",
+      "interfaces": [
+        {
+          "unique-id": "trade-api-http",
+          "protocol": "HTTP",
+          "env-binding": "TRADE_API_PORT"
+        }
+      ],
+      "metadata": {
+        "source-path": "services/trade-api",
+        "system-manager": "trade-capture-leads",
+        "criticality-tier": 2,
+        "data-classification": "internal"
+      }
+    },
+    {
+      "unique-id": "position-service",
+      "node-type": "service",
+      "name": "Position Service",
+      "description": "Sole owner of position calculation and of the position store.",
+      "interfaces": [
+        {
+          "unique-id": "position-service-http",
+          "protocol": "HTTP",
+          "env-binding": "POSITION_SERVICE_URL"
+        },
+        {
+          "unique-id": "position-service-port",
+          "protocol": "HTTP",
+          "env-binding": "POSITION_SERVICE_PORT"
+        }
+      ],
+      "metadata": {
+        "source-path": "services/position-service",
+        "system-manager": "risk-tech-leads",
+        "criticality-tier": 1,
+        "data-classification": "confidential"
+      }
+    },
+    {
+      "unique-id": "trade-store",
+      "node-type": "database",
+      "name": "Trade Store",
+      "description": "Record of captured trades.",
+      "interfaces": [
+        {
+          "unique-id": "trade-store-file",
+          "env-binding": "TRADE_STORE_PATH"
+        }
+      ],
+      "metadata": {
+        "criticality-tier": 2,
+        "data-classification": "internal"
+      }
+    },
+    {
+      "unique-id": "position-store",
+      "node-type": "database",
+      "name": "Position Store",
+      "description": "Book of record for positions. Confidential.",
+      "interfaces": [
+        {
+          "unique-id": "position-store-file",
+          "env-binding": "POSITION_STORE_PATH"
+        }
+      ],
+      "metadata": {
+        "criticality-tier": 1,
+        "data-classification": "confidential"
+      },
+      "controls": {
+        "sdlc-prev-017-service-dependency": {
+          "description": "Only position-service may connect to the position store. Any other source is architectural drift (risk SDLC-OP-007).",
+          "requirements": [
+            {
+              "requirement-url": "https://rocketstack-matt.github.io/agentic-sdlc-blueprint/controls/sdlc-prev-017-service-dependency.requirement.json",
+              "config": {
+                "catalog-id": "SDLC-PREV-017",
+                "catalog-url": "https://finos-labs.github.io/SDLC-Controls-Framework/",
+                "enforced-by": "gates/drift-check.mjs",
+                "allowed-sources": [
+                  "position-service"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "relationships": [
+    {
+      "unique-id": "trader-uses-trade-api",
+      "description": "Trader submits and lists trades",
+      "relationship-type": {
+        "interacts": {
+          "actor": "trader",
+          "nodes": [
+            "trade-api"
+          ]
+        }
+      }
+    },
+    {
+      "unique-id": "trade-api-to-position-service",
+      "description": "Apply captured trades, read positions",
+      "protocol": "HTTP",
+      "relationship-type": {
+        "connects": {
+          "source": {
+            "node": "trade-api"
+          },
+          "destination": {
+            "node": "position-service",
+            "interfaces": [
+              "position-service-http"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "unique-id": "trade-api-to-trade-store",
+      "description": "Persist captured trades",
+      "relationship-type": {
+        "connects": {
+          "source": {
+            "node": "trade-api"
+          },
+          "destination": {
+            "node": "trade-store",
+            "interfaces": [
+              "trade-store-file"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "unique-id": "position-service-to-position-store",
+      "description": "Persist positions",
+      "relationship-type": {
+        "connects": {
+          "source": {
+            "node": "position-service"
+          },
+          "destination": {
+            "node": "position-store",
+            "interfaces": [
+              "position-store-file"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "unique-id": "trade-capture-composition",
+      "relationship-type": {
+        "composed-of": {
+          "container": "trade-capture",
+          "nodes": [
+            "trade-api",
+            "position-service",
+            "trade-store",
+            "position-store"
+          ]
+        }
+      }
+    }
+  ],
+  "controls": {
+    "sdlc-prev-001-code-review": {
+      "description": "Review mode is selected by a deterministic, machine-evaluable policy. The policy inputs come from this architecture: which nodes a change touches, their criticality tier and data classification.",
+      "requirements": [
+        {
+          "requirement-url": "https://rocketstack-matt.github.io/agentic-sdlc-blueprint/controls/sdlc-prev-001-code-review.requirement.json",
+          "config": {
+            "catalog-id": "SDLC-PREV-001",
+            "catalog-url": "https://finos-labs.github.io/SDLC-Controls-Framework/mitigations/mi-1_code-review.html",
+            "enforced-by": "gates/review-router.mjs",
+            "author-may-not-review": true,
+            "default-mode": "human",
+            "rules": [
+              {
+                "mode": "human",
+                "reason": "Control plane: the model, the gates, the agent instructions and the pipeline decide how every other change is governed",
+                "paths": [
+                  "architecture/",
+                  "gates/",
+                  "agent/",
+                  "AGENTS.md",
+                  ".mcp.json",
+                  ".github/",
+                  "package.json",
+                  "package-lock.json"
+                ]
+              },
+              {
+                "mode": "human",
+                "reason": "Touches a tier 1 or confidential/restricted node",
+                "max-criticality-tier": 1,
+                "data-classifications": [
+                  "confidential",
+                  "restricted"
+                ]
+              },
+              {
+                "mode": "cognitive",
+                "reason": "Touches a tier 2+ node holding internal data, or changes requirements or tests",
+                "max-criticality-tier": 4,
+                "paths": [
+                  "specs/",
+                  "test/"
+                ]
+              },
+              {
+                "mode": "automated",
+                "reason": "Documentation only",
+                "paths": [
+                  "README.md",
+                  "docs/",
+                  "labs/",
+                  "LICENSE",
+                  "NOTICE"
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "sdlc-prev-004-requirements-repository": {
+      "description": "Requirements live as version-controlled specs. Every code change names an approved spec, and may only touch the CALM nodes that spec declares.",
+      "requirements": [
+        {
+          "requirement-url": "https://rocketstack-matt.github.io/agentic-sdlc-blueprint/controls/sdlc-prev-004-requirements-repository.requirement.json",
+          "config": {
+            "catalog-id": "SDLC-PREV-004",
+            "catalog-url": "https://finos-labs.github.io/SDLC-Controls-Framework/mitigations/mi-4_requirements.html",
+            "enforced-by": "gates/spec-check.mjs",
+            "repository": "specs/",
+            "audit-trail": "version-control"
+          }
+        }
+      ]
+    },
+    "sdlc-prev-012-deployment-gating": {
+      "description": "A change is only admissible when every blocking gate passes. Without this the other controls are advisory.",
+      "requirements": [
+        {
+          "requirement-url": "https://rocketstack-matt.github.io/agentic-sdlc-blueprint/controls/sdlc-prev-012-deployment-gating.requirement.json",
+          "config": {
+            "catalog-id": "SDLC-PREV-012",
+            "catalog-url": "https://finos-labs.github.io/SDLC-Controls-Framework/mitigations/mi-12_deployment-gating.html",
+            "enforced-by": "gates/run-all.mjs",
+            "blocking-gates": [
+              "calm-validate",
+              "spec-check",
+              "drift-check",
+              "tests",
+              "review-router"
+            ]
+          }
+        }
+      ]
+    },
+    "sdlc-prev-014-test-evidence-retention": {
+      "description": "Gate and test results are captured as a machine-readable bundle bound to the commit and hashed.",
+      "requirements": [
+        {
+          "requirement-url": "https://rocketstack-matt.github.io/agentic-sdlc-blueprint/controls/sdlc-prev-014-test-evidence-retention.requirement.json",
+          "config": {
+            "catalog-id": "SDLC-PREV-014",
+            "catalog-url": "https://finos-labs.github.io/SDLC-Controls-Framework/mitigations/mi-14_test-evidence.html",
+            "enforced-by": "gates/evidence.mjs",
+            "bound-to": [
+              "commit-sha",
+              "tree-sha",
+              "spec-id",
+              "architecture-sha256"
+            ],
+            "format": "application/json"
+          }
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "catalog": "https://finos-labs.github.io/SDLC-Controls-Framework/",
+    "catalog-status-note": "Catalog controls referenced here are drafts and may change."
+  }
+}

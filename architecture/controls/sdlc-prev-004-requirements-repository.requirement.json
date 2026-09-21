@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rocketstack-matt.github.io/agentic-sdlc-blueprint/controls/sdlc-prev-004-requirements-repository.requirement.json",
+  "title": "Requirements Repository",
+  "description": "CALM control requirement for FINOS SDLC Common Controls Catalog SDLC-PREV-004. Catalog entry: https://finos-labs.github.io/SDLC-Controls-Framework/mitigations/mi-4_requirements.html",
+  "type": "object",
+  "properties": {
+    "catalog-id": {
+      "const": "SDLC-PREV-004"
+    },
+    "catalog-url": {
+      "type": "string"
+    },
+    "enforced-by": {
+      "type": "string",
+      "description": "Repo path of the gate that enforces this control"
+    },
+    "repository": {
+      "type": "string"
+    },
+    "audit-trail": {
+      "enum": [
+        "version-control",
+        "ticket-history",
+        "immutable"
+      ]
+    }
+  },
+  "required": [
+    "catalog-id",
+    "enforced-by",
+    "repository",
+    "audit-trail"
+  ]
+}

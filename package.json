@@ -1,0 +1,30 @@
+{
+  "name": "agentic-sdlc-blueprint",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A clone-and-run blueprint for a governed agentic SDLC: model, spec, agent, gate, evidence. Built on FINOS CALM, the FINOS SDLC Common Controls Catalog and the FINOS AI Governance Framework.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "start:positions": "tsx services/position-service/src/server.ts",
+    "start:trades": "tsx services/trade-api/src/server.ts",
+    "test": "tsx --test test/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "calm:validate": "calm validate -a architecture/trade-capture.architecture.json -u architecture/url-mapping.json -f pretty",
+    "calm:context": "node agent/calm-context.mjs",
+    "gate:spec": "node gates/spec-check.mjs",
+    "gate:drift": "node gates/drift-check.mjs",
+    "gate:review": "node gates/review-router.mjs",
+    "gates": "node gates/run-all.mjs",
+    "evidence": "node gates/evidence.mjs"
+  },
+  "devDependencies": {
+    "@finos/calm-cli": "^1.60.1",
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0",
+    "zod": "^3.23.0"
+  }
+}

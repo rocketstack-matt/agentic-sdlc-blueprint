@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rocketstack-matt.github.io/agentic-sdlc-blueprint/controls/sdlc-prev-001-code-review.requirement.json",
+  "title": "Code Review",
+  "description": "CALM control requirement for FINOS SDLC Common Controls Catalog SDLC-PREV-001. Catalog entry: https://finos-labs.github.io/SDLC-Controls-Framework/mitigations/mi-1_code-review.html",
+  "type": "object",
+  "properties": {
+    "catalog-id": {
+      "const": "SDLC-PREV-001"
+    },
+    "catalog-url": {
+      "type": "string"
+    },
+    "enforced-by": {
+      "type": "string",
+      "description": "Repo path of the gate that enforces this control"
+    },
+    "default-mode": {
+      "enum": [
+        "human",
+        "cognitive",
+        "automated"
+      ]
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "mode": {
+            "enum": [
+              "human",
+              "cognitive",
+              "automated"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          },
+          "paths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "max-criticality-tier": {
+            "type": "integer"
+          },
+          "data-classifications": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "mode",
+          "reason"
+        ]
+      }
+    },
+    "author-may-not-review": {
+      "const": true
+    }
+  },
+  "required": [
+    "catalog-id",
+    "enforced-by",
+    "default-mode",
+    "rules"
+  ]
+}

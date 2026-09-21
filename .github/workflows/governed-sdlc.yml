@@ -1,0 +1,44 @@
+name: governed-sdlc
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  gates:
+    runs-on: ubuntu-latest
+    env:
+      BASE_REF: ${{ github.event_name == 'pull_request' && format('origin/{0}', github.base_ref) || 'HEAD~1' }}
+      CHANGE_AUTHOR_ID: ${{ github.actor }}
+      PR_BODY: ${{ github.event.pull_request.body }}
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - run: npm run typecheck
+      - name: Resolve spec from PR body ("Spec: SPEC-001") or commit trailer
+        run: echo "SPEC=$(printf '%s' "$PR_BODY" | grep -oE 'SPEC-[0-9]+' | head -1)" >> "$GITHUB_ENV"
+      # SDLC-PREV-010 Secret Detection
+      - uses: gitleaks/gitleaks-action@v2
+        env: { GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}" }
+      # SDLC-PREV-007 Dependency scanning
+      - run: npm audit --audit-level=high
+      # SDLC-PREV-009 Component Inventory
+      - run: npm sbom --sbom-format cyclonedx > sbom.cdx.json
+      # SDLC-PREV-012 gating + SDLC-PREV-014 evidence. Fails the job if any blocking gate fails.
+      - run: npm run evidence
+      - name: Publish the review decision
+        if: always()
+        run: |
+          node gates/review-router.mjs | tee -a "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: evidence-${{ github.sha }}
+          path: |
+            evidence/out/
+            sbom.cdx.json
+          retention-days: 90 # a real retention period comes from your records policy and WORM storage
