@@ -439,8 +439,7 @@ const HUB_LINKS = {
 const colour = (text) => text
   .replace(/&/g, '&amp;').replace(/</g, '&lt;')
   .replace(/^(PASS)\b/gm, '<span class="pass">$1</span>')
-  .replace(/\b(BLOCKED|ERROR|DRIFT:|CONTROL BREACH:|UNDECLARED MODEL CHANGE:|UNMODELLED BINDING:|Errors: yes|FAILED|FAIL)\b/g, '<span class="bad">$1</span>')
-  .replace(/^(FAIL)\b/gm, '<span class="fail">$1</span>')
+  .replace(/\b(BLOCKED|ERROR|DRIFT:|CONTROL BREACH:|UNDECLARED MODEL CHANGE:|UNMODELLED BINDING:|Errors: yes|FAILED|FAIL)/g, '<span class="bad">$1</span>')
   .replace(/\b(ADMISSIBLE|ok \d+|# pass \d+|Errors: no|typecheck: clean)\b/g, '<span class="ok">$1</span>')
   .replace(/^(ℹ pass \d+)$/gm, '<span class="ok">$1</span>')
   .replace(/\b(WARN|INFO)\b/g, '<span class="dim">$1</span>');
