@@ -65,6 +65,7 @@ export const changedFiles = (base = changeBase()) => {
 
 export const gitInfo = () => ({
   commit: git('rev-parse', 'HEAD'),
+  branch: process.env.GITHUB_HEAD_REF || process.env.GITHUB_REF_NAME || git('rev-parse', '--abbrev-ref', 'HEAD'),
   tree: git('rev-parse', 'HEAD^{tree}'),
   dirty: git('status', '--porcelain') !== '',
 });

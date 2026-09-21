@@ -15,8 +15,9 @@ const review = results.find((r) => r.gate === 'review-router');
 const body = {
   schema: 'agentic-sdlc-blueprint/evidence/v0',
   generatedAt: new Date().toISOString(),
-  subject: { commit: git.commit, tree: git.tree, workingTreeDirty: git.dirty, spec, architectureSha256: architectureSha(), comparedTo: changeBase(), changedFiles: changedFiles() },
+  subject: { commit: git.commit, branch: git.branch, tree: git.tree, workingTreeDirty: git.dirty, spec, architectureSha256: architectureSha(), comparedTo: changeBase(), changedFiles: changedFiles() },
   author: { kind: process.env.CHANGE_AUTHOR_KIND ?? 'unknown', id: process.env.CHANGE_AUTHOR_ID ?? 'unknown' },
+  pipeline: process.env.GITHUB_RUN_ID ? { runId: process.env.GITHUB_RUN_ID, url: `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}` } : null,
   admissible,
   review: { requiredMode: review?.decision?.mode ?? null, authorMayNotReview: review?.decision?.authorMayNotReview ?? null, policyInputs: review?.policyInputs ?? [] },
   controls: [...new Set(results.flatMap((r) => r.controls))].sort(),
