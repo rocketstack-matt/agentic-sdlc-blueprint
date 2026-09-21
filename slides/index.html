@@ -310,6 +310,119 @@ calm-relationships: [trade-api-to-position-service]
       <aside class="notes">Speaker: Matthew. The counterpart to attempt C. SPEC-002 legitimately needs a relationship the model lacks, and the spec declares it. Step one, a human lands the spec and the model together: admissible, with drift-check warning that the model is now ahead of the code and model-diff recording the change as declared. Human review, because it is the model. Step two, the agent implements: four connections in code, four in the model. Still human review, because position-service is tier one. The difference from attempt C is not the diff. It is who made the model change and whether a spec said they would.</aside>
     </section>
 
+    <section class="section-slide" data-background-image="img/background.png" data-background-size="cover">
+      <h2>5. Evidence</h2>
+      <p>Answer the examiner in one file.</p>
+      <aside class="notes">Speaker: Matthew. Station five. Risk SDLC-RC-005 is blunt: if you cannot produce the record, the control did not operate.</aside>
+    </section>
+
+    <section data-station="evidence">
+      <h2>One bundle per change <span class="live">live</span></h2>
+      <div class="cols">
+        <div><pre class="term" data-capture="evidence"></pre><p class="small">Commit with the spec trailer, run evidence. Bound to the commit, the spec and the exact architecture, then hashed.</p></div>
+        <div class="wide"><pre class="term" data-capture="evidence-json"></pre></div>
+      </div>
+      <aside class="notes">Speaker: Matthew. Live moment three. For this one commit you can now show: the spec it implemented, the exact architecture it was checked against by hash, each gate result with its catalog control ids, the review mode required and the inputs that decided it, who or what authored it, and a hash over the lot. SDLC-PREV-014 asks for evidence bound to commit, branch, pipeline run and timestamp; that is what this is. Immutability and retention are your platform's job, and the README says so.</aside>
+    </section>
+
+    <section data-station="evidence">
+      <h2>In CI, every step names its control</h2>
+      <div class="cols">
+        <div>
+          <table>
+            <tr><th>Workflow step</th><th>Control</th></tr>
+            <tr><td>gitleaks</td><td>SDLC-PREV-010 Secret Detection</td></tr>
+            <tr><td>npm audit</td><td>SDLC-PREV-007 Dependency scanning</td></tr>
+            <tr><td>npm sbom</td><td>SDLC-PREV-009 Component Inventory</td></tr>
+            <tr><td>gates</td><td>SDLC-PREV-012 Deployment Gating</td></tr>
+            <tr><td>evidence artefact</td><td>SDLC-PREV-014 Test Evidence Retention</td></tr>
+          </table>
+        </div>
+        <div>
+          <p><strong>And the model is published</strong></p>
+          <ul>
+            <li>Architecture, pattern and control requirement schemas served at their ids</li>
+            <li>Every <code>requirement-url</code> in the model resolves</li>
+            <li>Docs generated from the model with <code>calm docify</code></li>
+          </ul>
+          <p class="small"><a data-hub="site"></a></p>
+        </div>
+      </div>
+      <aside class="notes">Speaker: Matthew. The same gates run in GitHub Actions on every pull request to your fork, with the secret scan, dependency audit and SBOM alongside, and the bundle uploaded as an artefact with the SBOM and the scan report. The model itself is published: the schemas the controls point at resolve at their ids, and the docs site is generated from the model. Hand back to Aaron.</aside>
+    </section>
+
+    <section class="section-slide" data-background-image="img/background.png" data-background-size="cover">
+      <h2>Build it once, together, in the open</h2>
+      <p>What fell out of building this, and where it goes.</p>
+      <aside class="notes">Speaker: Aaron. Take it back. The point of the blueprint is not the blueprint. It is that every institution is about to write this on its own, and the pieces to write it once already exist in FINOS.</aside>
+    </section>
+
+    <section data-station="none">
+      <h2>Three candidate controls for the catalog</h2>
+      <table>
+        <tr><th>Candidate</th><th>Intent</th><th>Reference implementation</th></tr>
+        <tr><td><strong>Architecture Conformance</strong></td><td>Code admitted to a protected baseline must not introduce connections absent from the approved, machine-readable architecture</td><td>gates/drift-check.mjs, gates/model-diff.mjs, the pattern</td></tr>
+        <tr><td><strong>Agent Task Scoping</strong></td><td>An agent's change is bound to an approved requirement that declares its architectural scope in advance</td><td>gates/spec-check.mjs</td></tr>
+        <tr><td><strong>Agent Attribution and Context Provenance</strong></td><td>Show which agent identity produced a change, under which instructions, with which architectural context</td><td>gates/evidence.mjs (partial)</td></tr>
+      </table>
+      <p class="small muted">Drafts to start a conversation, not catalog content. docs/CANDIDATE-CONTROLS.md</p>
+      <aside class="notes">Speaker: Aaron. Three controls we could not find in the catalog while building this. They are strawmen: the wording is ours, the ids do not exist, and the right place to argue about them is the catalog's issue tracker, where agentic SDLC is already an emerging topic on the roadmap. Each has a working reference implementation in the repo, which is more than most control proposals arrive with.</aside>
+    </section>
+
+    <section data-station="none">
+      <h2>Where to contribute</h2>
+      <div class="cols">
+        <div>
+          <h3>Catalog</h3>
+          <p>Controls for the agentic SDLC. The three candidates, or better ones.</p>
+          <p class="small"><a href="https://github.com/finos-labs/SDLC-Controls-Framework">finos-labs/SDLC-Controls-Framework</a></p>
+        </div>
+        <div>
+          <h3>CALM</h3>
+          <p>Modelling gaps, patterns like the governed-service pattern, richer conformance signals.</p>
+          <p class="small"><a href="https://github.com/finos/architecture-as-code">finos/architecture-as-code</a></p>
+        </div>
+        <div>
+          <h3>AI Governance Framework</h3>
+          <p>Agent mitigations. Already expressed as a CALM controls domain in CALM Hub.</p>
+          <p class="small"><a href="https://air-governance-framework.finos.org">air-governance-framework.finos.org</a></p>
+        </div>
+      </div>
+      <aside class="notes">Speaker: Aaron. Three doors. The catalog for controls. CALM for the model, the pattern and the harder conformance signals the README is honest about: IaC, service mesh, OpenAPI clients, runtime traces. The AI Governance Framework for the agent side, and note that its mitigations are already seeded into CALM Hub as a controls domain, so the composition is not hypothetical.</aside>
+    </section>
+
+    <section data-station="none">
+      <h2>Make it yours</h2>
+      <div class="cols">
+        <div>
+          <ol>
+            <li><strong>Fork the repo.</strong> Node 22, git, npm install. No API key, no cloud account, under five minutes.</li>
+            <li><strong>Model your own estate.</strong> Nodes, connects relationships, source paths. Validate against the pattern.</li>
+            <li><strong>Wire it into your agent.</strong> Keep AGENTS.md, swap the model path. Open a pull request on your fork and read the bundle.</li>
+            <li><strong>Contribute.</strong> Controls to the catalog, modelling gaps to CALM.</li>
+          </ol>
+        </div>
+        <div>
+          <dl class="kv">
+            <dt>Repo</dt><dd><a data-hub="repo"></a></dd>
+            <dt>Site and deck</dt><dd><a data-hub="site"></a></dd>
+            <dt>Architecture</dt><dd><a data-hub="architecture">on CALM Hub</a></dd>
+            <dt>Pattern</dt><dd><a data-hub="pattern">on CALM Hub</a></dd>
+          </dl>
+        </div>
+      </div>
+      <aside class="notes">Speaker: Aaron. The call to action. Five labs, under an hour, nothing to install beyond Node. The lab that matters most is the last one: replace the toy model with one of your systems and see what the gates say. Then bring what you learn back.</aside>
+    </section>
+
+    <section class="title" data-background-image="img/background.png" data-background-size="cover">
+      <img class="logo" src="img/logo.svg" alt="Open Source in Finance Forum">
+      <div class="block">
+        <h1>Thank you</h1>
+        <p>Matthew Bain and Aaron Searle<br><span class="small"><a data-hub="repo"></a></span></p>
+      </div>
+      <aside class="notes">Speaker: Aaron. Questions. If time is short, the one thing to take away: the model is the context, and the same model is the control.</aside>
+    </section>
+
   </div>
 </div>
 
