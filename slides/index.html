@@ -22,6 +22,118 @@
     </section>
 
     <section data-station="none">
+      <h2>The risk event</h2>
+      <p class="statement">Agentic coding tools will happily generate confident, syntactically correct, architecturally catastrophic code.</p>
+      <p>Tests pass. Types pass. A tired reviewer approves.</p>
+      <p>In a regulated institution that is not a bug. It is a risk event.</p>
+      <aside class="notes">Speaker: Aaron. The abstract's opening line, delivered straight. Then the three beats: tests pass, types pass, the reviewer approves. Land "risk event": in our world a confident wrong answer that reaches production is a control failure with a name, an owner and an examiner. Drift happens one reasonable assumption at a time.</aside>
+    </section>
+
+    <section data-station="none">
+      <h2>Every bank is solving it alone</h2>
+      <div class="cols">
+        <div>
+          <ul>
+            <li>Home-grown guardrails for agents, written in every institution at once</li>
+            <li>Duplicated effort, then drift: each set evolves on its own</li>
+            <li>No shared language to compare them, audit them, or contribute them back</li>
+          </ul>
+        </div>
+        <div>
+          <p class="statement">The same failure the SDLC Common Controls Catalog was created to fix for the human-driven SDLC.</p>
+        </div>
+      </div>
+      <aside class="notes">Speaker: Aaron. This is the argument of the talk in one slide. The industry has been here before: every bank wrote its own SDLC controls, they diverged, and auditing across them was a nightmare. The catalog exists to stop that. Agentic guardrails are repeating the pattern right now, in 2026, and we can choose not to.</aside>
+    </section>
+
+    <section data-station="none">
+      <h2>A shared language for controls</h2>
+      <div class="cols">
+        <div class="wide">
+          <table>
+            <tr><th>Id</th><th>Control</th></tr>
+            <tr><td>SDLC-PREV-001</td><td>Code Review</td></tr>
+            <tr><td>SDLC-PREV-004</td><td>Requirements Repository</td></tr>
+            <tr><td>SDLC-PREV-012</td><td>Deployment Gating</td></tr>
+            <tr><td>SDLC-PREV-013</td><td>System Inventory</td></tr>
+            <tr><td>SDLC-PREV-014</td><td>Test Evidence Retention</td></tr>
+            <tr><td>SDLC-PREV-016</td><td>Test Execution and Sign-Off</td></tr>
+            <tr><td>SDLC-PREV-017</td><td>Service Dependency Control</td></tr>
+          </table>
+        </div>
+        <div>
+          <p><strong>Risks in view</strong></p>
+          <ul>
+            <li>SDLC-OP-007 Configuration Drift</li>
+            <li>SDLC-SEC-008 Unauthorised Change</li>
+            <li>SDLC-RC-005 Audit and Compliance Evidence Failure</li>
+          </ul>
+          <p class="small muted">FINOS SDLC Common Controls Catalog. The controls are drafts; ids may change.</p>
+        </div>
+      </div>
+      <aside class="notes">Speaker: Aaron. Introduce the catalog: a FINOS project, a common language for SDLC controls, mapped to NIST and to the risks regulators ask about. These seven controls and three risks are the ones the blueprint wires up; every gate you will see names its control id. Say plainly that the catalog is draft and the ids may move, which is why the repo carries a status caveat.</aside>
+    </section>
+
+    <section data-station="none">
+      <h2>The missing piece</h2>
+      <div class="cols">
+        <div>
+          <p>The catalog says <em>what</em> the controls are.</p>
+          <p>The missing piece is making them machine-enforceable when the developer is an AI agent.</p>
+          <p class="statement">FINOS CALM is the key.</p>
+        </div>
+        <div>
+          <svg viewBox="0 0 800 520" width="100%" aria-label="Three initiatives composing">
+            <g font-family="Arial" font-size="30" text-anchor="middle">
+              <rect x="250" y="40" width="300" height="130" rx="18" fill="#4285F4"/>
+              <text x="400" y="95" fill="#fff" font-weight="700">FINOS CALM</text><text x="400" y="140" fill="#fff" font-size="24">governs the system</text>
+              <rect x="40" y="340" width="300" height="130" rx="18" fill="#0097A7"/>
+              <text x="190" y="395" fill="#fff" font-weight="700">Controls Catalog</text><text x="190" y="440" fill="#fff" font-size="24">governs the change</text>
+              <rect x="460" y="340" width="300" height="130" rx="18" fill="#FFAB40"/>
+              <text x="610" y="395" fill="#212121" font-weight="700">AI Governance</text><text x="610" y="440" fill="#212121" font-size="24">governs the agent</text>
+              <line x1="330" y1="170" x2="220" y2="340" stroke="#595959" stroke-width="4"/>
+              <line x1="470" y1="170" x2="580" y2="340" stroke="#595959" stroke-width="4"/>
+              <line x1="340" y1="405" x2="460" y2="405" stroke="#595959" stroke-width="4"/>
+              <text x="400" y="290" fill="#595959" font-size="26">controls attached to CALM nodes as data</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+      <aside class="notes">Speaker: Aaron. Three initiatives, one operating model. CALM describes the system as a machine-readable model. The catalog describes the controls on the change. The AI Governance Framework describes mitigations on the agent itself. They compose because the catalog controls are attached to CALM nodes as data with a schema, and the agent is pointed at that model. Not competing frameworks: three layers of one loop. Hand to Matthew after the next slide.</aside>
+    </section>
+
+    <section data-station="none">
+      <h2>The loop</h2>
+      <div class="cols">
+        <div>
+          <svg viewBox="0 0 700 520" width="100%" aria-label="Five stations in a loop">
+            <g font-family="Arial" font-size="30" font-weight="700" text-anchor="middle" fill="#fff">
+              <circle cx="350" cy="80" r="62" fill="#4285F4"/><text x="350" y="90">Model</text>
+              <circle cx="600" cy="230" r="62" fill="#4285F4"/><text x="600" y="240">Spec</text>
+              <circle cx="510" cy="460" r="62" fill="#4285F4"/><text x="510" y="470">Agent</text>
+              <circle cx="190" cy="460" r="62" fill="#4285F4"/><text x="190" y="470">Gate</text>
+              <circle cx="100" cy="230" r="62" fill="#4285F4"/><text x="100" y="240">Evidence</text>
+            </g>
+            <g stroke="#595959" stroke-width="5" fill="none">
+              <path d="M405 110 L550 190"/><path d="M590 292 L525 400"/><path d="M448 460 L252 460"/><path d="M165 402 L120 292"/><path d="M148 190 L295 110"/>
+            </g>
+          </svg>
+        </div>
+        <div>
+          <ol>
+            <li><strong>Model.</strong> The system in CALM, controls attached as data.</li>
+            <li><strong>Spec.</strong> Requirements pinned to CALM nodes.</li>
+            <li><strong>Agent.</strong> Reads the model before it writes.</li>
+            <li><strong>Gate.</strong> Deterministic checks against the model. The model picks the reviewer.</li>
+            <li><strong>Evidence.</strong> One hashed bundle per change, keyed by control id.</li>
+          </ol>
+          <p class="small"><a data-hub="repo"></a></p>
+        </div>
+      </div>
+      <aside class="notes">Speaker: Aaron. The five stations, which are also the five labs in the repo. Read them once. Then the handover: "Matthew built this. Matthew, walk us round the loop." Everything from here to the evidence slide is Matthew.</aside>
+    </section>
+
+    <section data-station="none">
       <h2>Capture smoke test</h2>
       <pre class="term" data-capture="clean-gates"></pre>
       <aside class="notes">Speaker: Matthew. Temporary.</aside>
