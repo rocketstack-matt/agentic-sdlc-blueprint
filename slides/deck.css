@@ -62,3 +62,5 @@
 .reveal .kv dt { color: var(--muted); }
 .reveal .kv dd { margin: 0; }
 .reveal .hub-shot { width: 100%; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,.18); }
+.reveal .hub-shot.wide { display: block; width: 1400px; max-width: 100%; margin: 0 auto 12px; }
+.reveal .facts { display: flex; gap: 28px; font-size: 26px; line-height: 1.3; width: 1150px; max-width: 100%; margin: 0 auto; } .reveal .facts > div { flex: 1 1 0; } .reveal .facts > div:last-child { flex: 1.7 1 0; } .reveal .facts strong { color: var(--blue); }

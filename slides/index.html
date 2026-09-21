@@ -141,17 +141,11 @@
 
     <section data-station="model">
       <h2>Six nodes, five relationships</h2>
-      <div class="cols">
-        <div class="wide"><img class="hub-shot" src="img/hub-model.png" alt="The trade capture architecture rendered by CALM Hub"></div>
-        <div>
-          <p><strong>Three things make it enforceable</strong></p>
-          <dl class="kv">
-            <dt>source-path</dt><dd>ties a directory of code to a node</dd>
-            <dt>env-binding</dt><dd>names how code binds to an interface</dd>
-            <dt>criticality-tier<br>data-classification</dt><dd>the SDLC-PREV-013 inventory attributes, and review policy inputs later</dd>
-          </dl>
-          <p class="small muted">architecture/trade-capture.architecture.json, CALM 1.2</p>
-        </div>
+      <img class="hub-shot wide" src="img/hub-model.png" alt="The trade capture architecture rendered by CALM Hub">
+      <div class="facts">
+        <div><strong>source-path</strong><br>ties a directory of code to a node</div>
+        <div><strong>env-binding</strong><br>names how code binds to an interface</div>
+        <div><strong>criticality-tier, data-classification</strong><br>SDLC-PREV-013 inventory attributes, and review policy inputs later</div>
       </div>
       <aside class="notes">Speaker: Matthew. This is the real model, rendered by CALM Hub. Trader, trade-api, position-service, two stores, one system. Point at position-store: confidential, tier one, and it carries its own control. The three metadata items on the right are what turn a diagram into something a pipeline can check: a path so we know which code belongs to which node, an env name so we know how code connects, and the inventory attributes the catalog already asks for under SDLC-PREV-013.</aside>
     </section>
