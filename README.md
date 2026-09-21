@@ -79,7 +79,7 @@ Evidence Failure. Agent mitigations: AIGF mi-18 and mi-19, see [`agent/GUARDRAIL
 ## Layout
 
 ```
-architecture/   CALM 1.2 model, control requirement schemas, URL mapping for offline validation
+architecture/   CALM 1.2 model, the pattern it must satisfy, control requirement schemas, URL mapping for offline validation
 specs/          version-controlled requirements, pinned to CALM nodes
 services/       two tiny Node/TypeScript services (no framework, no database server)
 agent/          CALM context for agents: shared logic, a CLI, a read-only MCP server, AIGF mapping
@@ -96,7 +96,8 @@ AGENTS.md       the instructions any coding agent gets
   config, OpenAPI clients, runtime traces. That gap is the interesting open-source work.
 - The review router emits a decision. Enforcing it (required reviewers, an approved cognitive review engine) is platform work.
 - Evidence is written to disk and a CI artefact. Immutability and retention are yours to provide.
-- There is no CALM pattern yet. A pattern that requires these controls on every service node is the natural next step.
+- The pattern requires the system-level controls and, on every service, the metadata the gates read. It cannot know
+  which node should carry a node-level control such as SDLC-PREV-017 on `position-store`. That stays a modelling decision.
 
 ## Contributing
 

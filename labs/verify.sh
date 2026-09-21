@@ -59,7 +59,7 @@ edit_json() { node -e "const fs=require('fs');const p=process.argv[1];const a=JS
 echo "== Clean tree"
 lab "npm test";                 expect_rc 0; expect "pass 2"
 lab "npm run typecheck";        expect_rc 0
-lab "npm run gates";            expect_rc 0; expect "ADMISSIBLE"; expect "2 passed, 0 failed"
+lab "npm run gates";            expect_rc 0; expect "ADMISSIBLE"; expect "2 passed, 0 failed"; expect "governed-service pattern"
 
 # --- Lab 1: Model --------------------------------------------------------------------------------
 echo "== Lab 1"
@@ -67,6 +67,9 @@ lab "npm run calm:validate";    expect_rc 0; expect "Errors: no"
 edit_json architecture/trade-capture.architecture.json \
   "a => { delete a.controls['sdlc-prev-004-requirements-repository'].requirements[0].config.repository }"
 lab "npm run calm:validate";    expect_nonzero; expect "Errors: yes"; expect "must have required property 'repository'"
+lab "git checkout architecture/"; expect_rc 0
+edit_json architecture/trade-capture.architecture.json "a => { delete a.nodes.find((n) => n['unique-id'] === 'trade-api').metadata['source-path'] }"
+lab "npm run calm:validate";    expect_nonzero; expect "must have required property 'source-path'"
 lab "git checkout architecture/"; expect_rc 0
 
 # --- Lab 2: Spec ---------------------------------------------------------------------------------
