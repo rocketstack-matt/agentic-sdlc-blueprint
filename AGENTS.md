@@ -6,6 +6,8 @@ change will be checked against both. Read this before writing anything.
 ## The loop you must follow
 
 1. **Get the spec.** Work only from an `approved` spec in `specs/`. If there is no spec, stop and ask for one.
+   If the spec declares a `model-change`, check the model already contains it. If it does not, stop: a human
+   makes the model change first, then you implement.
 2. **Get the architecture context before you design.**
    - With MCP: call `calm_spec_context` with the spec id.
    - Without MCP: run `npm run calm:context -- --spec SPEC-001`.
