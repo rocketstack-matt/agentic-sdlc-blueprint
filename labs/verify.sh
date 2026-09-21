@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
 # Replays every command printed in labs/01 to 05 and asserts the outcome each lab promises.
-# Runs in a throwaway git worktree, so your working tree is never touched. Used by CI so the
+# Runs in a throwaway git worktree seeded from your working tree, so nothing here touches your files. Used by CI so the
 # patches and the prose can never silently rot. Usage: bash labs/verify.sh
 set -euo pipefail
 
 ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 cd "$ROOT"
 [ -d node_modules ] || { echo "run npm install first"; exit 2; }
-[ -z "$(git status --porcelain)" ] || echo "note: verify.sh replays HEAD, so uncommitted changes are not included"
 
 # CI exports these for the real gate run. The labs assume a developer shell, so drop them here.
 unset BASE_REF SPEC PR_BODY CHANGE_AUTHOR_KIND CHANGE_AUTHOR_ID
@@ -20,6 +19,14 @@ cleanup() { cd "$ROOT"; git worktree remove --force "$WT" >/dev/null 2>&1 || tru
 trap cleanup EXIT
 git worktree add --detach -q "$WT" HEAD
 ln -s "$ROOT/node_modules" "$WT/node_modules"
+if [ -n "$(git status --porcelain)" ]; then     # replay what you are about to commit, not just HEAD
+  echo "note: the working tree has uncommitted changes; they are included in this run"
+  git diff --binary HEAD > "$WT/.verify.diff"
+  [ -s "$WT/.verify.diff" ] && git -C "$WT" apply "$WT/.verify.diff"
+  git ls-files --others --exclude-standard -z | while IFS= read -r -d '' f; do mkdir -p "$WT/$(dirname "$f")"; cp "$f" "$WT/$f"; done
+  rm "$WT/.verify.diff"
+  git -C "$WT" add -A && git -C "$WT" commit -q -m "verify.sh snapshot of the working tree"
+fi
 cd "$WT"
 
 # --- tiny assertion kit -------------------------------------------------------------------
