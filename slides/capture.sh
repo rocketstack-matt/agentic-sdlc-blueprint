@@ -36,11 +36,11 @@ cap context "npm run calm:context -- --spec SPEC-001 2>&1 | node -e \"let s='';p
 
 git apply labs/patches/attempt-a-shortcut.patch
 cap attempt-a-tests "npm test 2>&1 | grep -E '^(✔|✖|ℹ (tests|pass|fail)|ok |not ok |# (tests|pass|fail))'"
-cap attempt-a-gates "SPEC=SPEC-001 npm run gates"
+cap attempt-a-gates "SPEC=SPEC-001 npm run gates 2>&1 | grep -vE '^ +INFO '"
 git checkout -q -- . && git clean -fdq services test
 
 git apply labs/patches/attempt-b-conformant.patch
-cap attempt-b-gates "SPEC=SPEC-001 npm run gates"
+cap attempt-b-gates "SPEC=SPEC-001 npm run gates 2>&1 | grep -vE '^ +INFO '"
 cap review-cognitive "npm run gate:review"
 echo "// reviewed" >> services/position-service/src/app.ts
 cap review-human "npm run gate:review"
@@ -52,9 +52,9 @@ cap attempt-c-gates "SPEC=SPEC-001 npm run gates"
 git checkout -q -- . && git clean -fdq services test specs
 
 git apply labs/patches/spec-002-model-change.patch
-cap spec-002-model "SPEC=SPEC-002 npm run gates"
+cap spec-002-model "SPEC=SPEC-002 npm run gates 2>&1 | grep -vE '^ +INFO '"
 git apply labs/patches/attempt-d-spec-002.patch
-cap spec-002-impl "SPEC=SPEC-002 npm run gates"
+cap spec-002-impl "SPEC=SPEC-002 npm run gates 2>&1 | grep -vE '^ +INFO '"
 git checkout -q -- . && git clean -fdq services test specs
 
 git apply labs/patches/attempt-b-conformant.patch

@@ -207,6 +207,109 @@ calm-relationships: [trade-api-to-position-service]
       <aside class="notes">Speaker: Matthew. The spec names the nodes and the relationship it may use. Ask the model what that implies and you get this: trade-api may connect to position-service and the trade store, and must not connect to position-store, because only position-service may. This JSON is exactly what the agent gets before it writes a line. A spec that names a node that does not exist is rejected before any agent sees it. Lab two.</aside>
     </section>
 
+    <section class="section-slide" data-background-image="img/background.png" data-background-size="cover">
+      <h2>3. Agent</h2>
+      <p>Two attempts at the same spec.</p>
+      <aside class="notes">Speaker: Matthew. Station three. Both attempts are pre-recorded patches in the repo, so nobody needs an API key to replay them.</aside>
+    </section>
+
+    <section data-station="agent">
+      <h2>Attempt A: the reasonable shortcut</h2>
+      <div class="cols">
+        <div class="wide">
+<pre class="code">// services/trade-api/src/config.ts
++ // Positions are already on disk next to us: read them directly and save a network hop.
++ positionStorePath: process.env.POSITION_STORE_PATH ?? 'data/positions.json',
+
+// services/trade-api/src/app.ts
++ const all = existsSync(positionStorePath) ? JSON.parse(readFileSync(positionStorePath, 'utf8')) : {};
++ return send(res, 200, { account, trades, positions: all[account] ?? {} });</pre>
+        </div>
+        <div>
+          <pre class="term" data-capture="attempt-a-tests"></pre>
+          <p class="small">Green. Types pass. A reviewer skimming the diff would likely approve it.</p>
+        </div>
+      </div>
+      <aside class="notes">Speaker: Matthew. An agent given only "add an account summary endpoint" notices the positions file is right there on disk. Fewer lines, no network hop, tests green, types clean. Read the comment it wrote: that is a reasonable assumption. It is also a confidential book of record being read by a tier two service. Nobody would catch this on a Friday afternoon.</aside>
+    </section>
+
+    <section data-station="agent">
+      <h2>Attempt A at the gate <span class="live">live</span></h2>
+      <pre class="term" data-capture="attempt-a-gates"></pre>
+      <aside class="notes">Speaker: Matthew. Live moment one, if you want it: switch to the terminal, apply the patch, run the gates. Two errors. Drift: the code has a connection the model does not. Control breach: position-store names who may connect to it, and trade-api is not on the list. Both name their catalog control. The review router still ran and says cognitive, but nothing gets that far because the gate list is blocking.</aside>
+    </section>
+
+    <section data-station="agent">
+      <h2>Attempt B, and two real agents</h2>
+      <div class="cols">
+        <div><pre class="term" data-capture="attempt-b-gates"></pre></div>
+        <div>
+          <p><strong>Same prompt, real agent, twice:</strong> "Implement SPEC-001."</p>
+          <table>
+            <tr><th></th><th>unassisted</th><th>assisted</th></tr>
+            <tr><td>AGENTS.md, MCP</td><td>removed</td><td>present</td></tr>
+            <tr><td>Result</td><td>conformant</td><td>conformant</td></tr>
+            <tr><td>Read the model first</td><td>opened the JSON</td><td>MCP context tool</td></tr>
+            <tr><td>Wall clock</td><td>748 s</td><td>279 s</td></tr>
+          </table>
+          <p class="small">Neither drifted. The unassisted agent found and read the gates on its own. The context changed the path, not the destination. One sample each: docs/live-runs.</p>
+        </div>
+      </div>
+      <aside class="notes">Speaker: Matthew. Same agent, given the architecture: it fetches positions over the modelled relationship, three connections in code, three in the model, admissible. Then the honest bit. We ran a real coding agent headless on this repo twice with only the prompt "Implement SPEC-001", once with the instructions and MCP server removed, once present. Neither drifted, because the spec itself says the store is off limits and the agent went looking for the gates. What the context bought was a shorter, more direct path and a gate run before handover. One sample each; it is in the repo with the transcripts, not a benchmark. The pre-recorded shortcut remains the drift case.</aside>
+    </section>
+
+    <section class="section-slide" data-background-image="img/background.png" data-background-size="cover">
+      <h2>4. Gate</h2>
+      <p>Who reviews the robot?</p>
+      <aside class="notes">Speaker: Matthew. Station four. SDLC-PREV-001 asks for a deterministic, machine-evaluable policy that picks the review mode, and it allows approved cognitive review engines. It needs policy inputs. The architecture has them.</aside>
+    </section>
+
+    <section data-station="gate">
+      <h2>The policy lives in the model</h2>
+      <div class="cols">
+        <div>
+<pre class="code">"sdlc-prev-001-code-review": { "config": {
+  "author-may-not-review": true,
+  "default-mode": "human",
+  "rules": [
+    { "mode": "human", "paths": ["architecture/", "gates/", "agent/", ".github/"] },
+    { "mode": "human", "max-criticality-tier": 1,
+      "data-classifications": ["confidential", "restricted"] },
+    { "mode": "cognitive", "max-criticality-tier": 4, "paths": ["specs/", "test/"] },
+    { "mode": "automated", "paths": ["README.md", "docs/", "labs/"] }
+  ] } }</pre>
+        </div>
+        <div>
+          <pre class="term" data-capture="review-cognitive"></pre>
+          <p class="small muted">Add one comment to the tier 1 service:</p>
+          <pre class="term" data-capture="review-human"></pre>
+        </div>
+      </div>
+      <aside class="notes">Speaker: Matthew. The review policy is not in the gate script. It is the config of the code review control inside the CALM model, and its inputs are the tier and classification of the nodes the diff touches. Attempt B touches trade-api, tier two, internal data: cognitive review, an approved AI reviewer that is not the author. Touch position-service, tier one, confidential: human. Same repo, same agent, different route, decided by the model. Changing review policy is therefore an architecture change, which is the next slide.</aside>
+    </section>
+
+    <section data-station="gate">
+      <h2>Attempt C: the agent edits the model <span class="live">live</span></h2>
+      <pre class="term" data-capture="attempt-c-gates"></pre>
+      <aside class="notes">Speaker: Matthew. Live moment two. The agent "fixes" the failing gate by adding the missing relationship to the model. Three things happen. Drift disappears, because the code now matches the model. The node-level control still blocks it. And model-diff blocks it too: the CALM CLI's own diff shows a relationship was added and SPEC-001 declared no model change. Review jumps to human because architecture is control plane. The agent cannot vote itself the permission.</aside>
+    </section>
+
+    <section data-station="gate">
+      <h2>The right path: a declared model change</h2>
+      <div class="cols">
+        <div>
+          <p class="small muted">1. A human applies the spec and the model change together:</p>
+          <pre class="term" data-capture="spec-002-model"></pre>
+        </div>
+        <div>
+          <p class="small muted">2. Then the agent implements inside the new scope:</p>
+          <pre class="term" data-capture="spec-002-impl"></pre>
+        </div>
+      </div>
+      <p class="small">SPEC-002 needs position-service to reach trade-api. Its front matter says so: <code>model-change: [trade-api, position-service-to-trade-api]</code>. Human first, then the agent.</p>
+      <aside class="notes">Speaker: Matthew. The counterpart to attempt C. SPEC-002 legitimately needs a relationship the model lacks, and the spec declares it. Step one, a human lands the spec and the model together: admissible, with drift-check warning that the model is now ahead of the code and model-diff recording the change as declared. Human review, because it is the model. Step two, the agent implements: four connections in code, four in the model. Still human review, because position-service is tier one. The difference from attempt C is not the diff. It is who made the model change and whether a spec said they would.</aside>
+    </section>
+
   </div>
 </div>
 
