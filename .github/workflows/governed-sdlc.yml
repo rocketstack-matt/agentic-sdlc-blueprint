@@ -9,7 +9,7 @@ jobs:
   gates:
     runs-on: ubuntu-latest
     env:
-      BASE_REF: ${{ github.event_name == 'pull_request' && format('origin/{0}', github.base_ref) || 'HEAD~1' }}
+      CHANGE_AUTHOR_KIND: ${{ endsWith(github.actor, '[bot]') && 'agent' || 'human' }}
       CHANGE_AUTHOR_ID: ${{ github.actor }}
       PR_BODY: ${{ github.event.pull_request.body }}
     steps:
@@ -23,6 +23,14 @@ jobs:
       - run: bash labs/verify.sh
       - name: Resolve the spec from the PR body (Spec trailer) or the commit message
         run: echo "SPEC=$(printf '%s' "$PR_BODY" | grep -oE 'SPEC-[0-9]+' | head -1)" >> "$GITHUB_ENV"
+      - name: Resolve the change under evaluation. A PR is diffed against its base, a push against the commit the branch was at before it
+        env: { BEFORE: "${{ github.event.before }}" }
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = pull_request ]; then base="origin/$GITHUB_BASE_REF"
+          elif git cat-file -e "$BEFORE^{commit}" 2>/dev/null; then base="$BEFORE"
+          elif git rev-parse --verify --quiet HEAD~1 >/dev/null; then base=HEAD~1
+          else base=HEAD; fi
+          echo "BASE_REF=$base" >> "$GITHUB_ENV"
       # SDLC-PREV-010 Secret Detection
       - uses: gitleaks/gitleaks-action@v2
         env: { GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}" }
