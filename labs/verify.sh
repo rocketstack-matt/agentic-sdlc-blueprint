@@ -29,6 +29,14 @@ if [ -n "$(git status --porcelain)" ]; then     # replay what you are about to c
 fi
 cd "$WT"
 
+# The labs assume the blueprint as shipped. A branch that has already implemented a spec cannot replay them,
+# and the gates, not this script, govern that change. main must always be lab-ready, so CI requires the baseline there.
+if ! git apply --check labs/patches/attempt-a-shortcut.patch 2>/dev/null; then
+  echo "labs/verify.sh: SKIPPED. This tree is not the lab baseline (labs/patches/attempt-a-shortcut.patch no longer applies)."
+  [ "${VERIFY_REQUIRE_BASELINE:-}" = true ] && { echo "VERIFY_REQUIRE_BASELINE is set: this branch must stay lab-ready."; exit 1; }
+  exit 0
+fi
+
 # --- tiny assertion kit -------------------------------------------------------------------
 FAILED=0; OUT=""; RC=0
 run() {                       # run "<command exactly as printed in the lab>"
