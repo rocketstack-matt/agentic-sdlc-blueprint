@@ -56,6 +56,17 @@ const REQUIRED_WORDS = {
   'evidence': ['evidence written'],
 };
 
+// pre.term has overflow hidden, so a regenerated capture that outgrows its pane is silently
+// clipped on the slide. Estimate each pane's rendered size against its box. The budgets mirror
+// deck.css geometry: chars = pane content width / monospace advance (0.6em), lines = pane
+// max-height (or the slide space a solo pane has) / line-height. Revisit if deck.css changes.
+const PANE_BUDGETS = {
+  solo: { chars: 89, lines: 17 },    // .term.solo: 30px type, full 1680px content width
+  dense: { chars: 50, lines: 26 },   // .term.dense.ring-clear: 22px type in the wide column
+  default: { chars: 47, lines: 18 }, // .term in a half column: 26px type, 720px max-height
+};
+const paneClasses = new Map([...html.matchAll(/<pre class="([^"]*)" data-capture="([^"]+)"/g)].map((m) => [m[2], m[1]]));
+
 const keys = [...html.matchAll(/data-capture="([^"]+)"/g)].map((m) => m[1]);
 if (keys.length) {
   const capturesPath = join(dir, 'captures.js');
@@ -70,6 +81,10 @@ if (keys.length) {
       for (const word of REQUIRED_WORDS[k] ?? []) {
         if (!captures[k].includes(word)) problems.push(`capture "${k}" is missing "${word}"`);
       }
+      const cls = paneClasses.get(k) ?? '';
+      const budget = cls.includes('solo') ? PANE_BUDGETS.solo : cls.includes('dense') ? PANE_BUDGETS.dense : PANE_BUDGETS.default;
+      const rendered = captures[k].trimEnd().split('\n').reduce((n, l) => n + Math.max(1, Math.ceil(l.length / budget.chars)), 0);
+      if (rendered > budget.lines) problems.push(`capture "${k}" renders ~${rendered} lines but its pane fits ~${budget.lines}; it will be clipped`);
     }
   }
 }

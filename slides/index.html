@@ -230,7 +230,7 @@ calm-relationships: [trade-api-to-position-service]
 
     <section data-station="agent">
       <h2>Attempt A at the gate <span class="live">live</span></h2>
-      <pre class="term" data-capture="attempt-a-gates"></pre>
+      <pre class="term solo" data-capture="attempt-a-gates"></pre>
       <aside class="notes">Speaker: Matthew. Live moment one, if you want it: switch to the terminal, apply the patch, run the gates. Two errors. Drift: the code has a connection the model does not. Control breach: position-store names who may connect to it, and trade-api is not on the list. Both name their catalog control. The review router still ran and says cognitive, but nothing gets that far because the gate list is blocking.</aside>
     </section>
 
@@ -263,16 +263,27 @@ calm-relationships: [trade-api-to-position-service]
       <h2>The policy lives in the model</h2>
       <div class="cols">
         <div>
-<pre class="code">"sdlc-prev-001-code-review": { "requirements": [{ "config": {
-  "author-may-not-review": true,
-  "default-mode": "human",
-  "rules": [
-    { "mode": "human", "paths": ["architecture/", "gates/", "agent/", ".github/"] },
-    { "mode": "human", "max-criticality-tier": 1,
-      "data-classifications": ["confidential", "restricted"] },
-    { "mode": "cognitive", "max-criticality-tier": 4, "paths": ["specs/", "test/"] },
-    { "mode": "automated", "paths": ["README.md", "docs/", "labs/"] }
-  ] } }] }</pre>
+<pre class="code">"sdlc-prev-001-code-review": {
+  "requirements": [{ "config": {
+    "author-may-not-review": true,
+    "default-mode": "human",
+    "rules": [
+      { "mode": "human",
+        "paths": ["architecture/", "gates/",
+                  "agent/", ".github/"] },
+      { "mode": "human",
+        "max-criticality-tier": 1,
+        "data-classifications":
+          ["confidential", "restricted"] },
+      { "mode": "cognitive",
+        "max-criticality-tier": 4,
+        "paths": ["specs/", "test/"] },
+      { "mode": "automated",
+        "paths": ["README.md",
+                  "docs/", "labs/"] }
+    ]
+  } }]
+}</pre>
         </div>
         <div>
           <pre class="term" data-capture="review-cognitive"></pre>
@@ -285,7 +296,7 @@ calm-relationships: [trade-api-to-position-service]
 
     <section data-station="gate">
       <h2>Attempt C: the agent edits the model <span class="live">live</span></h2>
-      <pre class="term" data-capture="attempt-c-gates"></pre>
+      <pre class="term solo" data-capture="attempt-c-gates"></pre>
       <aside class="notes">Speaker: Matthew. Live moment two. The agent "fixes" the failing gate by adding the missing relationship to the model. Three things happen. Drift disappears, because the code now matches the model. The node-level control still blocks it. And model-diff blocks it too: the CALM CLI's own diff shows a relationship was added and SPEC-001 declared no model change. Review jumps to human because architecture is control plane. The agent cannot vote itself the permission.</aside>
     </section>
 
@@ -438,6 +449,7 @@ const HUB_LINKS = {
 // Fill terminal panes from captures.js and colour the words that matter.
 const colour = (text) => text
   .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+  .replace(/^(✔ .*)$/gm, '<span class="good">$1</span>')
   .replace(/^(PASS)\b/gm, '<span class="pass">$1</span>')
   .replace(/\b(BLOCKED|ERROR|DRIFT:|CONTROL BREACH:|UNDECLARED MODEL CHANGE:|UNMODELLED BINDING:|Errors: yes|FAILED|FAIL)/g, '<span class="bad">$1</span>')
   .replace(/\b(ADMISSIBLE|ok \d+|# pass \d+|Errors: no|typecheck: clean)\b/g, '<span class="ok">$1</span>')
@@ -447,14 +459,15 @@ for (const pre of document.querySelectorAll('pre.term[data-capture]')) {
   const key = pre.dataset.capture;
   const text = window.CAPTURES?.[key];
   if (text === undefined) { pre.classList.add('missing'); pre.textContent = `capture missing: ${key}. Run slides/capture.sh`; }
-  else pre.innerHTML = colour(text.trimEnd());
+  // One block span per line so wrapped continuations hang-indent (see .ln in deck.css).
+  else pre.innerHTML = colour(text.trimEnd()).split('\n').map((l) => `<span class="ln">${l || ' '}</span>`).join('');
 }
 
 // Stamp the corner logo and the five-station ring onto every content slide.
 const STATIONS = ['model', 'spec', 'agent', 'gate', 'evidence'];
 for (const s of document.querySelectorAll('section[data-station]')) {
   s.classList.add('content');
-  s.insertAdjacentHTML('afterbegin', '<div class="corner-logo"><img src="img/logo.svg" alt=""></div>');
+  s.insertAdjacentHTML('afterbegin', '<div class="topbar"><img src="img/logo.svg" alt=""></div>');
   const on = s.dataset.station;
   const nodes = STATIONS.map((name, i) => `<g class="${name === on ? 'on' : ''}"><circle cx="${30 + i * 60}" cy="30" r="12"/><text x="${30 + i * 60}" y="70" text-anchor="middle">${name}</text></g>`).join('');
   // viewBox is wider than the 0..270 span the circles occupy so the anchor-middle text of the first

@@ -1,6 +1,6 @@
 /* Styling derived from the OSFF New York 2026 template: Arial, its theme palette, its blue network background. */
 :root {
-  --ink: #212121; --muted: #595959; --blue: #4285F4; --amber: #FFAB40; --teal: #0097A7; --paper: #ffffff; --term: #212121;
+  --ink: #212121; --muted: #595959; --blue: #4285F4; --amber: #FFAB40; --teal: #0097A7; --green: #5BB974; --paper: #ffffff; --term: #212121;
 }
 .reveal { font-family: Arial, Helvetica, sans-serif; color: var(--ink); font-size: 36px; }
 .reveal .slides section { text-align: left; padding: 0 120px; box-sizing: border-box; height: 100%; }
@@ -12,9 +12,8 @@
 .reveal ul { margin: 0 0 0 1em; }
 .reveal li { margin: 0.25em 0; }
 .reveal a { color: var(--blue); text-decoration: none; }
+.reveal section.title a, .reveal section.section-slide a { color: #fff; text-decoration: underline; }
 .reveal .muted { color: var(--muted); }
-.reveal .amber { color: var(--amber); }
-.reveal .teal { color: var(--teal); }
 .reveal small, .reveal .small { font-size: 26px; }
 
 /* Title and section slides: the template's blue network background, white text, white logo. */
@@ -26,10 +25,14 @@
 .reveal section.section-slide h2 { position: absolute; left: 120px; top: 440px; width: 1680px; }
 .reveal section.section-slide p { position: absolute; left: 120px; top: 620px; width: 1680px; font-size: 44px; }
 
-/* Content slides: white, small logo top left as the template places it, title top, station ring bottom right. */
-.reveal section.content { background: var(--paper); padding-top: 150px; }
-.reveal section.content .corner-logo { position: absolute; left: 12px; top: 12px; width: 130px; height: 120px; background: var(--blue); border-radius: 0 0 12px 0; padding: 12px; box-sizing: border-box; }
-.reveal section.content .corner-logo img { width: 100%; height: 100%; object-fit: contain; }
+/* Content slides: white, the template's top bar, title top, station ring bottom right. */
+.reveal section.content { background: var(--paper); padding-top: 190px; padding-bottom: 130px; }
+/* Reveal puts an inline display on each section (none/block), so the flex centring must win with
+   !important; scoping to .present leaves hidden slides' inline display:none in charge. */
+.reveal .slides section.content.present { display: flex !important; flex-direction: column; justify-content: safe center; }
+/* The template's content layout: a full-width band of the network artwork across the top, logo left. */
+.reveal section.content .topbar { position: absolute; left: 0; top: 0; right: 0; height: 140px; background: #12b1d6 url("img/background.png") center top / cover no-repeat; display: flex; align-items: center; }
+.reveal section.content .topbar img { height: 104px; margin-left: 44px; }
 .reveal section.content h2 { font-size: 60px; }
 .reveal .cols { display: flex; gap: 60px; align-items: flex-start; }
 .reveal .cols > * { flex: 1 1 0; min-width: 0; }
@@ -37,13 +40,18 @@
 
 /* Terminal panes: real output, dark, coloured by the inline script in index.html at load. */
 .reveal pre.term { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 26px; line-height: 1.35; background: var(--term); color: #e6e6e6; padding: 28px 32px; border-radius: 12px; width: 100%; box-sizing: border-box; box-shadow: none; margin: 0.4em 0; white-space: pre-wrap; max-height: 720px; overflow: hidden; }
-.reveal pre.term .pass, .reveal pre.term .ok { color: var(--teal); font-weight: 700; }
-.reveal pre.term .fail, .reveal pre.term .bad { color: var(--amber); font-weight: 700; }
+.reveal pre.term .pass, .reveal pre.term .ok, .reveal pre.term .good { color: var(--green); font-weight: 700; }
+.reveal pre.term .bad { color: var(--amber); font-weight: 700; }
 .reveal pre.term .dim { color: #9a9a9a; }
 .reveal pre.term.missing { border: 4px solid var(--amber); }
 .reveal pre.term.dense { font-size: 22px; max-height: 840px; }
+/* A gate terminal that is the slide's only content: bigger type, readable from the back. */
+.reveal pre.term.solo { font-size: 30px; max-height: 760px; }
+/* Each output line is its own block (see the fill script) so wrapped continuations hang-indent
+   under the message text instead of snapping back to column 0 and breaking the PASS/FAIL scan. */
+.reveal pre.term .ln { display: block; padding-left: 4ch; text-indent: -4ch; }
 .reveal pre.code { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 26px; line-height: 1.35; background: #f4f5f7; color: var(--ink); padding: 28px 32px; border-radius: 12px; width: 100%; box-sizing: border-box; box-shadow: none; white-space: pre-wrap; }
-.reveal .live { display: inline-block; font-size: 24px; color: var(--amber); border: 3px solid var(--amber); border-radius: 999px; padding: 4px 18px; margin-left: 16px; vertical-align: middle; }
+.reveal .live { display: inline-block; font-size: 24px; font-weight: 700; color: var(--ink); background: var(--amber); border-radius: 999px; padding: 7px 21px; margin-left: 16px; vertical-align: middle; }
 
 /* The five-station ring: the one repeated motif. */
 .reveal .ring { position: absolute; right: 40px; bottom: 30px; width: 300px; height: 90px; }
@@ -65,7 +73,7 @@
 .reveal .kv dt { color: var(--muted); }
 .reveal .kv dd { margin: 0; }
 .reveal .hub-shot { width: 100%; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,.18); }
-.reveal .hub-shot.wide { display: block; width: 1400px; max-width: 100%; margin: 0 auto 12px; }
+.reveal .hub-shot.wide { display: block; width: 1240px; max-width: 100%; margin: 0 auto 12px; }
 .reveal .facts { display: flex; gap: 28px; font-size: 26px; line-height: 1.3; width: 1150px; max-width: 100%; margin: 0 auto; }
 .reveal .facts > div { flex: 1 1 0; }
 .reveal .facts > div:last-child { flex: 1.7 1 0; }
