@@ -8,7 +8,7 @@ compose into one operating model for AI-assisted delivery in a regulated firm:
 | Initiative | Role here |
 | --- | --- |
 | [FINOS CALM](https://calm.finos.org) (architecture as code) | The machine-readable model that gives an agent its context and gives the pipeline something to check against |
-| [FINOS SDLC Common Controls Catalog](https://finos-labs.github.io/SDLC-Controls-Framework/) | The shared language for the controls, attached to the model as CALM controls and enforced by gates |
+| [FINOS SDLC Common Controls Catalog](https://finos.github.io/sdlc-common-controls/) | The shared language for the controls, attached to the model as CALM controls and enforced by gates |
 | [FINOS AI Governance Framework](https://air-governance-framework.finos.org) | The mitigations that govern the agent itself |
 
 Companion to the talk *Governing the Agentic SDLC: Driving Agentic Development with FINOS CALM*
@@ -17,7 +17,7 @@ Companion to the talk *Governing the Agentic SDLC: Driving Agentic Development w
 The talk's slides are in [`slides/`](slides/) and published at
 [rocketstack-matt.github.io/agentic-sdlc-blueprint/slides](https://rocketstack-matt.github.io/agentic-sdlc-blueprint/slides/).
 
-> **Status.** A teaching blueprint, not a product. The catalog controls it references are drafts and their ids may change.
+> **Status.** A teaching blueprint, not a product.
 
 ## The idea in one minute
 
@@ -107,4 +107,4 @@ AGENTS.md       the instructions any coding agent gets
 Your own work belongs in your fork. Issues and pull requests here are for the blueprint itself: a lab that does not
 run as printed, a gate that misses something, a control mapped to the wrong catalog entry. `labs/verify.sh` replays
 every lab command and must stay green on `main`. Licensed under Apache 2.0. If a control here looks wrong, the better
-fix is usually upstream in the [catalog](https://github.com/finos-labs/SDLC-Controls-Framework).
+fix is usually upstream in the [catalog](https://github.com/finos/sdlc-common-controls).

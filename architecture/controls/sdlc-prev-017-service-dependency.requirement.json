@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://rocketstack-matt.github.io/agentic-sdlc-blueprint/controls/sdlc-prev-017-service-dependency.requirement.json",
   "title": "Service Dependency Control",
-  "description": "CALM control requirement for FINOS SDLC Common Controls Catalog SDLC-PREV-017. Catalog entry: https://finos-labs.github.io/SDLC-Controls-Framework/mitigations/mi-17_service-dependency-control.html",
+  "description": "CALM control requirement for FINOS SDLC Common Controls Catalog SDLC-PREV-017. Catalog entry: https://finos.github.io/sdlc-common-controls/mitigations/mi-17_service-dependency-control.html",
   "type": "object",
   "properties": {
     "catalog-id": {

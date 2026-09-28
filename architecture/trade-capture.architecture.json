@@ -98,7 +98,7 @@
               "requirement-url": "https://rocketstack-matt.github.io/agentic-sdlc-blueprint/controls/sdlc-prev-017-service-dependency.requirement.json",
               "config": {
                 "catalog-id": "SDLC-PREV-017",
-                "catalog-url": "https://finos-labs.github.io/SDLC-Controls-Framework/mitigations/mi-17_service-dependency-control.html",
+                "catalog-url": "https://finos.github.io/sdlc-common-controls/mitigations/mi-17_service-dependency-control.html",
                 "enforced-by": "gates/drift-check.mjs",
                 "allowed-sources": [
                   "position-service"
@@ -198,7 +198,7 @@
           "requirement-url": "https://rocketstack-matt.github.io/agentic-sdlc-blueprint/controls/sdlc-prev-001-code-review.requirement.json",
           "config": {
             "catalog-id": "SDLC-PREV-001",
-            "catalog-url": "https://finos-labs.github.io/SDLC-Controls-Framework/mitigations/mi-1_code-review.html",
+            "catalog-url": "https://finos.github.io/sdlc-common-controls/mitigations/mi-1_code-review.html",
             "enforced-by": "gates/review-router.mjs",
             "author-may-not-review": true,
             "default-mode": "human",
@@ -258,7 +258,7 @@
           "requirement-url": "https://rocketstack-matt.github.io/agentic-sdlc-blueprint/controls/sdlc-prev-004-requirements-repository.requirement.json",
           "config": {
             "catalog-id": "SDLC-PREV-004",
-            "catalog-url": "https://finos-labs.github.io/SDLC-Controls-Framework/mitigations/mi-4_requirements.html",
+            "catalog-url": "https://finos.github.io/sdlc-common-controls/mitigations/mi-4_requirements.html",
             "enforced-by": "gates/spec-check.mjs",
             "repository": "specs/",
             "audit-trail": "version-control"
@@ -273,7 +273,7 @@
           "requirement-url": "https://rocketstack-matt.github.io/agentic-sdlc-blueprint/controls/sdlc-prev-012-deployment-gating.requirement.json",
           "config": {
             "catalog-id": "SDLC-PREV-012",
-            "catalog-url": "https://finos-labs.github.io/SDLC-Controls-Framework/mitigations/mi-12_deployment-gating.html",
+            "catalog-url": "https://finos.github.io/sdlc-common-controls/mitigations/mi-12_deployment-gating.html",
             "enforced-by": "gates/run-all.mjs",
             "blocking-gates": [
               "calm-validate",
@@ -294,7 +294,7 @@
           "requirement-url": "https://rocketstack-matt.github.io/agentic-sdlc-blueprint/controls/sdlc-prev-014-test-evidence-retention.requirement.json",
           "config": {
             "catalog-id": "SDLC-PREV-014",
-            "catalog-url": "https://finos-labs.github.io/SDLC-Controls-Framework/mitigations/mi-14_test-evidence.html",
+            "catalog-url": "https://finos.github.io/sdlc-common-controls/mitigations/mi-14_test-evidence.html",
             "enforced-by": "gates/evidence.mjs",
             "bound-to": [
               "commit-sha",
@@ -309,7 +309,6 @@
     }
   },
   "metadata": {
-    "catalog": "https://finos-labs.github.io/SDLC-Controls-Framework/",
-    "catalog-status-note": "Catalog controls referenced here are drafts and may change."
+    "catalog": "https://finos.github.io/sdlc-common-controls/"
   }
 }

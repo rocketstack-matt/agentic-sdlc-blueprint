@@ -1,5 +1,5 @@
 diff --git a/architecture/trade-capture.architecture.json b/architecture/trade-capture.architecture.json
-index 0ba6027..a41799c 100644
+index edec0ca..bb97783 100644
 --- a/architecture/trade-capture.architecture.json
 +++ b/architecture/trade-capture.architecture.json
 @@ -26,6 +26,11 @@
@@ -39,51 +39,3 @@ index 0ba6027..a41799c 100644
      {
        "unique-id": "trade-capture-composition",
        "relationship-type": {
-@@ -312,4 +335,4 @@
-     "catalog": "https://finos-labs.github.io/SDLC-Controls-Framework/",
-     "catalog-status-note": "Catalog controls referenced here are drafts and may change."
-   }
--}
-\ No newline at end of file
-+}
-diff --git a/specs/SPEC-002-position-reconciliation.md b/specs/SPEC-002-position-reconciliation.md
-new file mode 100644
-index 0000000..bf57063
---- /dev/null
-+++ b/specs/SPEC-002-position-reconciliation.md
-@@ -0,0 +1,35 @@
-+---
-+id: SPEC-002
-+title: Position reconciliation
-+status: approved
-+owner: risk-tech-leads
-+calm-nodes: [position-service]
-+calm-relationships: [position-service-to-trade-api]
-+model-change: [trade-api, position-service-to-trade-api]
-+---
-+
-+# SPEC-002 Position reconciliation
-+
-+## Why
-+Risk wants to prove, on demand, that the position book agrees with the trades that produced it.
-+
-+## What
-+`GET /positions/{account}/reconciliation` on **position-service** returns the stored positions, the positions
-+recomputed from the account's trades, and whether they agree:
-+
-+```json
-+{ "account": "ACC-1", "stored": { "VOD.L": 60 }, "fromTrades": { "VOD.L": 60 }, "consistent": true }
-+```
-+
-+## Architectural context (from the CALM model)
-+- Lives in node `position-service`.
-+- Trades are owned by node `trade-api`. Today the model has no relationship from `position-service` to `trade-api`,
-+  and `position-service` must not read the trade store directly.
-+- **This spec therefore declares a model change** (`model-change` above): a `trade-api-url` interface on `trade-api`
-+  bound to `TRADE_API_URL`, and a relationship `position-service-to-trade-api`. The model change is made and
-+  approved by a human before any implementation. `gates/model-diff.mjs` admits exactly this change and no other.
-+
-+## Acceptance
-+- Returns `consistent: true` for an account whose trades were all applied, `false` if the book has been altered.
-+- Returns 502 if trade-api is unavailable.
-+- Reads `TRADE_API_URL` only in `services/position-service/src/config.ts`.

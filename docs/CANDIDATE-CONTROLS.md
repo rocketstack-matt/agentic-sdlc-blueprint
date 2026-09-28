@@ -3,7 +3,7 @@
 The catalog was written for a human-driven SDLC and already anticipates agents in places (SDLC-PREV-001 treats
 prompts as reviewable artefacts and allows approved cognitive review engines). Building this blueprint surfaced
 three controls we could not find in the catalog. They are **drafts to start a conversation**, not catalog content.
-If they resonate, raise them at https://github.com/finos-labs/SDLC-Controls-Framework.
+If they resonate, raise them at https://github.com/finos/sdlc-common-controls.
 
 ## 1. Architecture Conformance
 **Intent.** Code admitted to a protected baseline must not introduce connections, dependencies or data flows that
