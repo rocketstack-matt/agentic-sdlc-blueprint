@@ -47,7 +47,94 @@
     </section>
 
     <section data-station="none">
-      <h2>A shared language for controls</h2>
+      <h2>The SDLC Common Controls Catalog</h2>
+      <div class="cols">
+        <div>
+          <p>A shared, open reference library of software governance controls for regulated delivery. A FINOS incubating project, written in the open by a working group.</p>
+          <ul>
+            <li><strong>11 risks</strong>: undesirable outcomes the catalog seeks to reduce</li>
+            <li><strong>22 mitigations</strong>: each names the risks it addresses, its type and the lifecycle phase where it applies</li>
+            <li>Every entry maps to NIST SP 800-53r5 and, where relevant, EU DORA, NIST SSDF, SLSA and others</li>
+            <li>Documents mature from Draft through First Reading to Working Group approval</li>
+          </ul>
+        </div>
+        <div>
+          <svg viewBox="0 0 800 520" width="100%" aria-label="Mitigations by lifecycle phase">
+            <g font-family="Arial" text-anchor="middle">
+              <rect x="20" y="40" width="760" height="70" rx="14" fill="#595959"/>
+              <text x="400" y="72" fill="#fff" font-size="26" font-weight="700">META, 2</text><text x="400" y="98" fill="#fff" font-size="20">controls over controls</text>
+              <rect x="20" y="130" width="760" height="70" rx="14" fill="#0097A7"/>
+              <text x="400" y="162" fill="#fff" font-size="26" font-weight="700">LIFECYCLE, 4</text><text x="400" y="188" fill="#fff" font-size="20">spanning the whole cycle</text>
+              <rect x="20" y="240" width="175" height="150" rx="14" fill="#4285F4"/><text x="107" y="305" fill="#fff" font-size="26" font-weight="700">CODE</text><text x="107" y="345" fill="#fff" font-size="40" font-weight="700">4</text>
+              <rect x="215" y="240" width="175" height="150" rx="14" fill="#4285F4"/><text x="302" y="305" fill="#fff" font-size="26" font-weight="700">BUILD</text><text x="302" y="345" fill="#fff" font-size="40" font-weight="700">5</text>
+              <rect x="410" y="240" width="175" height="150" rx="14" fill="#4285F4"/><text x="497" y="305" fill="#fff" font-size="26" font-weight="700">RELEASE</text><text x="497" y="345" fill="#fff" font-size="40" font-weight="700">5</text>
+              <rect x="605" y="240" width="175" height="150" rx="14" fill="#4285F4"/><text x="692" y="305" fill="#fff" font-size="26" font-weight="700">RUNTIME</text><text x="692" y="345" fill="#fff" font-size="40" font-weight="700">1</text>
+              <text x="400" y="440" fill="#595959" font-size="22">22 preventive mitigations; one is not yet assigned a phase</text>
+              <text x="400" y="480" fill="#595959" font-size="22">finos.github.io/sdlc-common-controls</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+      <aside class="notes">Speaker: Aaron. Introduce the catalog properly before we pick controls out of it. What it is: a shared, open reference library for software governance controls in regulated delivery, now an incubating FINOS project under the DevOps Automation SIG, built by a working group that meets fortnightly. How it is built: eleven risks, twenty two mitigations. Every mitigation says which risks it reduces, what type of control it is, all preventive so far, and the phase of the lifecycle it applies to: code, build, release, runtime, or spanning the whole cycle, plus meta controls that govern the other controls. Every entry is mapped to NIST SP 800-53 and, where relevant, to DORA, SSDF, SLSA and other references, which is what makes it usable in front of a regulator. Documents mature through the working group: draft, first reading, approved.</aside>
+    </section>
+
+    <section data-station="none">
+      <h2>The catalog at a glance</h2>
+      <div class="cols glance">
+        <div>
+          <p class="small muted">Risks</p>
+          <ul class="ids">
+            <li><span>SDLC-OP-007</span>Configuration Drift</li>
+            <li><span>SDLC-SEC-003</span>Credential and Secret Exposure</li>
+            <li><span>SDLC-SEC-004</span>Vulnerable Software in Production</li>
+            <li><span>SDLC-SEC-006</span>Unauthorised System Access</li>
+            <li><span>SDLC-SEC-008</span>Unauthorised Change</li>
+            <li><span>SDLC-SEC-009</span>Environment Breach</li>
+            <li><span>SDLC-SEC-010</span>Dependency and Transitive Supply Chain Compromise</li>
+            <li><span>SDLC-SEC-011</span>Build Toolchain and Service Supply Chain Compromise</li>
+            <li><span>SDLC-RC-001</span>Insider Threat</li>
+            <li><span>SDLC-RC-005</span>Audit and Compliance Evidence Failure</li>
+            <li><span>SDLC-BUS-012</span>Business Reputation Risk from Non-Approved Software Version Releases</li>
+          </ul>
+        </div>
+        <div>
+          <p class="small muted">Mitigations</p>
+          <ul class="ids">
+            <li><span>SDLC-PREV-001</span>Code Review</li>
+            <li><span>SDLC-PREV-002</span>Content Addressable Identities</li>
+            <li><span>SDLC-PREV-003</span>Software Artifact Provenance</li>
+            <li><span>SDLC-PREV-004</span>Requirements Repository</li>
+            <li><span>SDLC-PREV-005</span>Vulnerability Scanning: SAST</li>
+            <li><span>SDLC-PREV-006</span>Vulnerability Scanning: DAST</li>
+            <li><span>SDLC-PREV-007</span>Vulnerability Scanning: Dependencies</li>
+            <li><span>SDLC-PREV-008</span>Version Control</li>
+            <li><span>SDLC-PREV-009</span>Component Inventory</li>
+            <li><span>SDLC-PREV-010</span>Secret Detection</li>
+            <li><span>SDLC-PREV-011</span>Vulnerability Remediation SLAs</li>
+          </ul>
+        </div>
+        <div>
+          <p class="small muted">&nbsp;</p>
+          <ul class="ids">
+            <li><span>SDLC-PREV-012</span>Deployment Gating</li>
+            <li><span>SDLC-PREV-013</span>System Inventory</li>
+            <li><span>SDLC-PREV-014</span>Test Evidence Retention</li>
+            <li><span>SDLC-PREV-015</span>Testing Requirements</li>
+            <li><span>SDLC-PREV-016</span>Test Execution and Sign-Off</li>
+            <li><span>SDLC-PREV-017</span>Service Dependency Control</li>
+            <li><span>SDLC-PREV-018</span>Dependency Curation</li>
+            <li><span>SDLC-PREV-019</span>Version Release Approval Gating</li>
+            <li><span>SDLC-PREV-020</span>Requirements Approval for Release</li>
+            <li><span>SDLC-PREV-021</span>Infrastructure Dependencies</li>
+            <li><span>SDLC-PREV-022</span>Data Retention and Disposal</li>
+          </ul>
+        </div>
+      </div>
+      <aside class="notes">Speaker: Aaron. The whole catalog on one slide, as it stands today. Eleven risks on the left, from configuration drift through supply chain compromise to evidence failure. Twenty two mitigations on the right, from code review to data retention. Do not read it out. The point is that it is small enough to know in full, and that every institution in the room recognises most of these from its own control library under a different name. The next slide picks the seven this talk enforces.</aside>
+    </section>
+
+    <section data-station="none">
+      <h2>The seven this talk enforces</h2>
       <div class="cols">
         <div class="wide">
           <table>
@@ -68,10 +155,10 @@
             <li>SDLC-SEC-008 Unauthorised Change</li>
             <li>SDLC-RC-005 Audit and Compliance Evidence Failure</li>
           </ul>
-          <p class="small muted">FINOS SDLC Common Controls Catalog. The controls are drafts; ids may change.</p>
+          <p class="small muted">FINOS SDLC Common Controls Catalog, finos.github.io/sdlc-common-controls</p>
         </div>
       </div>
-      <aside class="notes">Speaker: Aaron. Introduce the catalog: a FINOS project, a common language for SDLC controls, mapped to NIST and to the risks regulators ask about. These seven controls and three risks are the ones the blueprint wires up; every gate you will see names its control id. Say plainly that the catalog is draft and the ids may move, which is why the repo carries a status caveat.</aside>
+      <aside class="notes">Speaker: Aaron. From the whole catalog to the seven the blueprint wires up, and the three risks they answer to. Every gate you will see names its control id, and the evidence bundle at the end is keyed by these ids. The project now lives in the main FINOS organisation as an incubating project.</aside>
     </section>
 
     <section data-station="none">
@@ -381,7 +468,7 @@ calm-relationships: [trade-api-to-position-service]
         <div>
           <h3>Catalog</h3>
           <p>Controls for the agentic SDLC. The three candidates, or better ones.</p>
-          <p class="small"><a href="https://github.com/finos-labs/SDLC-Controls-Framework">finos-labs/SDLC-Controls-Framework</a></p>
+          <p class="small"><a href="https://github.com/finos/sdlc-common-controls">finos/sdlc-common-controls</a></p>
         </div>
         <div>
           <h3>CALM</h3>

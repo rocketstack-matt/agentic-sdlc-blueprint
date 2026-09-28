@@ -9,7 +9,7 @@ const html = readFileSync(join(dir, 'index.html'), 'utf8');
 const problems = [];
 
 const sections = html.match(/<section\b[^>]*>[\s\S]*?<\/section>/g) ?? [];
-const expected = Number(process.env.EXPECTED_SLIDES ?? 27);
+const expected = Number(process.env.EXPECTED_SLIDES ?? 29);
 if (sections.length !== expected) problems.push(`expected ${expected} slides, found ${sections.length}`);
 
 sections.forEach((s, i) => {

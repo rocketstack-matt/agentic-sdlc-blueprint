@@ -69,6 +69,12 @@
 .reveal table { font-size: 30px; border-collapse: collapse; }
 .reveal table th, .reveal table td { padding: 10px 24px; border-bottom: 2px solid #e3e5ea; text-align: left; }
 .reveal table th { color: var(--muted); font-weight: 700; }
+/* The whole catalog on one slide: three tight columns, kept clear of the ring's corner. */
+.reveal .glance { gap: 40px; padding-right: 210px; }
+.reveal .glance .ids { list-style: none; margin: 0; padding: 0; }
+.reveal .glance .ids li { font-size: 22px; line-height: 1.2; margin: 0 0 7px; }
+.reveal .glance .ids span { display: block; font-size: 18px; color: var(--blue); font-weight: 700; }
+.reveal .glance p.small { margin-bottom: 8px; }
 .reveal .kv { display: grid; grid-template-columns: max-content 1fr; gap: 10px 36px; font-size: 32px; }
 .reveal .kv dt { color: var(--muted); }
 .reveal .kv dd { margin: 0; }
