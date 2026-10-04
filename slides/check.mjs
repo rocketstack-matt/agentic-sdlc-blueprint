@@ -9,7 +9,7 @@ const html = readFileSync(join(dir, 'index.html'), 'utf8');
 const problems = [];
 
 const sections = html.match(/<section\b[^>]*>[\s\S]*?<\/section>/g) ?? [];
-const expected = Number(process.env.EXPECTED_SLIDES ?? 29);
+const expected = Number(process.env.EXPECTED_SLIDES ?? 33);
 if (sections.length !== expected) problems.push(`expected ${expected} slides, found ${sections.length}`);
 
 sections.forEach((s, i) => {
@@ -22,6 +22,11 @@ sections.forEach((s, i) => {
   const station = s.split('>')[0].match(/data-station="(model|spec|agent|gate|evidence|none)"/);
   if (!isTitle && !isSection && !station) problems.push(`slide ${n}: content slide needs data-station`);
 });
+
+// Every image the deck references must exist: a missing screenshot renders as a broken image, silently.
+for (const m of html.matchAll(/(?:src|data-background-image)="(img\/[^"]+)"/g)) {
+  if (!existsSync(join(dir, m[1]))) problems.push(`image ${m[1]} is referenced but missing`);
+}
 
 // No em-dashes anywhere authored under slides/, skipping vendored and generated output.
 const TEXT_EXTS = new Set(['.html', '.css', '.js', '.mjs', '.sh', '.md']);

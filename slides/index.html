@@ -18,7 +18,7 @@
         <h1>Governing the Agentic SDLC</h1>
         <p>Driving agentic development with FINOS CALM<br><span class="small">Matthew Bain and Aaron Searle<br>OSFF New York, 4 November 2026</span></p>
       </div>
-      <aside class="notes">Speaker: Aaron. Welcome. Two of us: Aaron on the controls catalog and the contribution path, Matthew on CALM and the blueprint you can clone. Thirty five minutes, questions at the end.</aside>
+      <aside class="notes">Speaker: Aaron. Welcome. Two of us: Aaron on the controls catalog and the contribution path, Matthew on CALM and the blueprint you can clone. Thirty five minutes, questions at the end. Nothing in this talk assumes you have seen CALM before; everything gets one plain sentence the first time it appears.</aside>
     </section>
 
     <section data-station="none">
@@ -158,16 +158,19 @@
           <p class="small muted">FINOS SDLC Common Controls Catalog, finos.github.io/sdlc-common-controls</p>
         </div>
       </div>
-      <aside class="notes">Speaker: Aaron. From the whole catalog to the seven the blueprint wires up, and the three risks they answer to. Every gate you will see names its control id, and the evidence bundle at the end is keyed by these ids. The project now lives in the main FINOS organisation as an incubating project.</aside>
+      <aside class="notes">Speaker: Aaron. From the whole catalog to the seven the blueprint wires up, and the three risks they answer to. Five of the seven sit in the model as control blocks with their own configuration: code review, requirements repository, deployment gating and test evidence on the system, service dependency control on the position store. The other two are enforced without a control block: system inventory is the metadata every service and database must carry, and test execution is the tests gate. Every gate you will see names its control id, and the evidence at the end is keyed by these ids. The project now lives in the main FINOS organisation as an incubating project.</aside>
     </section>
 
     <section data-station="none">
-      <h2>The missing piece</h2>
+      <h2>The missing piece: FINOS CALM</h2>
       <div class="cols">
         <div>
-          <p>The catalog says <em>what</em> the controls are.</p>
-          <p>The missing piece is making them machine-enforceable when the developer is an AI agent.</p>
-          <p class="statement">FINOS CALM is the key.</p>
+          <p>The catalog says <em>what</em> the controls are. The missing piece is making them machine-enforceable when the developer is an AI agent.</p>
+          <ul>
+            <li><strong>Your architecture as data,</strong> not a diagram: nodes, relationships, interfaces and controls, in one JSON file.</li>
+            <li><strong>Validated by a command-line tool</strong> against a schema, so a bad model is a build failure.</li>
+            <li><strong>Readable by a pipeline and by an agent,</strong> so the same file is the context and the control.</li>
+          </ul>
         </div>
         <div>
           <svg viewBox="0 0 800 520" width="100%" aria-label="Three initiatives composing">
@@ -187,7 +190,7 @@
           </svg>
         </div>
       </div>
-      <aside class="notes">Speaker: Aaron. Three initiatives, one operating model. CALM describes the system as a machine-readable model. The catalog describes the controls on the change. The AI Governance Framework describes mitigations on the agent itself. They compose because the catalog controls are attached to CALM nodes as data with a schema, and the agent is pointed at that model. Not competing frameworks: three layers of one loop. Hand to Matthew after the next slide.</aside>
+      <aside class="notes">Speaker: Aaron. Define CALM in one breath, because nothing after this slide makes sense without it: the Common Architecture Language Model is your architecture written as data. Nodes are the systems, services, stores and people. Relationships are who talks to whom. Interfaces are how. Controls are the rules, attached to the parts they govern. A command-line tool validates the file against a schema, so a bad model fails a build the same way bad code does, and both a pipeline and an agent can read it. Three initiatives, one operating model: CALM describes the system, the catalog describes the controls on the change, the AI Governance Framework describes mitigations on the agent itself. They compose because the catalog's controls are attached to CALM nodes as data, and the agent is pointed at that model. Hand to Matthew after the next slide.</aside>
     </section>
 
     <section data-station="none">
@@ -209,66 +212,172 @@
         </div>
         <div>
           <ol>
-            <li><strong>Model.</strong> The system in CALM, controls attached as data.</li>
-            <li><strong>Spec.</strong> Requirements pinned to CALM nodes.</li>
-            <li><strong>Agent.</strong> Reads the model before it writes.</li>
-            <li><strong>Gate.</strong> Deterministic checks against the model. The model picks the reviewer.</li>
-            <li><strong>Evidence.</strong> One hashed bundle per change, keyed by control id.</li>
+            <li><strong>Model.</strong> What are the rules? The system in CALM, the catalog's controls attached as data.</li>
+            <li><strong>Spec.</strong> What are we building, and where? A requirement pinned to CALM nodes.</li>
+            <li><strong>Agent.</strong> Build it inside the rules. It reads the model before it writes.</li>
+            <li><strong>Gate.</strong> Did it stay inside? Deterministic checks against the model, which also picks the reviewer.</li>
+            <li><strong>Evidence.</strong> Prove it. One hashed bundle per change, keyed by control id.</li>
           </ol>
-          <p class="small"><a data-hub="repo"></a></p>
         </div>
       </div>
-      <aside class="notes">Speaker: Aaron. The five stations, which are also the five labs in the repo. Read them once. Then the handover: "Matthew built this. Matthew, walk us round the loop." Everything from here to the evidence slide is Matthew.</aside>
+      <aside class="notes">Speaker: Aaron. The five stations, which are also the five labs in the repo, each with the question it answers. Read them once. Then the handover: "Matthew built this. Matthew, walk us round the loop." Everything from here to the evidence slide is Matthew.</aside>
     </section>
 
     <section class="section-slide" data-background-image="img/background.png" data-background-size="cover">
       <h2>1. Model</h2>
-      <p>The architecture is the context.</p>
-      <aside class="notes">Speaker: Matthew. Station one. An agent is only as good as its context, and the missing context is how you want something built. That already exists if your architecture is code.</aside>
+      <p>Lab 1. One small system, and the one rule it must not break.</p>
+      <aside class="notes">Speaker: Matthew. Station one. An agent is only as good as its context, and the missing context is how you want something built. That already exists if your architecture is code. First the system, in plain words.</aside>
     </section>
 
     <section data-station="model">
-      <h2>Six nodes, five relationships</h2>
-      <img class="hub-shot wide" src="img/hub-model.png" alt="The trade capture architecture rendered by CALM Hub">
+      <h2>Meet the system</h2>
+      <img class="hub-shot wide system" src="img/hub-model.png" alt="The trade capture architecture rendered by CALM Hub">
       <div class="facts">
-        <div><strong>source-path</strong><br>ties a directory of code to a node</div>
-        <div><strong>env-binding</strong><br>names how code binds to an interface</div>
-        <div><strong>criticality-tier, data-classification</strong><br>SDLC-PREV-013 inventory attributes, and review policy inputs later</div>
+        <div><strong>Trade API</strong><br>takes and lists trades. Tier 2, internal data.</div>
+        <div><strong>Position Service</strong><br>owns positions and their store. Tier 1, confidential.</div>
+        <div><strong>The rule</strong><br>Trade API asks Position Service for positions. It never reads the store.</div>
       </div>
-      <aside class="notes">Speaker: Matthew. This is the real model, rendered by CALM Hub. Trader, trade-api, position-service, two stores, one system. Point at position-store: confidential, tier one, and it carries its own control. The three metadata items on the right are what turn a diagram into something a pipeline can check: a path so we know which code belongs to which node, an env name so we know how code connects, and the inventory attributes the catalog already asks for under SDLC-PREV-013.</aside>
+      <aside class="notes">Speaker: Matthew. This is the whole system, rendered by CALM Hub from the model. A trader uses the Trade API. The Trade API keeps trades in its own store. Positions belong to the Position Service, which keeps them in the position store, the confidential book of record. One rule matters for the next thirty minutes: the Trade API gets positions by asking the Position Service, never by reading the store. Two questions for this station. How does an agent learn that rule before it writes code? And how does a pipeline check that the code kept it?</aside>
     </section>
 
     <section data-station="model">
-      <h2>Controls as data</h2>
+      <h2>The same system as data</h2>
       <div class="cols">
         <div>
+<pre class="code">{
+  "unique-id": "trade-api",
+  "node-type": "service",
+  "interfaces": [{ "unique-id": "trade-api-http",
+                   "protocol": "HTTP",
+                   "env-binding": "TRADE_API_PORT" }],
+  "metadata": {
+    "source-path": "services/trade-api",
+    "criticality-tier": 2,
+    "data-classification": "internal"
+  }
+}
+"trade-api-to-position-service":
+  trade-api connects to position-service</pre>
+        </div>
+        <div>
+          <ul>
+            <li><strong>source-path</strong>, so a check can tell which files belong to which node.</li>
+            <li><strong>env-binding</strong>, so a check can see a connection in code: reading <code>POSITION_STORE_PATH</code> means connecting to the position store.</li>
+            <li><strong>criticality-tier</strong> and <strong>data-classification</strong>, so the review policy can be decided from the model. These are the inventory attributes SDLC-PREV-013 asks for.</li>
+          </ul>
+          <p class="small">Position Service: tier 1, confidential. Six nodes and five relationships in one file.</p>
+        </div>
+      </div>
+      <aside class="notes">Speaker: Matthew. The same system as CALM, one node and one relationship shown. Three things on the node are there for a reason, and each reason is a "so that". A source path, so that a check can tell which files belong to which node. An environment binding on every interface, so that a check can see a connection in the code: if the Trade API reads POSITION_STORE_PATH, it has connected to the position store. Tier and classification, so that the review policy can be decided from the model rather than from a spreadsheet; the catalog already asks for them under system inventory. Nothing else is special about this file.</aside>
+    </section>
+
+    <section data-station="model">
+      <h2>The rule becomes a control on the node</h2>
+      <div class="cols">
+        <div class="wide">
           <p class="small muted">On the position-store node:</p>
 <pre class="code">"sdlc-prev-017-service-dependency": {
-  "requirements": [{ "requirement-url": "<catalog document on CALM Hub>",
+  "requirements": [{
+    "requirement-url": "https://hub.calm.finos.org/calm/domains/finos-sdlc-common-controls/controls/sdlc-prev-017-service-dependency-control/requirement/versions/1.0.0",
     "config": {
       "control-id": "SDLC-PREV-017",
+      "name": "Service Dependency Control",
       "allowed-sources": ["position-service"]
-    } }]
+    }
+  }]
 }</pre>
-          <p class="small">Plus a pattern: every service must carry a source path, a tier and a classification, and the system its four controls.</p>
+        </div>
+        <div>
+          <ul class="small">
+            <li><strong>Which control.</strong> SDLC-PREV-017 Service Dependency Control, from the catalog.</li>
+            <li><strong>Where it is defined.</strong> The catalog's own control requirement document on CALM Hub. The CLI validates this config against it: a wrong id or a missing field is a build failure.</li>
+            <li><strong>The rule.</strong> <code>allowed-sources</code>: only Position Service may connect. The drift gate compares this list with the code.</li>
+          </ul>
+        </div>
+      </div>
+      <p class="statement small">A control in a catalog is prose. A control on a CALM node is data with a schema, an owner and an enforcement point.</p>
+      <aside class="notes">Speaker: Matthew. Here is the rule as data, attached to the node it protects. Three things to read off it. Which control: the catalog's SDLC-PREV-017, by its own id and name. Where it is defined: the requirement URL points at the catalog's control requirement document on CALM Hub, and the CLI validates this configuration against that document, so a half-configured control is a build failure, not a finding in next year's audit. And the rule itself: allowed sources, only the Position Service. The drift gate you will meet in station four compares this list with what the code actually does. Prose in a catalog has become data with a schema, an owner and an enforcement point.</aside>
+    </section>
+
+    <section data-station="model">
+      <h2>How the catalog becomes enforceable</h2>
+      <svg class="flow" viewBox="0 0 1680 250" width="100%" aria-label="From the catalog to the gates">
+        <g font-family="Arial" text-anchor="middle">
+          <rect x="0" y="10" width="300" height="160" rx="18" fill="#0097A7"/>
+          <text x="150" y="58" fill="#fff" font-size="30" font-weight="700">The catalog</text>
+          <text x="150" y="96" fill="#fff" font-size="20">22 controls, as prose:</text>
+          <text x="150" y="122" fill="#fff" font-size="20">risks, requirements,</text>
+          <text x="150" y="148" fill="#fff" font-size="20">references</text>
+          <text x="150" y="215" fill="#595959" font-size="22">FINOS SDLC Common Controls</text>
+
+          <rect x="345" y="10" width="300" height="160" rx="18" fill="#4285F4"/>
+          <text x="495" y="58" fill="#fff" font-size="30" font-weight="700">CALM Hub</text>
+          <text x="495" y="96" fill="#fff" font-size="20">one Standard, and</text>
+          <text x="495" y="122" fill="#fff" font-size="20">22 control requirement</text>
+          <text x="495" y="148" fill="#fff" font-size="20">documents that conform to it</text>
+          <text x="495" y="215" fill="#595959" font-size="22">FINOS, hub.calm.finos.org</text>
+
+          <rect x="690" y="10" width="300" height="160" rx="18" fill="#4285F4"/>
+          <text x="840" y="58" fill="#fff" font-size="30" font-weight="700">The pattern</text>
+          <text x="840" y="96" fill="#fff" font-size="20">the controls to carry,</text>
+          <text x="840" y="122" fill="#fff" font-size="20">the document each cites,</text>
+          <text x="840" y="148" fill="#fff" font-size="20">parameters, node Standards</text>
+          <text x="840" y="215" fill="#595959" font-size="22">your organisation</text>
+
+          <rect x="1035" y="10" width="300" height="160" rx="18" fill="#595959"/>
+          <text x="1185" y="58" fill="#fff" font-size="30" font-weight="700">The architecture</text>
+          <text x="1185" y="96" fill="#fff" font-size="20">conforms to the pattern,</text>
+          <text x="1185" y="122" fill="#fff" font-size="20">cites the documents,</text>
+          <text x="1185" y="148" fill="#fff" font-size="20">holds the values</text>
+          <text x="1185" y="215" fill="#595959" font-size="22">your team</text>
+
+          <rect x="1380" y="10" width="300" height="160" rx="18" fill="#595959"/>
+          <text x="1530" y="58" fill="#fff" font-size="30" font-weight="700">Gates, evidence</text>
+          <text x="1530" y="96" fill="#fff" font-size="20">read the model,</text>
+          <text x="1530" y="122" fill="#fff" font-size="20">cite the control id</text>
+          <text x="1530" y="215" fill="#595959" font-size="22">your pipeline</text>
+        </g>
+        <g stroke="#595959" stroke-width="5" fill="#595959">
+          <line x1="300" y1="90" x2="333" y2="90"/><polygon points="333,80 345,90 333,100"/>
+          <line x1="645" y1="90" x2="678" y2="90"/><polygon points="678,80 690,90 678,100"/>
+          <line x1="990" y1="90" x2="1023" y2="90"/><polygon points="1023,80 1035,90 1023,100"/>
+          <line x1="1335" y1="90" x2="1368" y2="90"/><polygon points="1368,80 1380,90 1368,100"/>
+        </g>
+      </svg>
+      <img class="hub-shot catalog" src="img/hub-catalog.png" alt="The SDLC Common Controls domain in CALM Hub">
+      <p class="small">Standards say what a node, an interface or a control requirement looks like. The pattern says which of them every architecture here must satisfy. Both are published on CALM Hub.</p>
+      <aside class="notes">Speaker: Matthew. This is the slide that answers "every bank is solving it alone", so take it slowly. Left to right, and notice who owns each box. The catalog is prose, owned by the FINOS working group. On CALM Hub it becomes one Standard, the schema every control requirement document conforms to, and twenty two documents that conform to it, one per control, still owned by FINOS. Then your organisation writes a pattern: which controls every architecture must carry, which catalog document each one cites, which parameters your gates need, and which Standards every node and interface must meet. Your team writes the architecture that conforms to the pattern and fills in the values. Your pipeline's gates read the model, and the evidence cites the control id. The picture below is the real thing: the catalog's domain on CALM Hub, twenty two documents. FINOS publishes the controls once; each organisation publishes how it enforces them; each team declares what it built. Nobody writes the catalog again.</aside>
+    </section>
+
+    <section data-station="model">
+      <h2>A pattern says what every model here must carry</h2>
+      <div class="cols">
+        <div>
+          <p>The governed-service pattern is how this estate enforces the catalog:</p>
+          <ul>
+            <li>requires the four system-level controls and pins each to its catalog document</li>
+            <li>fixes the parameters the gates read: the review rules, the blocking gates, the allowed sources</li>
+            <li>applies the governed-node Standard to every node: a source path, a tier, a classification, an environment binding on every interface</li>
+          </ul>
         </div>
         <div>
           <p class="small muted">Delete <code>source-path</code> from trade-api and validate:</p>
           <pre class="term" data-capture="lab1-break-pattern"></pre>
+          <p class="small">Rejected: without a source path the drift gate would be blind to that service, and the shortcut in station three would sail through.</p>
         </div>
       </div>
-      <p class="statement small">A control in a catalog is prose. A control on a CALM node is data with a schema, an owner and an enforcement point.</p>
-      <aside class="notes">Speaker: Matthew. Left: the control block on position-store. It names the catalog id, the gate that enforces it, and the one fact that matters: only position-service may connect. Its config is validated against a requirement schema, so a half-configured control is a build failure. Right: the pattern goes further. Delete the source path from a service and validation fails, because without it the drift gate would go blind to that service. This is lab one.</aside>
+      <aside class="notes">Speaker: Matthew. The pattern is the organisation's half of the deal. It requires the four system controls, pins each to its catalog document, fixes the parameters the gates read, and applies the node Standard to every node. Here is what that buys. Delete the source path from the Trade API and validate: rejected, because without it the drift gate cannot find that service's code, and the shortcut you are about to see would sail straight through. Validation runs in the pipeline, so nobody can quietly weaken the model. This is lab one.</aside>
     </section>
 
     <section class="section-slide" data-background-image="img/background.png" data-background-size="cover">
       <h2>2. Spec</h2>
-      <p>Say what you want in terms of the model.</p>
+      <p>Lab 2. What are we building, and which parts of the model may it touch?</p>
       <aside class="notes">Speaker: Matthew. Station two. "What you want" is easy. "How you want it" is the hard, auditable part, and the model already knows it.</aside>
     </section>
 
     <section data-station="spec">
-      <h2>SPEC-001 pins itself to the model</h2>
+      <h2>A spec names the parts of the model it may touch</h2>
+      <p>A spec is a requirement kept in the repository, which is SDLC-PREV-004. Its front matter names the CALM nodes and relationships the work may use.</p>
       <div class="cols">
         <div>
 <pre class="code">---
@@ -278,20 +387,20 @@ status: approved
 calm-nodes: [trade-api, position-service]
 calm-relationships: [trade-api-to-position-service]
 ---</pre>
-          <p class="small">The front matter fixes the scope an agent may touch. The body repeats, in words, the one constraint most likely to be violated.</p>
+          <p class="small">The body repeats, in words, the one constraint most likely to be violated.</p>
         </div>
         <div>
-          <p class="small muted">What the agent receives, over MCP or the CLI:</p>
+          <p class="small muted">The agent asks the model what that scope means, over MCP or the CLI, and gets this back:</p>
           <pre class="term" data-capture="context"></pre>
         </div>
       </div>
       <p class="statement small">Context engineering becomes a lookup, not a prompt-writing skill.</p>
-      <aside class="notes">Speaker: Matthew. The spec names the nodes and the relationship it may use. Ask the model what that implies and you get this: trade-api may connect to position-service and the trade store, and must not connect to position-store, because only position-service may. This JSON is exactly what the agent gets before it writes a line. A spec that names a node that does not exist is rejected before any agent sees it. Lab two.</aside>
+      <aside class="notes">Speaker: Matthew. The spec names the nodes and the relationship it may use. Ask the model what that implies and you get this: trade-api may connect to position-service and the trade store, and must not connect to position-store, because only position-service may. MCP is the protocol coding agents use to call tools; the blueprint ships a tiny server that answers from the model, and the command line gives the same answer. This JSON is exactly what the agent gets before it writes a line. A spec that names a node that does not exist is rejected before any agent sees it. Lab two.</aside>
     </section>
 
     <section class="section-slide" data-background-image="img/background.png" data-background-size="cover">
       <h2>3. Agent</h2>
-      <p>Two attempts at the same spec.</p>
+      <p>Lab 3. Build it inside the rules. Two attempts at the same spec.</p>
       <aside class="notes">Speaker: Matthew. Station three. Both attempts are pre-recorded patches in the repo, so nobody needs an API key to replay them.</aside>
     </section>
 
@@ -315,6 +424,22 @@ calm-relationships: [trade-api-to-position-service]
       <aside class="notes">Speaker: Matthew. An agent given only "add an account summary endpoint" notices the positions file is right there on disk. Fewer lines, no network hop, tests green, types clean. Read the comment it wrote: that is a reasonable assumption. It is also a confidential book of record being read by a tier two service. Nobody would catch this on a Friday afternoon.</aside>
     </section>
 
+    <section data-station="gate">
+      <h2>Every change meets six gates</h2>
+      <p>A gate is a check that runs on every change and must pass before it can merge.</p>
+      <table>
+        <tr><th>Gate</th><th>What it checks</th><th>Control</th></tr>
+        <tr><td>calm-validate</td><td>the model is valid against CALM, the pattern and the Standards it names</td><td>SDLC-PREV-012</td></tr>
+        <tr><td>spec-check</td><td>the change names an approved spec and touches only the nodes it declares</td><td>SDLC-PREV-004</td></tr>
+        <tr><td>drift-check</td><td>every connection in the code is in the model, and allowed</td><td>SDLC-PREV-017, 012</td></tr>
+        <tr><td>model-diff</td><td>any change to the model was declared by the spec</td><td>SDLC-PREV-004, 017</td></tr>
+        <tr><td>tests</td><td>the test suite passes</td><td>SDLC-PREV-016, 014</td></tr>
+        <tr><td>review-router</td><td>the model decides who must review</td><td>SDLC-PREV-001</td></tr>
+      </table>
+      <p class="small">All six must pass: SDLC-PREV-012 Deployment Gating. The list itself lives in the model, as that control's configuration. The model, the gates and the agent instructions are the control plane: a change there always goes to a human.</p>
+      <aside class="notes">Speaker: Matthew. Before attempt A meets the gates, here they are. A gate is a check that runs on every change and must pass before it can merge. Six of them, each a small script that reads the model and names the catalog control it serves. Validate the model. Check the spec. Check for drift between code and model. Check for undeclared changes to the model. Run the tests. Route the review. All six must pass, which is deployment gating, and the list of blocking gates is itself a value in the model. One term for later: the model, the gates and the agent instructions are the control plane, the things that decide how every other change is governed, so a change to them always goes to a human.</aside>
+    </section>
+
     <section data-station="agent">
       <h2>Attempt A at the gate <span class="live">live</span></h2>
       <pre class="term solo" data-capture="attempt-a-gates"></pre>
@@ -324,12 +449,15 @@ calm-relationships: [trade-api-to-position-service]
     <section data-station="agent">
       <h2>Attempt B, and two real agents</h2>
       <div class="cols">
-        <div><pre class="term" data-capture="attempt-b-gates"></pre></div>
+        <div>
+          <p class="small muted">Same spec, the agent given the model:</p>
+          <pre class="term" data-capture="attempt-b-gates"></pre>
+        </div>
         <div>
           <p><strong>Same prompt, real agent, twice:</strong> "Implement SPEC-001."</p>
           <table>
             <tr><th></th><th>unassisted</th><th>assisted</th></tr>
-            <tr><td>AGENTS.md, MCP</td><td>removed</td><td>present</td></tr>
+            <tr><td>Agent instructions and model access</td><td>removed</td><td>present</td></tr>
             <tr><td>Result</td><td>conformant</td><td>conformant</td></tr>
             <tr><td>Read the model first</td><td>opened the JSON</td><td>MCP context tool</td></tr>
             <tr><td>Wall clock</td><td>748 s</td><td>279 s</td></tr>
@@ -337,12 +465,12 @@ calm-relationships: [trade-api-to-position-service]
           <p class="small">Neither drifted. The unassisted agent found and read the gates on its own. The context changed the path, not the destination. One sample each: docs/live-runs.</p>
         </div>
       </div>
-      <aside class="notes">Speaker: Matthew. Same agent, given the architecture: it fetches positions over the modelled relationship, three connections in code, three in the model, admissible. Then the honest bit. We ran a real coding agent headless on this repo twice with only the prompt "Implement SPEC-001", once with the instructions and MCP server removed, once present. Neither drifted, because the spec itself says the store is off limits and the agent went looking for the gates. What the context bought was a shorter, more direct path and a gate run before handover. One sample each; it is in the repo with the transcripts, not a benchmark. The pre-recorded shortcut remains the drift case.</aside>
+      <aside class="notes">Speaker: Matthew. Same agent, given the architecture: it fetches positions over the modelled relationship, three connections in code, three in the model, admissible. Then the honest bit. We ran a real coding agent headless on this repo twice with only the prompt "Implement SPEC-001", once with the agent instructions and the model access server removed, once present. Neither drifted, because the spec itself says the store is off limits and the agent went looking for the gates. What the context bought was a shorter, more direct path and a gate run before handover. One sample each; it is in the repo with the transcripts, not a benchmark. The pre-recorded shortcut remains the drift case.</aside>
     </section>
 
     <section class="section-slide" data-background-image="img/background.png" data-background-size="cover">
       <h2>4. Gate</h2>
-      <p>Who reviews the robot?</p>
+      <p>Lab 4. Did it stay inside the rules, and who reviews the robot?</p>
       <aside class="notes">Speaker: Matthew. Station four. SDLC-PREV-001 asks for a deterministic, machine-evaluable policy that picks the review mode, and it allows approved cognitive review engines. It needs policy inputs. The architecture has them.</aside>
     </section>
 
@@ -373,12 +501,13 @@ calm-relationships: [trade-api-to-position-service]
 }</pre>
         </div>
         <div>
-          <pre class="term" data-capture="review-cognitive"></pre>
+          <p class="small muted">Review mode comes from the tier and classification of what a change touches. Attempt B, tier 2, internal data:</p>
+          <pre class="term dense" data-capture="review-cognitive"></pre>
           <p class="small muted">Add one comment to the tier 1 service:</p>
-          <pre class="term" data-capture="review-human"></pre>
+          <pre class="term dense" data-capture="review-human"></pre>
         </div>
       </div>
-      <aside class="notes">Speaker: Matthew. The review policy is not in the gate script. It is the config of the code review control inside the CALM model, and its inputs are the tier and classification of the nodes the diff touches. Attempt B touches trade-api, tier two, internal data: cognitive review, an approved AI reviewer that is not the author. Touch position-service, tier one, confidential: human. Same repo, same agent, different route, decided by the model. Changing review policy is therefore an architecture change, which is the next slide.</aside>
+      <aside class="notes">Speaker: Matthew. The review policy is not in the gate script. It is the configuration of the code review control inside the CALM model, and its inputs are the tier and classification of the nodes the diff touches. Attempt B touches trade-api, tier two, internal data: cognitive review, an approved AI reviewer that is not the author. Touch position-service, tier one, confidential: human. Same repo, same agent, different route, decided by the model. Changing review policy is therefore an architecture change, which is the next slide.</aside>
     </section>
 
     <section data-station="gate">
@@ -405,17 +534,17 @@ calm-relationships: [trade-api-to-position-service]
 
     <section class="section-slide" data-background-image="img/background.png" data-background-size="cover">
       <h2>5. Evidence</h2>
-      <p>Answer the examiner in one file.</p>
+      <p>Lab 5. Prove it, in one file.</p>
       <aside class="notes">Speaker: Matthew. Station five. Risk SDLC-RC-005 is blunt: if you cannot produce the record, the control did not operate.</aside>
     </section>
 
     <section data-station="evidence">
       <h2>One bundle per change <span class="live">live</span></h2>
       <div class="cols">
-        <div><pre class="term" data-capture="evidence"></pre><p class="small">Commit with the spec trailer, run evidence. Bound to the commit, the spec and the exact architecture, then hashed.</p></div>
+        <div><pre class="term" data-capture="evidence"></pre><p class="small">Commit with the spec trailer, run evidence. Bound to the commit, the spec and the exact architecture, then hashed. Beside it, one CALM evidence document per control configuration, pointing at the exact config it evidences.</p></div>
         <div class="wide"><pre class="term dense ring-clear" data-capture="evidence-json"></pre></div>
       </div>
-      <aside class="notes">Speaker: Matthew. Live moment three. For this one commit you can now show: the spec it implemented, the exact architecture it was checked against by hash, each gate result with its catalog control ids, the review mode required and the inputs that decided it, who or what authored it, and a hash over the lot. SDLC-PREV-014 asks for evidence bound to commit, branch, pipeline run and timestamp; that is what this is. Immutability and retention are your platform's job, and the README says so.</aside>
+      <aside class="notes">Speaker: Matthew. Live moment three. For this one commit you can now show: the spec it implemented, the exact architecture it was checked against by hash, each gate result with its catalog control ids, the review mode required and the inputs that decided it, who or what authored it, and a hash over the lot. Beside the bundle sit five CALM evidence documents, one per control configuration in the model, each pointing at the gate results that evidenced it and at the exact configuration they evidenced, in CALM's own evidence format. SDLC-PREV-014 asks for evidence bound to commit, branch, pipeline run and timestamp; that is what this is. Immutability and retention are your platform's job, and the README says so.</aside>
     </section>
 
     <section data-station="evidence">
@@ -434,14 +563,13 @@ calm-relationships: [trade-api-to-position-service]
         <div>
           <p><strong>And the model is published</strong></p>
           <ul>
-            <li>Architecture, pattern and control requirement schemas served at their ids</li>
-            <li>Every <code>requirement-url</code> in the model resolves</li>
-            <li>Docs generated from the model with <code>calm docify</code></li>
+            <li>The architecture and the pattern, with docs generated from the model by <code>calm docify</code></li>
+            <li>The catalog's documents and their Standard on CALM Hub, where every <code>requirement-url</code> in the model resolves</li>
           </ul>
           <p class="small"><a data-hub="site"></a></p>
         </div>
       </div>
-      <aside class="notes">Speaker: Matthew. The same gates run in GitHub Actions on every pull request to your fork, with the secret scan, dependency audit and SBOM alongside, and the bundle uploaded as an artefact with the SBOM and the scan report. The model itself is published: the schemas the controls point at resolve at their ids, and the docs site is generated from the model. Hand back to Aaron.</aside>
+      <aside class="notes">Speaker: Matthew. The same gates run in GitHub Actions on every pull request to your fork, with the secret scan, dependency audit and SBOM alongside, and the bundle uploaded as an artefact with the SBOM and the scan report. The model itself is published: the architecture and the pattern with a docs site generated from the model, and the catalog's documents on CALM Hub, where every requirement URL in the model resolves. Hand back to Aaron.</aside>
     </section>
 
     <section class="section-slide" data-background-image="img/background.png" data-background-size="cover">
@@ -467,12 +595,12 @@ calm-relationships: [trade-api-to-position-service]
       <div class="cols">
         <div>
           <h3>Catalog</h3>
-          <p>Controls for the agentic SDLC. The three candidates, or better ones.</p>
+          <p>Controls for the agentic SDLC. The three candidates, or better ones. The parameters an enforcement needs, so they can live in the catalog's documents.</p>
           <p class="small"><a href="https://github.com/finos/sdlc-common-controls">finos/sdlc-common-controls</a></p>
         </div>
         <div>
           <h3>CALM</h3>
-          <p>Modelling gaps, patterns like the governed-service pattern, richer conformance signals.</p>
+          <p>The catalog's Standard and documents, the governed-service pattern and the node Standards, contributed to CALM Hub. Modelling gaps and richer conformance signals next.</p>
           <p class="small"><a href="https://github.com/finos/architecture-as-code">finos/architecture-as-code</a></p>
         </div>
         <div>
@@ -481,7 +609,7 @@ calm-relationships: [trade-api-to-position-service]
           <p class="small"><a href="https://air-governance-framework.finos.org">air-governance-framework.finos.org</a></p>
         </div>
       </div>
-      <aside class="notes">Speaker: Aaron. Three doors. The catalog for controls. CALM for the model, the pattern and the harder conformance signals the README is honest about: IaC, service mesh, OpenAPI clients, runtime traces. The AI Governance Framework for the agent side, and note that its mitigations are already seeded into CALM Hub as a controls domain, so the composition is not hypothetical.</aside>
+      <aside class="notes">Speaker: Aaron. Three doors. The catalog for controls, and for a conversation about which enforcement parameters belong in the catalog's own documents rather than in each organisation's pattern. CALM for the model, the pattern, the Standards and the harder conformance signals the README is honest about: IaC, service mesh, OpenAPI clients, runtime traces. The AI Governance Framework for the agent side, and note that its mitigations are already seeded into CALM Hub as a controls domain, so the composition is not hypothetical.</aside>
     </section>
 
     <section data-station="none">
@@ -499,9 +627,10 @@ calm-relationships: [trade-api-to-position-service]
           <dl class="kv">
             <dt>Repo</dt><dd><a data-hub="repo"></a></dd>
             <dt>Site and deck</dt><dd><a data-hub="site"></a></dd>
-            <dt>Architecture</dt><dd><a data-hub="architecture">on CALM Hub</a></dd>
-            <dt>Pattern</dt><dd><a data-hub="pattern">on CALM Hub</a></dd>
-            <dt>Controls</dt><dd><a data-hub="controls">on CALM Hub</a></dd>
+            <dt>Architecture</dt><dd><a data-hub="architecture">published with the site</a></dd>
+            <dt>Pattern</dt><dd><a data-hub="pattern">published with the site</a></dd>
+            <dt>Catalog</dt><dd><a data-hub="catalog">finos.github.io/sdlc-common-controls</a></dd>
+            <dt>CALM Hub</dt><dd><a data-hub="hub">hub.calm.finos.org</a></dd>
           </dl>
         </div>
       </div>
@@ -524,13 +653,15 @@ calm-relationships: [trade-api-to-position-service]
 <script src="vendor/reveal/dist/plugin/notes.js"></script>
 <script src="captures.js"></script>
 <script>
-// Links to the published artefacts. Point at the FINOS-hosted CALM Hub once the seeding PR lands; nothing else changes.
+// Links to the published artefacts. The hub link becomes the seeded content once the pull request to
+// finos/architecture-as-code lands; nothing else changes.
 const HUB_LINKS = {
   repo: 'https://github.com/rocketstack-matt/agentic-sdlc-blueprint',
   site: 'https://rocketstack-matt.github.io/agentic-sdlc-blueprint/',
   architecture: 'https://rocketstack-matt.github.io/agentic-sdlc-blueprint/trade-capture.architecture.json',
   pattern: 'https://rocketstack-matt.github.io/agentic-sdlc-blueprint/patterns/governed-service.pattern.json',
-  controls: 'https://rocketstack-matt.github.io/agentic-sdlc-blueprint/controls/',
+  catalog: 'https://finos.github.io/sdlc-common-controls/',
+  hub: 'https://hub.calm.finos.org/',
 };
 
 // Fill terminal panes from captures.js and colour the words that matter.

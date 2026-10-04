@@ -10,7 +10,11 @@ and a timer, `esc` for the overview, `?` for the rest.
   `architecture-as-code` checkout, `cd calm-hub && ../mvnw quarkus:dev -Pstandalone`. The hub UI's document route is
   a hash route, for example `http://localhost:8080/#/finos.agentic-sdlc/architectures/trade-capture/1.0.0`. Every
   re-run of the script pushes a new patch version to the local hub (the hub auto-bumps), which is harmless locally.
-- `node slides/check.mjs` is the deck's test: slide count, notes on every slide, capture keys present, no em-dashes.
+- `node slides/hub-catalog-screenshot.mjs` retakes the picture of the
+  catalog's control domain on the "how the catalog becomes enforceable" slide. It needs a hub seeded with the
+  `finos-sdlc-common-controls` domain, which the read-only image built from finos/architecture-as-code has.
+- `node slides/check.mjs` is the deck's test: slide count, notes on every slide, capture keys present, images present,
+  no em-dashes.
 - `HUB_LINKS` at the top of `index.html` holds the repository, site and CALM Hub links. Point them at the
   FINOS-hosted CALM Hub once the seeding pull request to finos/architecture-as-code has landed.
 
