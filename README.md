@@ -82,7 +82,7 @@ Evidence Failure. Agent mitigations: AIGF AIR-PREV-018 and AIR-PREV-019, see [`a
 ## Layout
 
 ```
-architecture/   CALM 1.2 model, the pattern it must satisfy, control requirement schemas, URL mapping for offline validation
+architecture/   CALM 1.2 model, the pattern and Standards it must satisfy, copies of the catalog's control requirements from CALM Hub, URL mapping for offline validation
 specs/          version-controlled requirements, pinned to CALM nodes
 services/       two tiny Node/TypeScript services (no framework, no database server)
 agent/          CALM context for agents: shared logic, a CLI, a read-only MCP server, AIGF mapping
