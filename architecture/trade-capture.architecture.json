@@ -1,5 +1,6 @@
 {
   "$schema": "https://calm.finos.org/release/1.2/meta/calm.json",
+  "$id": "https://rocketstack-matt.github.io/agentic-sdlc-blueprint/trade-capture.architecture.json",
   "unique-id": "trade-capture-architecture",
   "name": "Trade Capture",
   "description": "A deliberately small trade capture system used to demonstrate a governed agentic SDLC.",

@@ -123,7 +123,7 @@ lab "git apply labs/patches/attempt-b-conformant.patch"; expect_rc 0
 echo "== Lab 5"
 lab 'git add -A && git commit -m "Add account summary endpoint" -m "Spec: SPEC-001"'; expect_rc 0
 lab "CHANGE_AUTHOR_KIND=agent CHANGE_AUTHOR_ID=my-coding-agent npm run evidence"; expect_rc 0
-  expect "ADMISSIBLE  evidence written to evidence/out/"; expect "review mode: cognitive"
+  expect "ADMISSIBLE  evidence written to evidence/out/"; expect "review mode: cognitive"; expect "5 CALM evidence documents in evidence/out/"
   expect "SDLC-PREV-001, SDLC-PREV-004, SDLC-PREV-012, SDLC-PREV-014, SDLC-PREV-016, SDLC-PREV-017"
 BUNDLE=$(ls evidence/out/*.json | head -1)
 echo "\$ node <bundle checks> $BUNDLE"
@@ -143,6 +143,28 @@ check("hash recomputes", require("crypto").createHash("sha256").update(JSON.stri
 if (!process.exitCode) console.log("bundle ok");
 ' "$BUNDLE" 2>&1); RC=$?; set -e
 expect_rc 0; expect "bundle ok"
+DOCS="${BUNDLE%.json}"
+echo "\$ node <CALM evidence document checks> $DOCS/"
+set +e; OUT=$(node -e '
+const fs = require("fs"), path = require("path");
+const [dir, bundlePath] = process.argv.slice(1);
+const bundle = JSON.parse(fs.readFileSync(bundlePath, "utf8"));
+const arch = JSON.parse(fs.readFileSync("architecture/trade-capture.architecture.json", "utf8"));
+const check = (name, cond) => { if (!cond) { console.log("evidence document check failed: " + name); process.exitCode = 1; } };
+const deref = (root, pointer) => pointer.split("/").slice(1).map((k) => k.replace(/~1/g, "/").replace(/~0/g, "~")).reduce((o, k) => o?.[k], root);
+const files = fs.readdirSync(dir).filter((f) => f.endsWith(".json")).sort();
+check("one document per control configuration", files.length === 5);
+for (const f of files) {
+  const d = JSON.parse(fs.readFileSync(path.join(dir, f), "utf8")), e = d.evidence ?? {};
+  check(f + ": CALM 1.2 evidence schema", d.$schema === "https://calm.finos.org/release/1.2/meta/evidence.json");
+  check(f + ": required keys", typeof e["unique-id"] === "string" && Array.isArray(e["evidence-paths"]) && e["evidence-paths"].length > 0 && typeof e["control-config-url"] === "string");
+  const [url, pointer] = e["control-config-url"].split("#"), config = deref(arch, pointer);
+  check(f + ": cites a config in this architecture", url === arch.$id && typeof config?.["control-id"] === "string");
+  for (const p of e["evidence-paths"]) { const [file, gate] = p.split("#"); check(f + ": " + p, file === bundlePath && deref(bundle, gate)?.controls?.includes(config?.["control-id"])); }
+}
+if (!process.exitCode) console.log(files.length + " CALM evidence documents ok");
+' "$DOCS" "$BUNDLE" 2>&1); RC=$?; set -e
+expect_rc 0; expect "5 CALM evidence documents ok"
 
 echo
 if [ "$FAILED" -eq 0 ]; then echo "labs/verify.sh: every lab behaves as printed."; else echo "labs/verify.sh: $FAILED assertion(s) failed."; exit 1; fi
