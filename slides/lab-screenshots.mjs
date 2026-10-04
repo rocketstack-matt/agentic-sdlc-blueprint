@@ -85,7 +85,16 @@ try {
     await dragSplitTo(pane.y + pane.height - 90);
     await tab('Diagram');
     await page.waitForTimeout(1500);
-    await shot(name, await box(page.locator('[aria-label^="Live diagram"]'), 'the diagram'));
+    // Crop to the drawing itself (the nodes and the edge labels), not the pane's empty margins.
+    const area = await box(page.locator('[aria-label^="Live diagram"]'), 'the diagram');
+    const boxes = await page.locator('.react-flow__node, .react-flow__edge-textwrapper, .react-flow__edgelabel-renderer > *').evaluateAll((els) => els.map((e) => { const r = e.getBoundingClientRect(); return [r.left, r.top, r.right, r.bottom]; }).filter((r) => r[2] > r[0] && r[3] > r[1]));
+    if (!boxes.length) throw new Error('no diagram nodes found');
+    const pad = 36;
+    const left = Math.max(area.x, Math.min(...boxes.map((r) => r[0])) - pad);
+    const top = Math.max(area.y, Math.min(...boxes.map((r) => r[1])) - pad);
+    const right = Math.min(area.x + area.width, Math.max(...boxes.map((r) => r[2])) + pad);
+    const bottom = Math.min(area.y + area.height, Math.max(...boxes.map((r) => r[3])) + pad);
+    await shot(name, { x: left, y: top, width: right - left, height: bottom - top });
     await tab('Editor');
     await dragSplitTo(restore);
   };
