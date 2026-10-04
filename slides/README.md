@@ -4,9 +4,11 @@
 present: reveal.js is vendored, nothing needs a network. Keys: arrows to move, `s` for the speaker view with notes
 and a timer, `esc` for the overview, `?` for the rest.
 
-The deck is the workshop. After the opening, every slide is a step of labs 1 to 5 with the screen a participant sees:
-a picture of the CALM Learning Lab for the steps that run in the browser, or a terminal session replayed from the
-repository for the rest. Each screen has a callout beside it saying what it shows and what to take away.
+The deck is the workshop, cut to one demonstration per idea. After the opening, every slide is a step of labs 1 to 5
+with the screen a participant sees: a picture of the CALM Learning Lab for the steps that run in the browser, or a
+terminal session replayed from the repository for the rest. Each screen has a callout beside it saying what it shows
+and what to take away. The steps the talk skips (the lesson's last two breakages, the spec gate, the browser version
+of the model change, the CALM evidence documents) stay in the labs and the lessons.
 
 - `bash slides/capture.sh` regenerates every terminal session in `captures.js` by replaying the labs in a throwaway
   worktree seeded from your working tree. A session is the commands exactly as the labs print them, each with its

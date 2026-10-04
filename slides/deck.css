@@ -253,4 +253,9 @@
 .reveal .ways-list li { margin: 0 0 8px; }
 .reveal .cols img.shot { width: auto; max-width: 100%; max-height: 320px; }
 .reveal pre.code.v3-clone { font-size: 24px; white-space: pre-wrap; word-break: break-all; }
+.reveal .v4-cands { font-size: 28px; line-height: 1.35; margin: 0 0 14px; padding-left: 36px; }
+.reveal .v4-cands li { margin: 0 0 12px; }
+.reveal .v4-doors { display: grid; grid-template-columns: 200px 1fr; gap: 22px 26px; align-items: center; }
+.reveal .v4-doors img { height: 44px; width: auto; max-width: 200px; filter: brightness(0); justify-self: start; }
+.reveal .v4-doors p { font-size: 26px; line-height: 1.3; margin: 0; }
 /* v3 fragments: end */
