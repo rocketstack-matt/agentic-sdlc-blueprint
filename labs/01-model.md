@@ -16,19 +16,24 @@
    npm run calm:validate
    ```
 5. Break a control on purpose. Delete the `repository` key from the `sdlc-prev-004-requirements-repository`
-   config and validate again. The CALM CLI checks each control's config against the Standard its `requirement-url`
-   names in `architecture/standards/`, which in turn extends the catalog's own control requirement on CALM Hub (a copy
-   sits in `architecture/hub/`), so a half-configured control is a build failure, not a finding in next year's audit.
-   Undo with `git checkout architecture/`.
+   config and validate again. Two schemas look at that config. The control's `requirement-url` names the catalog's
+   own control requirement document on CALM Hub (a copy sits in `architecture/hub/`); the CLI validates the config
+   against it, which pins `control-id` and `name` to the catalog. The pattern then says what this estate needs
+   from the control, here `repository` and `audit-trail`, the values `gates/spec-check.mjs` reads. So a
+   half-configured control is a build failure, not a finding in next year's audit. Open the copy in
+   `architecture/hub/` too: every catalog document declares the catalog's one Standard as its `$schema`, so the
+   CLI also checks the document itself before trusting it. Undo with `git checkout architecture/`.
 6. Now break the shape of the model. Delete `source-path` from the `trade-api` node and validate again:
    ```sh
    npm run calm:validate
    ```
-   The pattern in `architecture/governed-service.pattern.json` applies the governed-node Standard to every node:
-   services carry a source path, a criticality tier and a data classification, every interface names its environment
-   binding, and the system carries its four controls. Without it this edit validates cleanly, and the drift gate then
-   no longer knows `trade-api` has code to check, so the shortcut in Lab 3 would sail through. Undo with
-   `git checkout architecture/`.
+   The pattern in `architecture/governed-service.pattern.json` is how this estate enforces the catalog: it requires
+   the four system-level controls, pins each to its catalog document, fixes the parameters the gates read, and applies
+   the governed-node Standard to every node, so services carry a source path, a criticality tier and a data
+   classification, and every interface names its environment binding. Standards say what a node, an interface or a
+   control requirement looks like; the pattern says which of them an architecture here must satisfy. Without it this
+   edit validates cleanly, and the drift gate then no longer knows `trade-api` has code to check, so the shortcut in
+   Lab 3 would sail through. Undo with `git checkout architecture/`.
 
 **Takeaway.** A control in a catalog is prose. A control attached to a CALM node is data with a schema, an owner and an enforcement point.
 

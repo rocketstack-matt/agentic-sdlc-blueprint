@@ -83,7 +83,7 @@ Evidence Failure. Agent mitigations: AIGF AIR-PREV-018 and AIR-PREV-019, see [`a
 ## Layout
 
 ```
-architecture/   CALM 1.2 model, the pattern and Standards it must satisfy, copies of the catalog's control requirements from CALM Hub, URL mapping for offline validation
+architecture/   CALM 1.2 model, the pattern that enforces the controls, the node and interface Standards, copies of the catalog's control requirement documents and their Standard from CALM Hub, URL mapping for offline validation
 specs/          version-controlled requirements, pinned to CALM nodes
 services/       two tiny Node/TypeScript services (no framework, no database server)
 agent/          CALM context for agents: shared logic, a CLI, a read-only MCP server, AIGF mapping
@@ -103,8 +103,9 @@ AGENTS.md       the instructions any coding agent gets
   documents are checked for shape by `labs/verify.sh`, not validated against the meta schema: the CLI validates
   architectures and patterns, not evidence. A gate that cites a control with no config in the model (SDLC-PREV-016
   in `tests`) is in the bundle but gets no document.
-- The pattern requires the system-level controls and, on every service, the metadata the gates read. It cannot know
-  which node should carry a node-level control such as SDLC-PREV-017 on `position-store`. That stays a modelling decision.
+- The pattern requires the system-level controls, pins each to its catalog document, fixes the parameters the gates
+  read, and checks the config of any node that carries SDLC-PREV-017. It cannot know which node should carry that
+  control; `position-store` does. That stays a modelling decision.
 
 ## Contributing
 
