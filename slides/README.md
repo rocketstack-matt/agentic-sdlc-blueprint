@@ -15,8 +15,8 @@ repository for the rest. Each screen has a callout beside it saying what it show
   run it; never filter in the script. Run it after any change to the labs, patches, gates or model, then commit
   `captures.js`.
 - `node slides/lab-screenshots.mjs [lab url]` retakes the Learning Lab pictures in `img/lab/`, one per lesson step:
-  the whole lab, the terminal after each command, the diagram after each model edit, the editor after each file edit
-  and the completion card. It needs a lab serving the two lessons: the hosted lab once they have landed, or the dev
+  the whole lab and its diagram, the editor at the node and the control the talk explains, the whole lab with the
+  terminal enlarged after the failing validate, the editor after each edit and the terminal after each command. It needs a lab serving the two lessons: the hosted lab once they have landed, or the dev
   server from a checkout of finos/architecture-as-code (`npm run calm-lab:run`, then pass `http://localhost:5173`).
 - `node slides/hub-catalog-screenshot.mjs` retakes the picture of the catalog's control domain on the "three
   failures, three layers" slide. It needs a hub seeded with the `finos-sdlc-common-controls` domain, which the

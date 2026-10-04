@@ -1,11 +1,12 @@
 // Screenshots the two CALM Learning Lab lessons for the deck, one picture per workshop step, into slides/img/lab/:
-// the whole lab and its diagram, the terminal after each command, the editor after each edit and the guide at
-// completion. Needs a lab serving the lessons: the hosted lab once they have landed, or the dev server from a
-// checkout of finos/architecture-as-code (`npm run calm-lab:run`, http://localhost:5173). Playwright comes from
-// that checkout next to this repo. Run: node slides/lab-screenshots.mjs [lab url]
+// the whole lab and its diagram, the editor at the node and the control the talk explains, the whole lab with the
+// terminal enlarged after the failing validate, the editor after each edit, the terminal after each command and the
+// completion card. Needs a lab serving the lessons: the hosted lab once they have landed, or the dev server from a
+// checkout of finos/architecture-as-code (`npm run calm-lab:run`, http://localhost:5173). Playwright comes from that
+// checkout next to this repo. Run: node slides/lab-screenshots.mjs [lab url]
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
-import { mkdirSync, readFileSync } from 'node:fs';
+import { mkdirSync } from 'node:fs';
 const here = dirname(fileURLToPath(import.meta.url));
 const { chromium } = await import(join(here, '..', '..', 'architecture-as-code', 'node_modules', 'playwright', 'index.mjs'));
 const lab = process.argv[2] ?? 'https://lab.calm.finos.org';
@@ -14,7 +15,6 @@ mkdirSync(dir, { recursive: true });
 
 const HOME = '/workspace';
 const ARCHITECTURE = `${HOME}/architecture/trade-capture.architecture.json`;
-const MISSING_PARAMETER = `${HOME}/architecture/broken/missing-parameter.json`;
 const SPEC_002 = `${HOME}/specs/SPEC-002-position-reconciliation.md`;
 const validate = (architecture) => `calm validate -p architecture/governed-service.pattern.json -a ${architecture} -u architecture/url-mapping.json -f pretty`;
 const VALIDATE_MODEL = validate('architecture/trade-capture.architecture.json');
@@ -23,9 +23,6 @@ const connects = (id, source, destination, iface, description) => ({
   'unique-id': id, description, 'relationship-type': { connects: { source: { node: source }, destination: { node: destination, interfaces: [iface] } } },
 });
 const json = (value) => `${JSON.stringify(value, null, 2)}\n`;
-// The parameter the first lesson removes, restored with the value the estate's own model carries.
-const estate = JSON.parse(readFileSync(join(here, '..', 'architecture', 'trade-capture.architecture.json'), 'utf8'));
-const REPOSITORY = estate.controls['sdlc-prev-004-requirements-repository'].requirements[0].config.repository;
 
 const browser = await chromium.launch();
 const written = [];
@@ -49,8 +46,8 @@ try {
   const input = () => page.locator('input[aria-label="Terminal input"]');
   const run = async (command, wait = 4000) => { await input().click(); await input().fill(command); await input().press('Enter'); await page.waitForTimeout(wait); };
   // The terminal pane's left 960 px from its tab row to its prompt: what the learner just saw, legible at slide width.
-  // With `from`, the pane is first scrolled so that command's line sits at the top and the crop stops at the pane's
-  // bottom, for output longer than the pane (calm diff) where the start is the part that matters.
+  // With `from`, the pane is first scrolled so that line sits at the top and the crop stops at the pane's bottom,
+  // for output longer than the pane (calm diff) where a later part is the part that matters.
   const terminalShot = async (name, from) => {
     await tab('Terminal');
     const t = await box(page.getByRole('tab', { name: /^Terminal/ }), 'the Terminal tab');
@@ -67,11 +64,9 @@ try {
     }
     await shot(name, { x: Math.max(0, t.x - 20), y: t.y - 2, width: 960, height: bottom - t.y + 2 });
   };
+  const diagramShot = async (name) => { await tab('Diagram'); await page.waitForTimeout(1500); await shot(name, await box(page.locator('[aria-label^="Live diagram"]'), 'the diagram')); };
   // The guide's completion box alone, small enough to sit beside a terminal on a slide.
   const completionShot = async (name) => shot(name, await box(page.getByText('Lesson complete').locator('xpath=..'), 'the completion box'));
-  // A taller window gives the terminal pane more rows, so a crop from a command shows its output rather than a scroll.
-  const tall = async () => { await page.setViewportSize({ width: 1600, height: 1500 }); await page.waitForTimeout(600); };
-  const diagramShot = async (name) => { await tab('Diagram'); await page.waitForTimeout(1500); await shot(name, await box(page.locator('[aria-label^="Live diagram"]'), 'the diagram')); };
   const editor = () => page.locator('textarea[aria-label^="Edit "]');
   const openFile = async (path) => {
     await tab('Editor');
@@ -84,38 +79,58 @@ try {
   };
   const save = async () => { await page.getByRole('button', { name: /^Save/ }).click(); await page.waitForTimeout(1500); };
   const edit = async (transform) => { await tab('Editor'); await editor().fill(transform(await editor().inputValue())); await save(); };
-  // The editor pane scrolled so the line holding `needle` sits near the top, cropped with its header and gutter.
-  const editorShot = async (name, needle) => {
+  // Scroll the editor so the line holding `needle` sits `above` lines from the top.
+  const scrollEditorTo = async (needle, above) => {
     await tab('Editor');
-    await editor().evaluate((el, n) => {
+    await editor().evaluate((el, [n, a]) => {
       const i = el.value.split('\n').findIndex((l) => l.includes(n));
       const lh = parseFloat(getComputedStyle(el).lineHeight) || 20;
-      el.scrollTop = Math.max(0, (i - 7) * lh);
+      el.scrollTop = Math.max(0, (i - a) * lh);
       el.dispatchEvent(new Event('scroll'));
-    }, needle);
+    }, [needle, above]);
     await page.waitForTimeout(400);
+  };
+  // The editor pane scrolled to `needle` with `above` lines of context, cropped with its header and gutter.
+  const editorShot = async (name, needle, above = 7) => {
+    await scrollEditorTo(needle, above);
     const b = await box(editor(), 'the editor');
     await shot(name, { x: Math.max(0, b.x - 72), y: Math.max(0, b.y - 58), width: Math.min(b.width + 84, 1100), height: Math.min(b.height + 62, 600) });
   };
+  // The lab's terminal is a quarter of the window; dragging the split handle up gives it the room a crop needs.
+  const enlargeTerminal = async (by = 330) => {
+    const h = await box(page.locator('[aria-label="Resize editor and terminal"]'), 'the split handle');
+    const x = h.x + h.width / 2;
+    const y = h.y + h.height / 2;
+    await page.mouse.move(x, y);
+    await page.mouse.down();
+    await page.mouse.move(x, y - by, { steps: 12 });
+    await page.mouse.up();
+    await page.waitForTimeout(600);
+  };
 
-  // Lesson 1: a governed model, controls as data.
+  // Lesson 1: a governed model, controls as data. The open file carries one wrong control id.
   await open('agentic-sdlc-model');
   await tab('Diagram');
   await page.waitForTimeout(1500);
   await shot('model-full');
-  await tall();
-  await run(VALIDATE_MODEL); await terminalShot('model-validate');
+  await diagramShot('model-diagram');
+  await editorShot('model-node', '"unique-id": "trade-api"', 1);
+  await editorShot('model-control', '"sdlc-prev-017-service-dependency"', 1);
+  await run(VALIDATE_MODEL);
+  await enlargeTerminal();
+  await scrollEditorTo('"SDLC-PREV-999"', 6);
+  await shot('model-broken-full');
+  await enlargeTerminal(-330);   // the editor gets its room back for the repair
+  await edit((text) => { const doc = JSON.parse(text); doc.controls['sdlc-prev-012-deployment-gating'].requirements[0].config['control-id'] = 'SDLC-PREV-012'; return json(doc); });
+  await editorShot('model-fix', '"sdlc-prev-012-deployment-gating"', 1);
+  await run(VALIDATE_MODEL); await terminalShot('model-validate-fix');
   await run(validate('architecture/broken/missing-parameter.json')); await terminalShot('model-missing-parameter');
   await run(validate('architecture/broken/missing-source-path.json')); await terminalShot('model-missing-source-path');
-  await run(validate('architecture/broken/wrong-control-id.json')); await terminalShot('model-wrong-control-id');
-  await openFile(MISSING_PARAMETER);
-  await edit((text) => { const doc = JSON.parse(text); doc.controls['sdlc-prev-004-requirements-repository'].requirements[0].config.repository = REPOSITORY; return json(doc); });
-  await editorShot('model-fix', '"repository"');
-  await run(validate('architecture/broken/missing-parameter.json')); await terminalShot('model-validate-fix');
   await completionShot('model-complete');
 
   // Lesson 2: a change to the model, what validation cannot know.
   await open('agentic-sdlc-change');
+  await enlargeTerminal();
   await openFile(ARCHITECTURE);
   await edit((text) => {
     const doc = JSON.parse(text);
@@ -127,7 +142,7 @@ try {
   await run(DIFF); await terminalShot('change-diff', '"edgesAdded"');
   await openFile(SPEC_002);
   await edit((text) => text.replace('model-change: []', 'model-change: [trade-api, position-service-to-trade-api]'));
-  await editorShot('change-spec', 'model-change');
+  await editorShot('change-spec', 'model-change', 7);
   await openFile(ARCHITECTURE);
   await edit((text) => {
     const doc = JSON.parse(text);

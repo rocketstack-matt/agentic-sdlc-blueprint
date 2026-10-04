@@ -38,219 +38,226 @@
 
     <section data-station="none">
       <h2>The SDLC Common Controls Catalog</h2>
-      <div class="cols">
-        <div class="wide">
-          <p class="lead">FINOS wrote the SDLC controls once, in the open: a shared reference library of software governance controls for regulated delivery, built by a working group.</p>
-          <ul class="commentary-list">
-            <li><strong>11 risks</strong>: the outcomes the catalog exists to reduce</li>
-            <li><strong>22 mitigations</strong>: each names the risks it addresses and the lifecycle phase it applies to</li>
-            <li>Every entry maps to NIST SP 800-53r5 and, where relevant, EU DORA, NIST SSDF, SLSA and others</li>
-          </ul>
-        </div>
-        <div>
-          <svg viewBox="0 0 760 420" width="100%" aria-label="Mitigations by lifecycle phase">
-            <g font-family="Arial" text-anchor="middle" fill="#fff">
-              <rect x="0" y="20" width="175" height="150" rx="14" fill="#0097A7"/><text x="87" y="85" font-size="28" font-weight="700">CODE</text><text x="87" y="135" font-size="44" font-weight="700">4</text>
-              <rect x="195" y="20" width="175" height="150" rx="14" fill="#0097A7"/><text x="282" y="85" font-size="28" font-weight="700">BUILD</text><text x="282" y="135" font-size="44" font-weight="700">5</text>
-              <rect x="390" y="20" width="175" height="150" rx="14" fill="#0097A7"/><text x="477" y="85" font-size="28" font-weight="700">RELEASE</text><text x="477" y="135" font-size="44" font-weight="700">5</text>
-              <rect x="585" y="20" width="175" height="150" rx="14" fill="#0097A7"/><text x="672" y="85" font-size="28" font-weight="700">RUNTIME</text><text x="672" y="135" font-size="44" font-weight="700">1</text>
-              <text x="380" y="240" fill="#595959" font-size="28">plus 4 spanning the whole cycle,</text>
-              <text x="380" y="280" fill="#595959" font-size="28">2 controls over the controls,</text>
-              <text x="380" y="320" fill="#595959" font-size="28">and 1 not yet placed</text>
-              <text x="380" y="390" fill="#0097A7" font-size="28" font-weight="700">finos.github.io/sdlc-common-controls</text>
-            </g>
-          </svg>
-        </div>
+        <div class="v3-catalog">
+    <div>
+      <p class="v3-head"><b>22 controls</b>, SDLC-PREV-001 to 022, by the lifecycle phase each applies to</p>
+      <div class="v3-grid">
+        <div class="v3-phase v3-next">Code</div>
+        <div class="v3-phase v3-next">Build</div>
+        <div class="v3-phase v3-next">Release</div>
+        <div class="v3-phase">Runtime</div>
+        <ul class="v3-col">
+          <li class="v3-chip on"><b>001</b>Code Review</li>
+          <li class="v3-chip"><b>005</b>Vulnerability Scanning: SAST</li>
+          <li class="v3-chip"><b>008</b>Version Control</li>
+          <li class="v3-chip"><b>010</b>Secret Detection</li>
+        </ul>
+        <ul class="v3-col">
+          <li class="v3-chip"><b>003</b>Software Artifact Provenance</li>
+          <li class="v3-chip"><b>007</b>Vulnerability Scanning: Dependencies</li>
+          <li class="v3-chip"><b>009</b>Component Inventory</li>
+          <li class="v3-chip on"><b>014</b>Test Evidence Retention</li>
+          <li class="v3-chip on"><b>016</b>Test Execution and Sign-Off</li>
+        </ul>
+        <ul class="v3-col">
+          <li class="v3-chip"><b>006</b>Vulnerability Scanning: DAST</li>
+          <li class="v3-chip on"><b>012</b>Deployment Gating</li>
+          <li class="v3-chip"><b>019</b>Version Release Approval Gating</li>
+          <li class="v3-chip"><b>020</b>Requirements Approval for Release</li>
+          <li class="v3-chip"><b>021</b>Infrastructure Dependencies</li>
+        </ul>
+        <ul class="v3-col">
+          <li class="v3-chip on"><b>017</b>Service Dependency Control</li>
+        </ul>
+        <div class="v3-rule"></div>
+        <ul class="v3-band">
+          <li class="v3-band-label">Whole lifecycle <small>every phase</small></li>
+          <li class="v3-chip on"><b>004</b>Requirements Repository</li>
+          <li class="v3-chip"><b>011</b>Vulnerability Remediation SLAs</li>
+          <li class="v3-chip on"><b>013</b>System Inventory</li>
+          <li class="v3-chip"><b>015</b>Testing Requirements</li>
+        </ul>
+        <div class="v3-rule"></div>
+        <ul class="v3-band">
+          <li class="v3-band-label">Governance of the controls <small>META in the catalog</small></li>
+          <li class="v3-chip"><b>002</b>Content Addressable Identities</li>
+          <li class="v3-chip"><b>022</b>Data Retention and Disposal</li>
+          <li class="v3-cell"><span class="v3-band-label">Not yet placed</span><span class="v3-chip"><b>018</b>Dependency Curation</span></li>
+        </ul>
       </div>
-      <aside class="notes">Speaker: Aaron. Introduce the catalog properly before we pick controls out of it. What it is: a shared, open reference library for software governance controls in regulated delivery, an incubating FINOS project under the DevOps Automation SIG, built by a working group that meets fortnightly. How it is built: eleven risks, twenty two mitigations. Every mitigation says which risks it reduces and the phase of the lifecycle it applies to: code, build, release, runtime, or spanning the whole cycle, plus meta controls that govern the other controls. Every entry is mapped to NIST SP 800-53 and, where relevant, to DORA, SSDF, SLSA and other references, which is what makes it usable in front of a regulator. Documents mature through the working group: draft, first reading, approved.</aside>
-    </section>
-
-    <section data-station="none">
-      <h2>The catalog at a glance</h2>
-      <div class="cols glance">
-        <div>
-          <p class="small muted">Risks</p>
-          <ul class="ids">
-            <li><span>SDLC-OP-007</span>Configuration Drift</li>
-            <li><span>SDLC-SEC-003</span>Credential and Secret Exposure</li>
-            <li><span>SDLC-SEC-004</span>Vulnerable Software in Production</li>
-            <li><span>SDLC-SEC-006</span>Unauthorised System Access</li>
-            <li><span>SDLC-SEC-008</span>Unauthorised Change</li>
-            <li><span>SDLC-SEC-009</span>Environment Breach</li>
-            <li><span>SDLC-SEC-010</span>Dependency and Transitive Supply Chain Compromise</li>
-            <li><span>SDLC-SEC-011</span>Build Toolchain and Service Supply Chain Compromise</li>
-            <li><span>SDLC-RC-001</span>Insider Threat</li>
-            <li><span>SDLC-RC-005</span>Audit and Compliance Evidence Failure</li>
-            <li><span>SDLC-BUS-012</span>Business Reputation Risk from Non-Approved Software Version Releases</li>
-          </ul>
-        </div>
-        <div>
-          <p class="small muted">Mitigations</p>
-          <ul class="ids">
-            <li><span>SDLC-PREV-001</span>Code Review</li>
-            <li><span>SDLC-PREV-002</span>Content Addressable Identities</li>
-            <li><span>SDLC-PREV-003</span>Software Artifact Provenance</li>
-            <li><span>SDLC-PREV-004</span>Requirements Repository</li>
-            <li><span>SDLC-PREV-005</span>Vulnerability Scanning: SAST</li>
-            <li><span>SDLC-PREV-006</span>Vulnerability Scanning: DAST</li>
-            <li><span>SDLC-PREV-007</span>Vulnerability Scanning: Dependencies</li>
-            <li><span>SDLC-PREV-008</span>Version Control</li>
-            <li><span>SDLC-PREV-009</span>Component Inventory</li>
-            <li><span>SDLC-PREV-010</span>Secret Detection</li>
-            <li><span>SDLC-PREV-011</span>Vulnerability Remediation SLAs</li>
-          </ul>
-        </div>
-        <div>
-          <p class="small muted">&nbsp;</p>
-          <ul class="ids">
-            <li><span>SDLC-PREV-012</span>Deployment Gating</li>
-            <li><span>SDLC-PREV-013</span>System Inventory</li>
-            <li><span>SDLC-PREV-014</span>Test Evidence Retention</li>
-            <li><span>SDLC-PREV-015</span>Testing Requirements</li>
-            <li><span>SDLC-PREV-016</span>Test Execution and Sign-Off</li>
-            <li><span>SDLC-PREV-017</span>Service Dependency Control</li>
-            <li><span>SDLC-PREV-018</span>Dependency Curation</li>
-            <li><span>SDLC-PREV-019</span>Version Release Approval Gating</li>
-            <li><span>SDLC-PREV-020</span>Requirements Approval for Release</li>
-            <li><span>SDLC-PREV-021</span>Infrastructure Dependencies</li>
-            <li><span>SDLC-PREV-022</span>Data Retention and Disposal</li>
-          </ul>
-        </div>
-      </div>
-      <aside class="notes">Speaker: Aaron. The whole catalog on one slide, as it stands today. Eleven risks on the left, from configuration drift through supply chain compromise to evidence failure. Twenty two mitigations on the right, from code review to data retention. Do not read it out. The point is that it is small enough to know in full, and that every institution in the room recognises most of these from its own control library under a different name. The next slide picks the seven this talk enforces.</aside>
-    </section>
-
-    <section data-station="none">
-      <h2>The seven this talk enforces</h2>
-      <p class="lead">Of the 22, we picked seven, and every check you see today names one of them.</p>
-      <div class="cols">
-        <div class="wide">
-          <table class="c1-38">
-            <tr><th>Id</th><th>Control</th></tr>
-            <tr><td>SDLC-PREV-001</td><td>Code Review</td></tr>
-            <tr><td>SDLC-PREV-004</td><td>Requirements Repository</td></tr>
-            <tr><td>SDLC-PREV-012</td><td>Deployment Gating</td></tr>
-            <tr><td>SDLC-PREV-013</td><td>System Inventory</td></tr>
-            <tr><td>SDLC-PREV-014</td><td>Test Evidence Retention</td></tr>
-            <tr><td>SDLC-PREV-016</td><td>Test Execution and Sign-Off</td></tr>
-            <tr><td>SDLC-PREV-017</td><td>Service Dependency Control</td></tr>
-          </table>
-        </div>
-        <div class="commentary">
-          <p><strong>The three risks in view</strong></p>
-          <ul>
-            <li>SDLC-OP-007 Configuration Drift</li>
-            <li>SDLC-SEC-008 Unauthorised Change</li>
-            <li>SDLC-RC-005 Audit and Compliance Evidence Failure</li>
-          </ul>
-        </div>
-      </div>
-      <aside class="notes">Speaker: Aaron. From the whole catalog to the seven the blueprint wires up, and the three risks they answer to. Five of the seven sit in the model as control blocks with their own configuration: code review, requirements repository, deployment gating and test evidence on the system, service dependency control on the position store. The other two are enforced without a control block: system inventory is the metadata every service and database must carry, and test execution is the tests gate. Every gate you will see names its control id, and the evidence at the end is keyed by these ids.</aside>
-    </section>
-
-    <section data-station="none">
-      <p class="kicker">The missing piece</p>
-      <h2>FINOS CALM: your architecture as data a machine can check</h2>
-      <ul class="follow-list">
-        <li><strong>Not a diagram, a file.</strong> Nodes (the systems, services, stores and people), relationships (who talks to whom), interfaces (how), and controls (the rules, attached to the parts they govern).</li>
-        <li><strong>Validated by a command-line tool</strong> against a schema, so a bad model fails a build the way bad code does.</li>
-        <li><strong>Readable by a pipeline and by an agent,</strong> so the same file is the context the agent works from and the control the pipeline enforces.</li>
+    </div>
+    <aside class="v3-rail">
+      <p class="v3-head"><b>11 risks</b> <small>the outcomes the controls exist to reduce</small></p>
+      <ul class="v3-risks">
+        <li class="on"><b>SDLC-OP-007</b>Configuration Drift</li>
+        <li><b>SDLC-SEC-003</b>Credential and Secret Exposure</li>
+        <li><b>SDLC-SEC-004</b>Vulnerable Software in Production</li>
+        <li><b>SDLC-SEC-006</b>Unauthorised System Access</li>
+        <li class="on"><b>SDLC-SEC-008</b>Unauthorised Change</li>
+        <li><b>SDLC-SEC-009</b>Environment Breach</li>
+        <li><b>SDLC-SEC-010</b>Dependency and Transitive Supply Chain Compromise</li>
+        <li><b>SDLC-SEC-011</b>Build Toolchain and Service Supply Chain Compromise</li>
+        <li><b>SDLC-RC-001</b>Insider Threat</li>
+        <li class="on"><b>SDLC-RC-005</b>Audit and Compliance Evidence Failure</li>
+        <li><b>SDLC-BUS-012</b>Business Reputation Risk from Non-Approved Software Version Releases</li>
       </ul>
-      <aside class="notes">Speaker: Aaron. Define CALM in one breath, because nothing after this slide makes sense without it: the Common Architecture Language Model is your architecture written as data. Nodes are the systems, services, stores and people. Relationships are who talks to whom. Interfaces are how. Controls are the rules, attached to the parts they govern. A command-line tool validates the file against a schema, so a bad model fails a build the same way bad code does, and both a pipeline and an agent can read it. The catalog says what the controls are; CALM is how they become machine-enforceable when the developer is an AI agent.</aside>
+    </aside>
+  </div>
+  <div class="v3-foot">
+    <p class="v3-row"><span><span class="v3-swatch"></span><b>Filled</b>: the seven controls this talk enforces, and the three risks they answer to.</span><span class="v3-link">finos.github.io/sdlc-common-controls</span></p>
+    <p>Built by a FINOS working group. Every control maps to NIST SP 800-53r5 and, where relevant, EU DORA, NIST SSDF and SLSA.</p>
+  </div>
+      <aside class="notes">Speaker: Aaron. FINOS wrote the SDLC controls once, in the open: a reference library of software governance controls for regulated delivery, built by a working group. Eleven risks are the outcomes it exists to reduce; twenty two mitigations each name the risks they address and the lifecycle phase they belong to; every entry maps to NIST SP 800-53r5 and, where relevant, EU DORA, NIST SSDF and SLSA. The highlighted seven are the ones this talk enforces, and the highlighted three risks are the ones in view: configuration drift, unauthorised change, and audit and compliance evidence failure. The link is the catalog site; everything on this slide is there.</aside>
     </section>
 
     <section data-station="none">
-      <h2>Three FINOS projects, one operating model</h2>
+      <h2>The pieces already exist, in FINOS</h2>
+      <p class="lead">An agent needs the rules as context. A pipeline needs them as checks. Prose controls give neither. Three projects together do.</p>
       <div class="cards">
-        <div class="calm">
-          <div class="logo-row"><img src="img/logos/calm.svg" alt="FINOS CALM"></div>
-          <p class="verb">governs the system</p>
-          <p>The model: nodes, relationships, interfaces and the controls attached to them.</p>
-        </div>
         <div class="catalog">
           <div class="logo-row"><img src="img/logos/sdlc-common-controls.svg" alt="SDLC Common Controls Catalog"></div>
-          <p class="verb">governs the change</p>
-          <p>22 controls on how software is built, reviewed, released and evidenced.</p>
+          <p class="verb">says what the controls are</p>
+          <p>22 mitigations for 11 risks, mapped to the regulations an examiner will ask about. The what, not the how.</p>
+        </div>
+        <div class="calm">
+          <div class="logo-row"><img src="img/logos/calm.svg" alt="FINOS CALM"></div>
+          <p class="verb">makes them checkable</p>
+          <p>The architecture as data a tool can validate, with the catalog's controls attached to the parts they govern. The same file is the agent's context and the pipeline's check.</p>
         </div>
         <div class="aigf">
           <div class="logo-row"><img src="img/logos/ai-governance-framework.png" alt="AI Governance Framework"></div>
-          <p class="verb">governs the agent</p>
-          <p>Mitigations on the AI itself, already published as a controls domain on CALM Hub.</p>
+          <p class="verb">governs the agent itself</p>
+          <p>Mitigations for the AI, already published as a controls domain on CALM Hub, so the agent's own guardrails live in the same model.</p>
         </div>
       </div>
-      <p class="caption">They compose because the catalog's controls are attached to CALM nodes as data, and the agent is pointed at that model.</p>
-      <aside class="notes">Speaker: Aaron. Three initiatives, one operating model. CALM describes the system. The catalog describes the controls on the change. The AI Governance Framework describes mitigations on the agent itself, and its mitigations are already seeded into CALM Hub as a controls domain, so the composition is not hypothetical. Not competing frameworks: three layers of one loop. Hand to Matthew after the next slide.</aside>
+      <aside class="notes">Speaker: Aaron. State the problem before the projects. A coding agent needs the rules as context it can read; a pipeline needs the same rules as checks it can run; a catalog written as prose gives neither. Three FINOS projects supply the pieces. The catalog says what the controls are. CALM, the Common Architecture Language Model, makes the architecture and the controls on it data a machine can check, so one file is both the context the agent reads and the thing the gates enforce. The AI Governance Framework names the mitigations on the agent itself, and they are already on CALM Hub as a controls domain. Together: controls as data on the architecture, read by the agent, enforced by gates, evidenced per change.</aside>
     </section>
 
     <section data-station="none">
-      <h2>The workshop: five stations, two ways in</h2>
-      <p class="lead">One question and one lab per station. From here on the slides are the workshop, screen by screen, and you can follow along.</p>
+      <h2>CALM in six terms</h2>
+        <div class="v3-primer-wrap">
+    <svg class="v3-primer" viewBox="0 0 800 560" aria-label="Two nodes, a relationship through an interface and a control, inside a pattern">
+      <defs><marker id="v3-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#4285F4"/></marker></defs>
+      <rect x="8" y="40" width="784" height="508" rx="18" fill="none" stroke="#595959" stroke-width="3" stroke-dasharray="16 12"/>
+      <text x="34" y="80" font-size="26" font-weight="700" fill="#595959">pattern</text>
+      <rect x="510" y="106" width="260" height="46" rx="23" fill="#0097A7"/>
+      <text x="640" y="138" font-size="22" fill="#fff" text-anchor="middle"><tspan font-weight="700">control</tspan> SDLC-PREV-017</text>
+      <line x1="740" y1="152" x2="740" y2="200" stroke="#0097A7" stroke-width="4"/>
+      <text x="165" y="186" font-size="26" font-weight="700" fill="#212121" text-anchor="middle">node</text>
+      <text x="635" y="186" font-size="26" font-weight="700" fill="#212121" text-anchor="middle">node</text>
+      <rect x="30" y="200" width="270" height="120" rx="16" fill="#4285F4"/>
+      <text x="165" y="254" font-size="30" font-weight="700" fill="#fff" text-anchor="middle">Trade API</text>
+      <text x="165" y="292" font-size="22" fill="#fff" text-anchor="middle">tier 2, internal</text>
+      <rect x="500" y="200" width="270" height="120" rx="16" fill="#4285F4"/>
+      <text x="635" y="254" font-size="30" font-weight="700" fill="#fff" text-anchor="middle">Position Service</text>
+      <text x="635" y="292" font-size="22" fill="#fff" text-anchor="middle">tier 1, confidential</text>
+      <line x1="300" y1="260" x2="476" y2="260" stroke="#4285F4" stroke-width="6" marker-end="url(#v3-arrow)"/>
+      <text x="392" y="240" font-size="24" font-weight="700" fill="#212121" text-anchor="middle">relationship</text>
+      <circle cx="500" cy="260" r="18" fill="#fff" stroke="#4285F4" stroke-width="5"/>
+      <line x1="490" y1="276" x2="462" y2="346" stroke="#595959" stroke-width="2" stroke-dasharray="4 4"/>
+      <text x="462" y="376" font-size="26" font-weight="700" fill="#212121" text-anchor="middle">interface</text>
+      <text x="462" y="404" font-size="22" fill="#595959" text-anchor="middle">env-binding: POSITION_SERVICE_URL</text>
+      <line x1="120" y1="320" x2="72" y2="428" stroke="#595959" stroke-width="2" stroke-dasharray="4 4"/>
+      <path d="M44 432 h30 l14 14 v38 h-44 z" fill="#fff" stroke="#595959" stroke-width="3"/>
+      <path d="M74 432 v14 h14" fill="none" stroke="#595959" stroke-width="3"/>
+      <text x="104" y="462" font-size="26" font-weight="700" fill="#212121">Standard</text>
+      <text x="104" y="490" font-size="22" fill="#595959">the schema this node must match</text>
+    </svg>
+    <dl class="v3-terms">
+      <dt>node</dt><dd>a component: a service, a database, an actor</dd>
+      <dt>relationship</dt><dd>connects one node to another, through an interface</dd>
+      <dt>interface</dt><dd>what a node exposes; an <code>env-binding</code> names the setting that holds its address</dd>
+      <dt>control</dt><dd>a requirement attached to a node or the whole system: a <code>requirement-url</code> and a <code>config</code></dd>
+      <dt>pattern</dt><dd>what every architecture of this kind must carry: which controls, which parameters, which Standards</dd>
+      <dt>Standard</dt><dd>a schema that says what a node, an interface or a control requirement document must look like</dd>
+    </dl>
+  </div>
+  <p class="v3-foot-line">Node metadata used later: <b>criticality tier</b> (1 is the most critical) and <b>data classification</b> (internal or confidential).</p>
+      <aside class="notes">Speaker: Aaron. Six terms, and every slide after this uses them. A node is a component: a service, a database, an actor. A relationship connects one node to another through an interface. An interface is what a node exposes, and an env-binding names the setting that holds its address, which is how the gates later tie code to the model. A control is a requirement attached to a node or to the whole system: a requirement-url pointing at the document that defines it, and a config with the values this estate chose. A pattern says what every architecture of this kind must carry: which controls, which parameters, which Standards. A Standard is a schema that says what a node, an interface or a control requirement document must look like; the catalog publishes one for its documents. Two attributes you will see on nodes: criticality tier, where one is the most critical, and data classification, internal or confidential.</aside>
+    </section>
+
+    <section data-station="none">
+      <h2>Two ways to run the workshop</h2>
+      <p class="lead">Everything from here on is a step you can repeat. Two environments carry it.</p>
       <div class="cols">
         <div>
-          <svg class="loop" viewBox="0 0 700 560" aria-label="Five stations in a loop">
-            <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#595959"/></marker></defs>
-            <g stroke="#595959" stroke-width="5" fill="none" marker-end="url(#arrow)">
-              <path d="M405 110 L545 192"/><path d="M588 300 L528 396"/><path d="M438 470 L262 470"/><path d="M168 400 L116 300"/><path d="M152 192 L292 110"/>
-            </g>
-            <g font-family="Arial" font-size="30" font-weight="700" text-anchor="middle" fill="#fff">
-              <circle cx="350" cy="80" r="72" fill="#4285F4"/><text x="350" y="90">Model</text>
-              <circle cx="600" cy="230" r="72" fill="#4285F4"/><text x="600" y="240">Spec</text>
-              <circle cx="510" cy="470" r="72" fill="#4285F4"/><text x="510" y="480">Agent</text>
-              <circle cx="190" cy="470" r="72" fill="#4285F4"/><text x="190" y="480">Gate</text>
-              <circle cx="100" cy="230" r="72" fill="#4285F4"/><text x="100" y="240">Evidence</text>
-            </g>
-            <g font-family="Arial" font-size="26" font-weight="700" fill="#595959" text-anchor="middle">
-              <text x="440" y="60">1</text><text x="690" y="230">2</text><text x="600" y="520">3</text><text x="100" y="520">4</text><text x="12" y="230">5</text>
-            </g>
-          </svg>
+          <p class="verb-line"><strong>In the browser: the CALM Learning Lab</strong></p>
+          <img class="shot" src="img/lab/model-full.png" alt="The CALM Learning Lab">
+          <ul class="ways-list">
+            <li>The real CALM command-line tool in a browser: an editor, a live diagram, a terminal.</li>
+            <li>Two guided lessons with hints. Nothing to install.</li>
+            <li>Station 1, and half of station 4.</li>
+          </ul>
         </div>
-        <div class="commentary">
-          <ol class="tight-list">
-            <li><strong>Model.</strong> What are the rules? The system in CALM, the catalog's controls attached as data.</li>
-            <li><strong>Spec.</strong> What are we building, and where? A requirement pinned to CALM nodes.</li>
-            <li><strong>Agent.</strong> Build it inside the rules. It reads the model before it writes.</li>
-            <li><strong>Gate.</strong> Did it stay inside? Deterministic checks against the model, which also picks the reviewer.</li>
-            <li><strong>Evidence.</strong> Prove it. One hashed bundle per change, keyed by control id.</li>
-          </ol>
-          <p class="ways"><strong>In the browser:</strong> lab.calm.finos.org, two lessons, for stations 1, 2 and half of 4. <strong>In the repository:</strong> Node 22 and git, labs 1 to 5.</p>
+        <div>
+          <p class="verb-line"><strong>In the repository: the blueprint</strong></p>
+          <pre class="code v3-clone">git clone github.com/rocketstack-matt/agentic-sdlc-blueprint
+cd agentic-sdlc-blueprint
+npm install
+npm run gates</pre>
+          <ul class="ways-list">
+            <li>Node 22 and git. No API key, under five minutes.</li>
+            <li>Five labs, one per station; the agent's attempts are patches.</li>
+            <li>All five stations: agent, gates and evidence included.</li>
+          </ul>
         </div>
       </div>
-      <aside class="notes">Speaker: Aaron. The five stations are the five labs in the repository, each with the question it answers. Two ways in: the first two stations and the model-diff half of station four run in the CALM Learning Lab, in a browser, with nothing installed; everything runs in the repository with Node and git. From here on every slide is a step of the workshop with the screen you would see, so follow along or replay it afterwards. Then the handover: "Matthew built this. Matthew, walk us round the loop."</aside>
+      <aside class="notes">Speaker: Aaron. Before the stations, the two places they run, so nobody wonders what the lab is when it appears. The CALM Learning Lab at lab.calm.finos.org runs the real CALM CLI in a browser: an editor, a live diagram, a terminal, and lessons with steps and hints. Two lessons were written for this talk; they cover the model station and the model-change half of the gate station, with nothing installed. The repository is the full workshop: five labs, Node and git, under five minutes to set up, with the agent attempts pre-recorded as patches so nobody needs an API key.</aside>
+    </section>
+
+    <section data-station="none">
+      <h2>The workshop: five stations, in order</h2>
+      <p class="lead">One question and one lab per station. From here on the slides are the workshop, screen by screen, and you can follow along.</p>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+    <symbol id="v3-i-browser" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><line x1="2" y1="9" x2="22" y2="9" stroke="currentColor" stroke-width="2"/><circle cx="6" cy="6.5" r="1.3" fill="currentColor"/></symbol>
+    <symbol id="v3-i-repo" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M6 9 L10 12 L6 15" fill="none" stroke="currentColor" stroke-width="2"/><line x1="12" y1="15" x2="17" y2="15" stroke="currentColor" stroke-width="2"/></symbol>
+  </defs></svg>
+  <ol class="v3-strip">
+    <li class="v3-station">
+      <span class="v3-disc">1</span>
+      <h3 class="v3-name">Model</h3>
+      <p class="v3-q">What are the rules?</p>
+      <p class="v3-what">The system in CALM, the catalog's controls attached as data.</p>
+      <p class="v3-where"><span class="v3-badge"><svg aria-hidden="true"><use href="#v3-i-browser"/></svg>Browser</span></p>
+    </li>
+    <li class="v3-station">
+      <span class="v3-disc">2</span>
+      <h3 class="v3-name">Spec</h3>
+      <p class="v3-q">What are we building, and where?</p>
+      <p class="v3-what">A requirement pinned to CALM nodes.</p>
+      <p class="v3-where"><span class="v3-badge"><svg aria-hidden="true"><use href="#v3-i-repo"/></svg>Repository</span></p>
+    </li>
+    <li class="v3-station">
+      <span class="v3-disc">3</span>
+      <h3 class="v3-name">Agent</h3>
+      <p class="v3-q">Build it inside the rules</p>
+      <p class="v3-what">It reads the model before it writes.</p>
+      <p class="v3-where"><span class="v3-badge"><svg aria-hidden="true"><use href="#v3-i-repo"/></svg>Repository</span></p>
+    </li>
+    <li class="v3-station">
+      <span class="v3-disc">4</span>
+      <h3 class="v3-name">Gate</h3>
+      <p class="v3-q">Did it stay inside, and who reviews?</p>
+      <p class="v3-what">Deterministic checks against the model, which also picks the reviewer.</p>
+      <p class="v3-where"><span class="v3-badge"><svg aria-hidden="true"><use href="#v3-i-browser"/></svg>Browser</span><span class="v3-badge"><svg aria-hidden="true"><use href="#v3-i-repo"/></svg>Repository</span></p>
+    </li>
+    <li class="v3-station">
+      <span class="v3-disc">5</span>
+      <h3 class="v3-name">Evidence</h3>
+      <p class="v3-q">Prove it</p>
+      <p class="v3-what">One hashed bundle per change, keyed by control id.</p>
+      <p class="v3-where"><span class="v3-badge"><svg aria-hidden="true"><use href="#v3-i-repo"/></svg>Repository</span></p>
+    </li>
+  </ol>
+  <p class="v3-legend"><span class="v3-badge"><svg aria-hidden="true"><use href="#v3-i-browser"/></svg>Browser</span> the CALM Learning Lab, nothing to install <span class="v3-gap"></span> <span class="v3-badge"><svg aria-hidden="true"><use href="#v3-i-repo"/></svg>Repository</span> the blueprint repository on your machine, Node 22 and git</p>
+      <aside class="notes">Speaker: Aaron. Five stations, one question each, in the order a change moves: the model says what the rules are, the spec says what we are building and where, the agent builds inside the rules, the gate asks whether it stayed inside and who reviews, and the evidence proves it. The badges say where each runs. Then the handover: "Matthew built this. Matthew, walk us through."</aside>
     </section>
 
     <section class="section-slide" data-ring="model" data-background-image="img/background.png" data-background-size="cover">
       <p class="tag">Station 1 of 5. Learning Lab lesson agentic-sdlc-model, or Lab 1</p>
       <h2>Model: what are the rules?</h2>
-      <p>One small system, one rule, and three ways to break the model that the model itself rejects.</p>
-      <aside class="notes">Speaker: Matthew. Station one. An agent is only as good as its context, and the missing context is how you want something built. That already exists if your architecture is code. First the system in plain words, then the same system in the lab.</aside>
-    </section>
-
-    <section data-station="model">
-      <h2>Meet the system</h2>
-      <svg class="system" viewBox="0 0 1680 560" aria-label="Trade capture: five nodes and the one forbidden connection">
-        <defs>
-          <marker id="blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#4285F4"/></marker>
-          <marker id="grey" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#595959"/></marker>
-        </defs>
-        <g stroke-width="6" fill="none">
-          <path d="M320 290 L450 290" stroke="#595959" marker-end="url(#grey)"/>
-          <path d="M780 270 L890 140" stroke="#4285F4" marker-end="url(#blue)"/>
-          <path d="M780 310 L1330 450" stroke="#4285F4" marker-end="url(#blue)"/>
-          <path d="M1240 120 L1330 120" stroke="#4285F4" marker-end="url(#blue)"/>
-          <path d="M780 290 L1330 160" stroke="#FFAB40" stroke-dasharray="18 14"/>
-        </g>
-        <g font-family="Arial" text-anchor="middle">
-          <rect x="40" y="230" width="280" height="120" rx="16" fill="#fff" stroke="#595959" stroke-width="4"/><text x="180" y="300" font-size="40" font-weight="700" fill="#212121">Trader</text>
-          <rect x="460" y="230" width="320" height="120" rx="16" fill="#4285F4"/><text x="620" y="282" font-size="40" font-weight="700" fill="#fff">Trade API</text><text x="620" y="326" font-size="26" fill="#fff">tier 2, internal data</text>
-          <rect x="900" y="60" width="340" height="120" rx="16" fill="#4285F4"/><text x="1070" y="112" font-size="40" font-weight="700" fill="#fff">Position Service</text><text x="1070" y="156" font-size="26" fill="#fff">tier 1, confidential</text>
-          <rect x="1340" y="60" width="320" height="120" rx="16" fill="#212121"/><text x="1500" y="112" font-size="40" font-weight="700" fill="#fff">Position Store</text><text x="1500" y="156" font-size="26" fill="#fff">the book of record</text>
-          <rect x="1340" y="400" width="320" height="120" rx="16" fill="#595959"/><text x="1500" y="470" font-size="40" font-weight="700" fill="#fff">Trade Store</text>
-          <circle cx="1055" cy="225" r="34" fill="#fff" stroke="#FFAB40" stroke-width="6"/><text x="1055" y="240" font-size="40" font-weight="700" fill="#FFAB40">×</text>
-          <text x="1055" y="300" font-size="30" font-weight="700" fill="#c77800">never</text>
-        </g>
-      </svg>
-      <p class="caption">Trade API (tier 2, internal) asks Position Service (tier 1, confidential) for positions. It never reads the position store itself.</p>
-      <aside class="notes">Speaker: Matthew. This is the whole system. A trader uses the Trade API. The Trade API keeps trades in its own store. Positions belong to the Position Service, which keeps them in the position store, the confidential book of record. One rule matters for the next thirty minutes: the Trade API gets positions by asking the Position Service, never by reading the store, and that is the dashed line with the cross. Two questions for this station. How does an agent learn that rule before it writes code? And how does a pipeline check that the code kept it?</aside>
+      <p>One small system, one rule, and a model that arrives broken.</p>
+      <aside class="notes">Speaker: Matthew. Station one. An agent is only as good as its context, and the missing context is how you want something built. That exists if your architecture is code. We open the lab, meet the system as the lab draws it, read two pieces of it as data, and then validate a model that arrives with one thing wrong.</aside>
     </section>
 
     <section data-station="model" class="step">
@@ -267,106 +274,131 @@
         </div>
         <aside class="callout-panel">
           <h3>What this shows</h3>
-          <p>The Learning Lab with lesson one open. 1: the guide, six steps with hints. 2: the model as a diagram and as a file. 3: the real CALM engine in a terminal.</p>
+          <p>The Learning Lab with lesson one open.</p>
+          <ol class="v3-points">
+            <li>The guide: five steps, each with a hint, down the left side.</li>
+            <li>The model as a live diagram and, beside it, as the JSON file.</li>
+            <li>The real CALM engine in a terminal: every command runs here.</li>
+          </ol>
           <h3>Take away</h3>
           <p class="takeaway">The system you just met, as data in a browser. Nothing to install.</p>
         </aside>
       </div>
-      <aside class="notes">Speaker: Matthew. This is the no-install route: the CALM Learning Lab runs the real CALM CLI in the browser. The guide on the left has the six steps; the middle shows the model as a live diagram and as the JSON file; the terminal at the bottom is where every command runs. Point at the diagram: the same system, drawn from the model, with the rule we care about already in it.</aside>
+      <aside class="notes">Speaker: Matthew. Open the lab at the lesson link. Three things on screen: the guide on the left with the five steps and a hint for each; the model in the middle, as a live diagram and as the JSON file behind it; and the terminal at the bottom, where the real CALM CLI runs. Nothing is installed.</aside>
     </section>
 
-    <section data-station="model">
-      <h2>The same system as data</h2>
-      <div class="cols cc">
-        <div class="code-col">
-<pre class="code">{
-  "unique-id": "trade-api",
-  "node-type": "service",
-  "interfaces": [{
-    "unique-id": "trade-api-http",
-    "protocol": "HTTP",
-    "env-binding": "TRADE_API_PORT"
-  }],
-  "metadata": {
-    "source-path": "services/trade-api",
-    "criticality-tier": 2,
-    "data-classification": "internal"
-  }
-}
-"trade-api-to-position-service":
-  trade-api connects to position-service</pre>
+    <section data-station="model" class="step">
+      <h2>The system, as the lab draws it</h2>
+      <div class="screen">
+        <div>
+          <p class="pane-head"><strong>Learning Lab</strong> &middot; lesson agentic-sdlc-model</p>
+          <img class="shot" src="img/lab/model-diagram.png" alt="The lab diagram: trader, trade API, position service, position store, trade store">
         </div>
-        <div class="commentary">
-          <ul>
-            <li><strong>source-path</strong>, so a check can tell which files belong to which node.</li>
-            <li><strong>env-binding</strong>, so a check can see a connection in code: reading <code>POSITION_STORE_PATH</code> means connecting to the position store.</li>
-            <li><strong>criticality-tier</strong> and <strong>data-classification</strong>, so the review policy can be decided from the model. The catalog asks for them under SDLC-PREV-013.</li>
-          </ul>
-          <p class="small muted">Position Service: tier 1, confidential. Six nodes and five relationships in one file.</p>
-        </div>
+        <aside class="callout-panel">
+          <h3>What this shows</h3>
+          <p>The Diagram tab, drawn from the model: five nodes inside and outside the trade capture system boundary, and the relationships between them. Each arrow is a relationship through an interface.</p>
+          <h3>Take away</h3>
+          <p class="takeaway">One rule matters today: only position-service may connect to position-store. Everything that follows tests that rule.</p>
+        </aside>
       </div>
-      <aside class="notes">Speaker: Matthew. The same system as CALM, one node and one relationship shown. Three things on the node are there for a reason, and each reason is a "so that". A source path, so that a check can tell which files belong to which node. An environment binding on every interface, so that a check can see a connection in the code: if the Trade API reads POSITION_STORE_PATH, it has connected to the position store. Tier and classification, so that the review policy can be decided from the model rather than from a spreadsheet; the catalog already asks for them under system inventory. Nothing else is special about this file.</aside>
+      <aside class="notes">Speaker: Matthew. The system in plain words, as the lab draws it from the model. A trader submits trades to the trade API. The trade API asks the position service for positions and persists trades in the trade store. The position service alone owns the position store, the book of record. Five nodes, five relationships, one rule: only position-service may connect to position-store. Hold on to that rule.</aside>
     </section>
 
-    <section data-station="model">
-      <h2>The rule becomes a control on the node</h2>
-      <div class="cols cc">
-        <div class="code-col">
-          <p class="small muted">On the position-store node:</p>
-<pre class="code">"sdlc-prev-017-service-dependency": {
-  "requirements": [{
-    "requirement-url":
-      "https://hub.calm.finos.org/calm/domains/
-       finos-sdlc-common-controls/controls/
-       sdlc-prev-017-service-dependency-control
-       /requirement/versions/1.0.0",
-    "config": {
-      "control-id": "SDLC-PREV-017",
-      "name": "Service Dependency Control",
-      "allowed-sources": ["position-service"]
-    }
-  }]
-}</pre>
+    <section data-station="model" class="step">
+      <h2>A node is data</h2>
+      <div class="screen">
+        <div>
+          <p class="pane-head"><strong>Learning Lab</strong> &middot; lesson agentic-sdlc-model, the editor</p>
+          <img class="shot" src="img/lab/model-node.png" alt="The trade-api node in the editor">
         </div>
-        <div class="commentary">
-          <ul>
-            <li><strong>Which control.</strong> SDLC-PREV-017 Service Dependency Control, from the catalog.</li>
-            <li><strong>Where it is defined.</strong> The catalog's own control requirement document on CALM Hub. The CLI validates this config against it: a wrong id or a missing field is a build failure.</li>
-            <li><strong>The rule.</strong> <code>allowed-sources</code>: only Position Service may connect. The drift gate compares this list with the code.</li>
-          </ul>
-        </div>
+        <aside class="callout-panel">
+          <h3>What this shows</h3>
+          <p>The trade-api node in the file: its type, an interface whose env-binding names the setting that holds its port, and metadata: where its code lives (source-path), its criticality tier (1 is most critical; this is 2) and its data classification (internal).</p>
+          <h3>Take away</h3>
+          <p class="takeaway">Tier and classification are facts about the architecture, not about a ticket. Later, the review policy reads them.</p>
+        </aside>
       </div>
-      <p class="statement small">A control in a catalog is prose. A control on a CALM node is data with a schema, an owner and an enforcement point.</p>
-      <aside class="notes">Speaker: Matthew. Here is the rule as data, attached to the node it protects. Three things to read off it. Which control: the catalog's SDLC-PREV-017, by its own id and name. Where it is defined: the requirement URL points at the catalog's control requirement document on CALM Hub, and the CLI validates this configuration against that document, so a half-configured control is a build failure, not a finding in next year's audit. And the rule itself: allowed sources, only the Position Service. The drift gate you will meet in station four compares this list with what the code actually does. Prose in a catalog has become data with a schema, an owner and an enforcement point.</aside>
+      <aside class="notes">Speaker: Matthew. The same system as data. Scroll to the trade-api node: a service, with an interface, and the env-binding is the environment variable the code reads for it, which is how a gate later ties code to model. Then metadata: source-path, where this node's code lives; criticality tier, one is the most critical and this is a two; data classification, internal. Position-service is tier one and confidential. Those two attributes decide who reviews a change, in station four.</aside>
+    </section>
+
+    <section data-station="model" class="step">
+      <h2>The rule is a control on the node</h2>
+      <div class="screen">
+        <div>
+          <p class="pane-head"><strong>Learning Lab</strong> &middot; lesson agentic-sdlc-model, the editor</p>
+          <img class="shot" src="img/lab/model-control.png" alt="The position-store node's control in the editor">
+        </div>
+        <aside class="callout-panel">
+          <h3>What this shows</h3>
+          <p>The position-store node carries control SDLC-PREV-017 from the catalog: a requirement-url pointing at the catalog's own document on CALM Hub, and a config with the control id and the one allowed source, position-service.</p>
+          <h3>Take away</h3>
+          <p class="takeaway">A control in a catalog is prose. On a CALM node it is data with a schema, an owner and an enforcement point.</p>
+        </aside>
+      </div>
+      <aside class="notes">Speaker: Matthew. Now the rule. The position-store node carries a control: Service Dependency Control, SDLC-PREV-017, straight from the catalog. The requirement-url is the catalog's own document on CALM Hub, which is what the CLI validates this config against. The config says the allowed sources are position-service, and nothing else. That is the rule from the diagram, as data, with a schema behind it and a gate in front of it.</aside>
     </section>
 
     <section data-station="model" class="step">
       <h2>Step 1. Validate the model</h2>
       <div class="screen">
         <div>
-          <p class="pane-head"><strong>Learning Lab</strong> &middot; lesson agentic-sdlc-model, step 1 of 6</p>
-          <img class="shot" src="img/lab/model-validate.png" alt="calm validate passes: no errors, no warnings">
+          <p class="pane-head"><strong>Learning Lab</strong> &middot; lesson agentic-sdlc-model, step 1 of 5</p>
+          <img class="shot" src="img/lab/model-broken-full.png" alt="The whole lab: the editor on the wrong control id, the terminal with the failing validate">
         </div>
         <aside class="callout-panel">
           <h3>What this shows</h3>
-          <p><code>calm validate</code> with the pattern (<code>-p</code>), the architecture (<code>-a</code>) and a URL mapping (<code>-u</code>) that serves the catalog documents and Standards from local copies. No errors.</p>
+          <p>The whole lab after the first command. The status bar already flags the file; the terminal says why: the Deployment Gating control claims SDLC-PREV-999, and the catalog document it cites pins the id.</p>
           <h3>Take away</h3>
-          <p class="takeaway">One command checks the model against CALM, the pattern, the Standards and the catalog documents it cites.</p>
+          <p class="takeaway">One command checked CALM, the pattern, the Standards and the catalog documents. The catalog's own layer said no.</p>
         </aside>
       </div>
-      <aside class="notes">Speaker: Matthew. Step one is the happy path, and read the flags once: minus p is the pattern this estate enforces, minus a the architecture, minus u a mapping from the CALM Hub URLs the model cites to copies in the workspace, so validation needs no network. The summary says zero errors. Everything that follows is this command against a copy of the model with one thing wrong.</aside>
+      <aside class="notes">Speaker: Matthew. Step one. The file arrives with one thing wrong, and the lab already knows: the status bar says one problem. Run validate with the pattern, the architecture and the URL mapping that serves the catalog documents and the Standards from local copies. It fails, and the error is precise: the Deployment Gating control's control-id must equal a constant. The constant comes from the catalog's own requirement document; this file claims SDLC-PREV-999. Nobody at this estate wrote that check. FINOS did.</aside>
     </section>
 
     <section data-station="model" class="step">
-      <h2>Step 2. A missing parameter fails on the pattern</h2>
+      <h2>Step 2. Fix the control id</h2>
       <div class="screen">
         <div>
-          <p class="pane-head"><strong>Learning Lab</strong> &middot; lesson agentic-sdlc-model, step 2 of 6</p>
+          <p class="pane-head"><strong>Learning Lab</strong> &middot; lesson agentic-sdlc-model, step 2 of 5</p>
+          <img class="shot" src="img/lab/model-fix.png" alt="The control with SDLC-PREV-012 restored">
+        </div>
+        <aside class="callout-panel">
+          <h3>What this shows</h3>
+          <p>The control's config with SDLC-PREV-012 back in place and saved. The status bar clears the moment the saved file matches the document it cites.</p>
+          <h3>Take away</h3>
+          <p class="takeaway">The fix is one token of data. Nobody edited a gate.</p>
+        </aside>
+      </div>
+      <aside class="notes">Speaker: Matthew. The repair: change 999 to 012, the catalog's id for Deployment Gating, and save. The live validation clears straight away, because the lab validates the saved file against the same documents the command uses.</aside>
+    </section>
+
+    <section data-station="model" class="step">
+      <h2>Step 3. Validate again</h2>
+      <div class="screen">
+        <div>
+          <p class="pane-head"><strong>Learning Lab</strong> &middot; lesson agentic-sdlc-model, step 3 of 5</p>
+          <img class="shot" src="img/lab/model-validate-fix.png" alt="calm validate passes: no errors">
+        </div>
+        <aside class="callout-panel">
+          <h3>What this shows</h3>
+          <p>The same command, no errors.</p>
+          <h3>Take away</h3>
+          <p class="takeaway">Valid against CALM 1.2, the pattern, the node and interface Standards and the catalog documents it cites.</p>
+        </aside>
+      </div>
+      <aside class="notes">Speaker: Matthew. Same command, zero errors. Read what that covered: the CALM schema, the pattern this estate enforces, the node and interface Standards the pattern applies to every node, and the five catalog documents the controls cite. Now two more faults, each caught by a different layer.</aside>
+    </section>
+
+    <section data-station="model" class="step">
+      <h2>Step 4. A missing parameter fails on the pattern</h2>
+      <div class="screen">
+        <div>
+          <p class="pane-head"><strong>Learning Lab</strong> &middot; lesson agentic-sdlc-model, step 4 of 5</p>
           <img class="shot" src="img/lab/model-missing-parameter.png" alt="calm validate fails: must have required property repository">
         </div>
         <aside class="callout-panel">
           <h3>What this shows</h3>
-          <p>The same command against a copy with one parameter removed: the requirements repository under SDLC-PREV-004. The error names the property, the control and the line.</p>
+          <p>The same command against a copy of the model with one parameter removed: the requirements repository under SDLC-PREV-004. The error names the property, the control and the line. The catalog document did not object: parameters are the estate's business.</p>
           <h3>Take away</h3>
           <p class="takeaway">The pattern fixes the parameters the gates read. Standards do not enforce themselves; a pattern does.</p>
         </aside>
@@ -375,10 +407,10 @@
     </section>
 
     <section data-station="model" class="step">
-      <h2>Step 3. No source path fails on the node Standard</h2>
+      <h2>Step 5. No source path fails on the node Standard</h2>
       <div class="screen">
         <div>
-          <p class="pane-head"><strong>Learning Lab</strong> &middot; lesson agentic-sdlc-model, step 3 of 6</p>
+          <p class="pane-head"><strong>Learning Lab</strong> &middot; lesson agentic-sdlc-model, step 5 of 5</p>
           <img class="shot" src="img/lab/model-missing-source-path.png" alt="calm validate fails: must have required property source-path">
         </div>
         <aside class="callout-panel">
@@ -388,31 +420,14 @@
           <p class="takeaway">Without a source path the drift gate cannot find the service's code. The shortcut in station three would sail through.</p>
         </aside>
       </div>
-      <aside class="notes">Speaker: Matthew. Second layer. Delete the source path from a service node. The node Standard rejects it. Why does that matter: the drift gate maps code to nodes through the source path, so a node without one is invisible to it. The Standard makes sure nobody can quietly make a service invisible.</aside>
-    </section>
-
-    <section data-station="model" class="step">
-      <h2>Step 4. A wrong control id fails on the catalog document</h2>
-      <div class="screen">
-        <div>
-          <p class="pane-head"><strong>Learning Lab</strong> &middot; lesson agentic-sdlc-model, step 4 of 6</p>
-          <img class="shot" src="img/lab/model-wrong-control-id.png" alt="calm validate fails: control-id must be equal to constant">
-        </div>
-        <aside class="callout-panel">
-          <h3>What this shows</h3>
-          <p>A copy where the deployment gating control claims control-id SDLC-PREV-999. The catalog's own requirement document pins the id, so the config is rejected.</p>
-          <h3>Take away</h3>
-          <p class="takeaway">The catalog document validates the control's config. A control cannot claim a catalog entry it does not meet.</p>
-        </aside>
-      </div>
-      <aside class="notes">Speaker: Matthew. Third layer, and this one belongs to FINOS, not to us. Each control cites a requirement document on CALM Hub, published by the catalog project. The CLI fetches that document, through the mapping here, and validates the config against it. Change the control id to something that is not that control and the catalog itself says no.</aside>
+      <aside class="notes">Speaker: Matthew. Third layer. Delete the source path from a service node and the node Standard rejects it. Why it matters: the drift gate maps code to nodes through the source path, so a node without one is invisible to it, and the shortcut you are about to see in station three would sail straight through. The lesson completes here: a control in a catalog is prose; a control on a CALM node is data with a schema, an owner and an enforcement point.</aside>
     </section>
 
     <section data-station="model">
-      <h2>Three failures, three layers</h2>
+      <h2>Three faults, three layers, three owners</h2>
       <svg class="flow" viewBox="0 0 1680 250" aria-label="From the catalog to the gates">
         <g font-family="Arial" text-anchor="middle">
-          <rect x="0" y="10" width="300" height="160" rx="18" fill="#0097A7"/>
+          <rect x="0" y="10" width="300" height="160" rx="18" fill="#4285F4"/>
           <text x="150" y="58" fill="#fff" font-size="30" font-weight="700">The catalog</text>
           <text x="150" y="96" fill="#fff" font-size="20">22 controls, as prose:</text>
           <text x="150" y="122" fill="#fff" font-size="20">risks, requirements,</text>
@@ -426,21 +441,21 @@
           <text x="495" y="148" fill="#fff" font-size="20">documents that conform to it</text>
           <text x="495" y="215" fill="#595959" font-size="22">FINOS, hub.calm.finos.org</text>
 
-          <rect x="690" y="10" width="300" height="160" rx="18" fill="#595959"/>
+          <rect x="690" y="10" width="300" height="160" rx="18" fill="#4285F4"/>
           <text x="840" y="58" fill="#fff" font-size="30" font-weight="700">The pattern</text>
           <text x="840" y="96" fill="#fff" font-size="20">the controls to carry,</text>
           <text x="840" y="122" fill="#fff" font-size="20">the document each cites,</text>
           <text x="840" y="148" fill="#fff" font-size="20">parameters, node Standards</text>
           <text x="840" y="215" fill="#595959" font-size="22">your organisation</text>
 
-          <rect x="1035" y="10" width="300" height="160" rx="18" fill="#595959"/>
+          <rect x="1035" y="10" width="300" height="160" rx="18" fill="#4285F4"/>
           <text x="1185" y="58" fill="#fff" font-size="30" font-weight="700">The architecture</text>
           <text x="1185" y="96" fill="#fff" font-size="20">conforms to the pattern,</text>
           <text x="1185" y="122" fill="#fff" font-size="20">cites the documents,</text>
           <text x="1185" y="148" fill="#fff" font-size="20">holds the values</text>
           <text x="1185" y="215" fill="#595959" font-size="22">your team</text>
 
-          <rect x="1380" y="10" width="300" height="160" rx="18" fill="#595959"/>
+          <rect x="1380" y="10" width="300" height="160" rx="18" fill="#4285F4"/>
           <text x="1530" y="58" fill="#fff" font-size="30" font-weight="700">Gates, evidence</text>
           <text x="1530" y="96" fill="#fff" font-size="20">read the model,</text>
           <text x="1530" y="122" fill="#fff" font-size="20">cite the control id</text>
@@ -455,49 +470,31 @@
       </svg>
       <img class="hub-shot header" src="img/hub-catalog.png" alt="The SDLC Common Controls domain in CALM Hub: 22 controls">
       <p class="caption">Standards say what a node, an interface or a control requirement looks like. The pattern says which of them every architecture here must satisfy. FINOS publishes the controls once; each organisation publishes how it enforces them.</p>
-      <aside class="notes">Speaker: Matthew. Pattern, node Standard, catalog document: the three failures you just saw came from three layers, and each layer has an owner. This is the slide that answers "every bank is solving it alone", so take it slowly. Left to right, and notice who owns each box: colour means ownership here, teal is the catalog, blue is CALM, grey is yours. The catalog is prose, owned by the FINOS working group. On CALM Hub it becomes one Standard, the schema every control requirement document conforms to, and twenty two documents that conform to it, one per control, still owned by FINOS. Then your organisation writes a pattern: which controls every architecture must carry, which catalog document each one cites, which parameters your gates need, and which Standards every node and interface must meet. Your team writes the architecture that conforms to the pattern and fills in the values. Your pipeline's gates read the model, and the evidence cites the control id. The strip below is the real thing: the catalog's domain on CALM Hub, twenty two documents. Nobody writes the catalog again.</aside>
-    </section>
-
-    <section data-station="model" class="step">
-      <h2>Step 5. Put the parameter back</h2>
-      <div class="screen">
-        <div>
-          <p class="pane-head"><strong>Learning Lab</strong> &middot; lesson agentic-sdlc-model, step 5 of 6</p>
-          <img class="shot" src="img/lab/model-fix.png" alt="The broken copy in the editor with repository restored">
-        </div>
-        <aside class="callout-panel">
-          <h3>What this shows</h3>
-          <p>The broken copy from step 2 in the editor, with <code>repository</code> restored under the requirements repository control and saved. The lab validates the open file as you type.</p>
-          <h3>Take away</h3>
-          <p class="takeaway">The fix is one line of data. Nobody edited a gate.</p>
-        </aside>
-      </div>
-      <aside class="notes">Speaker: Matthew. The repair. Open the broken copy, put the parameter back, save. The status bar validates the open file live, so the error disappears as you type. The point is where the fix lives: in the model, as data, not in a script.</aside>
-    </section>
-
-    <section data-station="model" class="step">
-      <h2>Step 6. Validate your fix</h2>
-      <div class="screen">
-        <div>
-          <p class="pane-head"><strong>Learning Lab</strong> &middot; lesson agentic-sdlc-model, step 6 of 6</p>
-          <img class="shot" src="img/lab/model-validate-fix.png" alt="The command that failed in step 2 now passes">
-        </div>
-        <aside class="callout-panel">
-          <h3>What this shows</h3>
-          <p>The command that failed in step 2 now passes, and the lesson completes.</p>
-          <h3>Take away</h3>
-          <p class="takeaway">A control in a catalog is prose. A control on a CALM node is data with a schema, an owner and an enforcement point.</p>
-          <img src="img/lab/model-complete.png" alt="Lesson complete">
-        </aside>
-      </div>
-      <aside class="notes">Speaker: Matthew. Same command, no errors, lesson complete. Read the completion card aloud: a control in a catalog is prose; a control on a CALM node is data with a schema, an owner and an enforcement point. That is station one.</aside>
+      <aside class="notes">Speaker: Matthew. Three faults, three layers, and each layer has an owner. The catalog, published by FINOS, caught the wrong control id through its own requirement document on CALM Hub. The pattern, published by this organisation, caught the missing parameter, because the pattern says which controls every architecture here must carry and with which parameters. The node Standard, applied by the pattern, caught the missing source path. Standards say what a node, an interface or a control requirement document looks like; the pattern says which of them every architecture here must satisfy; the architecture complies; the gates and the evidence read it. FINOS publishes the controls once; each organisation publishes how it enforces them.</aside>
     </section>
 
     <section class="section-slide" data-ring="spec" data-background-image="img/background.png" data-background-size="cover">
       <p class="tag">Station 2 of 5. Lab 2</p>
       <h2>Spec: what are we building, and which parts of the model may it touch?</h2>
       <p>A requirement that names its scope in the model, and a model that answers back.</p>
-      <aside class="notes">Speaker: Matthew. Station two. "What you want" is easy. "How you want it" is the hard, auditable part, and the model already knows it. Three commands from lab two.</aside>
+      <aside class="notes">Speaker: Matthew. Station two. "What you want" is easy. "How you want it" is the hard, auditable part, and the model already knows it. First how the agent knows to start from a spec at all, then three commands from lab two.</aside>
+    </section>
+
+    <section data-station="spec" class="step">
+      <h2>How the agent knows where to start</h2>
+      <div class="screen">
+        <div>
+          <p class="pane-head"><strong>Repository terminal</strong> &middot; Lab 2</p>
+          <pre class="term" data-capture="agents-md"></pre>
+        </div>
+        <aside class="callout-panel">
+          <h3>What this shows</h3>
+          <p>AGENTS.md, which every coding agent reads before it writes: work only from an approved spec in specs/, ask the model for context (an MCP tool, or the calm:context script), implement inside that scope, run the gates.</p>
+          <h3>Take away</h3>
+          <p class="takeaway">Spec-driven: the requirement is a file in the repository that names its scope in the model, and the agent starts there because the repository says so.</p>
+        </aside>
+      </div>
+      <aside class="notes">Speaker: Matthew. Spec-driven development, in this repository. A spec is a requirement written as a markdown file under specs slash, approved by an owner, with front matter that names the CALM nodes and relationships the work may use. How does an agent know to read it? AGENTS.md, the file Claude Code, Codex, Copilot, Cursor and Gemini read before they write. Step one: work only from an approved spec. Step two: ask the model for the architecture context, through the MCP tool or the npm script. Step three: implement inside that scope. Step four: run the gates. The prompt we give is three words: Implement SPEC-001.</aside>
     </section>
 
     <section data-station="spec" class="step">
@@ -514,7 +511,7 @@
           <p class="takeaway">A spec is a requirement kept in the repository (SDLC-PREV-004) that names its architectural scope before any code.</p>
         </aside>
       </div>
-      <aside class="notes">Speaker: Matthew. A spec is a markdown file in specs slash, which is the requirements repository control. The front matter is the part that matters: it names the CALM nodes and the relationship the change may use. Approved status, an owner, and the scope.</aside>
+      <aside class="notes">Speaker: Matthew. The spec itself: a markdown file in specs slash, which is the requirements repository control. The front matter is the part the tooling reads: approved status, an owner, and the CALM nodes and relationship the change may use.</aside>
     </section>
 
     <section data-station="spec" class="step">
@@ -526,12 +523,12 @@
         </div>
         <aside class="callout-panel">
           <h3>What this shows</h3>
-          <p><code>calm:context</code> for SPEC-001, narrowed to the first node in scope: trade-api, its tier and data class, what it may connect to, what it must not, and the rule.</p>
+          <p><code>npm run calm:context</code> is the repository's script that reads the model for a spec's nodes; an MCP tool gives an agent the same answer. Narrowed to the first node: trade-api, its tier and data class, what it may connect to, what it must not, and the rule.</p>
           <h3>Take away</h3>
           <p class="takeaway">Context engineering becomes a lookup. The model already knows how you want it built.</p>
         </aside>
       </div>
-      <aside class="notes">Speaker: Matthew. The same command an agent runs, or the MCP tool it calls. For each node in scope: who it is, its tier and data classification, what it may connect to, and the line that matters: must not connect to position-store, only position-service may. The last line is the rule for the whole change. None of this was written in a prompt; it was looked up in the model.</aside>
+      <aside class="notes">Speaker: Matthew. The second step of the loop. calm:context is a small script in the repository that reads the model for the spec's nodes; with MCP the agent calls the same thing as a tool. For trade-api: who it is, tier two, internal data, what it may connect to, and the line that matters: must not connect to position-store, only position-service may. The last line is the rule for the whole change. None of this was written in a prompt. It was looked up in the model.</aside>
     </section>
 
     <section data-station="spec" class="step">
@@ -543,7 +540,7 @@
         </div>
         <aside class="callout-panel">
           <h3>What this shows</h3>
-          <p>spec-check passes for the spec as written. A patch adds pricing-service, a node the model does not have, and the same gate rejects it. <code>git checkout</code> undoes it.</p>
+          <p>spec-check passes for the spec as written. A patch adds pricing-service, a node the model does not have, and the same gate rejects it.</p>
           <h3>Take away</h3>
           <p class="takeaway">A spec that names architecture that does not exist is rejected before any agent sees it.</p>
         </aside>
@@ -555,24 +552,7 @@
       <p class="tag">Station 3 of 5. Lab 3</p>
       <h2>Agent: the same spec, two attempts</h2>
       <p>Attempt A gets the spec. Attempt B gets the spec and the model. Both are pre-recorded patches, so nobody needs an API key.</p>
-      <aside class="notes">Speaker: Matthew. Station three, and the storyline is deliberately simple: one spec, two attempts. A got only the spec. B got the spec and the model. Both are patches in the repository, so you can replay them without an agent or an API key, and the optional part of lab three is to run your own agent.</aside>
-    </section>
-
-    <section data-station="agent" class="step">
-      <h2>What the agent is given</h2>
-      <div class="screen">
-        <div>
-          <p class="pane-head"><strong>Repository terminal</strong> &middot; Lab 3</p>
-          <pre class="term" data-capture="agents-md"></pre>
-        </div>
-        <aside class="callout-panel">
-          <h3>What this shows</h3>
-          <p>The first sixteen lines of AGENTS.md, which every coding agent reads first: get the approved spec, ask the model for context, implement inside that scope, run the gates.</p>
-          <h3>Take away</h3>
-          <p class="takeaway">The rules live in the repository, not in the prompt. The prompt is three words: Implement SPEC-001.</p>
-        </aside>
-      </div>
-      <aside class="notes">Speaker: Matthew. Before the attempts, what the agent is given. AGENTS.md is read by Claude Code, Codex, Copilot, Cursor and Gemini. The loop is five steps: get the spec, get the architecture context, implement inside it, run the gates, hand over. With MCP the context and the gates are tools; without it they are npm scripts. The prompt we use is only "Implement SPEC-001."</aside>
+      <aside class="notes">Speaker: Matthew. Station three, and the storyline is deliberately simple: one spec, two attempts. A got only the spec. B got the spec and the model. Both are patches in the repository, so you can replay them without an agent or an API key; the optional part of lab three is to run your own agent with the same three-word prompt.</aside>
     </section>
 
     <section data-station="agent" class="step">
@@ -652,17 +632,16 @@
 
     <section data-station="gate">
       <h2>Every change meets six gates</h2>
-      <table class="c1-20 nowrap-last">
-        <tr><th>Gate</th><th>What it checks</th><th>Control</th></tr>
-        <tr><td>calm-validate</td><td>the model is valid against CALM, the pattern and the Standards it names</td><td>SDLC-PREV-012</td></tr>
-        <tr><td>spec-check</td><td>the change names an approved spec and touches only the nodes it declares</td><td>SDLC-PREV-004</td></tr>
-        <tr><td>drift-check</td><td>every connection in the code is in the model, and allowed</td><td>SDLC-PREV-017, 012</td></tr>
-        <tr><td>model-diff</td><td>any change to the model was declared by the spec</td><td>SDLC-PREV-004, 017</td></tr>
-        <tr><td>tests</td><td>the test suite passes</td><td>SDLC-PREV-016, 014</td></tr>
-        <tr><td>review-router</td><td>the model decides who must review</td><td>SDLC-PREV-001</td></tr>
-      </table>
-      <p class="caption">All six must pass: SDLC-PREV-012 Deployment Gating, and the list itself lives in the model. The model, the gates and the agent instructions are the control plane: a change there always goes to a human.</p>
-      <aside class="notes">Speaker: Matthew. Six gates, each a small script that reads the model and names the catalog control it serves. Validate the model. Check the spec. Check for drift between code and model. Check for undeclared changes to the model. Run the tests. Route the review. All six must pass, which is deployment gating, and the list of blocking gates is itself a value in the model. One term for the next two slides: the model, the gates and the agent instructions are the control plane, the things that decide how every other change is governed, so a change to them always goes to a human.</aside>
+        <ol class="v3-gates">
+    <li class="v3-gate"><span class="v3-gate-n">1</span><h3 class="v3-gate-name">calm-validate</h3><p class="v3-gate-what">the model is valid against CALM, the pattern and the Standards it names</p><p class="v3-gate-ctl"><span><span class="v3-ctl">SDLC-PREV-012</span>Deployment Gating</span></p></li>
+    <li class="v3-gate"><span class="v3-gate-n">2</span><h3 class="v3-gate-name">spec-check</h3><p class="v3-gate-what">the change names an approved spec and touches only the nodes it declares</p><p class="v3-gate-ctl"><span><span class="v3-ctl">SDLC-PREV-004</span>Requirements Repository</span></p></li>
+    <li class="v3-gate"><span class="v3-gate-n">3</span><h3 class="v3-gate-name">drift-check</h3><p class="v3-gate-what">every connection in the code is in the model, and allowed</p><p class="v3-gate-ctl"><span><span class="v3-ctl">SDLC-PREV-017</span>Service Dependency Control</span><span><span class="v3-ctl">SDLC-PREV-012</span>Deployment Gating</span></p></li>
+    <li class="v3-gate"><span class="v3-gate-n">4</span><h3 class="v3-gate-name">model-diff</h3><p class="v3-gate-what">any change to the model was declared by the spec</p><p class="v3-gate-ctl"><span><span class="v3-ctl">SDLC-PREV-004</span>Requirements Repository</span><span><span class="v3-ctl">SDLC-PREV-017</span>Service Dependency Control</span></p></li>
+    <li class="v3-gate"><span class="v3-gate-n">5</span><h3 class="v3-gate-name">tests</h3><p class="v3-gate-what">the test suite passes</p><p class="v3-gate-ctl"><span><span class="v3-ctl">SDLC-PREV-016</span>Test Execution and Sign-Off</span><span><span class="v3-ctl">SDLC-PREV-014</span>Test Evidence Retention</span></p></li>
+    <li class="v3-gate"><span class="v3-gate-n">6</span><h3 class="v3-gate-name">review-router</h3><p class="v3-gate-what">the model decides who must review</p><p class="v3-gate-ctl"><span><span class="v3-ctl">SDLC-PREV-001</span>Code Review</span></p></li>
+  </ol>
+  <p class="v3-gates-foot"><b>All six must pass</b>: that is SDLC-PREV-012 Deployment Gating, and the list of gates itself lives in the model. The model, the gates and the agent instructions are the control plane: a change there always goes to a human.</p>
+      <aside class="notes">Speaker: Matthew. The six gates you met in station three, as a set. calm-validate: the model is valid against CALM, the pattern and the Standards. spec-check: the change names an approved spec and touches only the nodes it declares. drift-check: every connection in the code is in the model, and allowed. model-diff: any change to the model was declared by the spec. tests. review-router: the model decides who must review. All six must pass, which is Deployment Gating, SDLC-PREV-012, and the list of gates itself lives in the model.</aside>
     </section>
 
     <section data-station="gate" class="step">
@@ -708,7 +687,7 @@
         </div>
         <aside class="callout-panel">
           <h3>What this shows</h3>
-          <p>Reset, then the patch where the agent "fixes" the failing gate by adding the missing relationship to the model. <code>git diff --stat</code>: the architecture file changed with the code.</p>
+          <p>Reset, then the patch where the agent "fixes" the failing gate by adding the missing relationship to the model. The stat shows the architecture file changed alongside the code.</p>
           <h3>Take away</h3>
           <p class="takeaway">The agent made the gate's complaint go away by editing the thing the gate checks against.</p>
         </aside>
@@ -759,7 +738,7 @@
         </div>
         <aside class="callout-panel">
           <h3>What this shows</h3>
-          <p><code>calm validate</code> on the model with the shortcut in it: no errors. The pattern leaves relationships unconstrained, and no schema can know what the code does.</p>
+          <p>Validation of the model with the shortcut in it: no errors. The pattern leaves relationships unconstrained, and no schema can know what the code does.</p>
           <h3>Take away</h3>
           <p class="takeaway">Valid is not the same as declared. Validation checks shape; the next command checks change.</p>
         </aside>
@@ -776,7 +755,7 @@
         </div>
         <aside class="callout-panel">
           <h3>What this shows</h3>
-          <p><code>calm diff</code> between the baseline and the edited model, scrolled to <code>edgesAdded</code>: the shortcut relationship, as a change no spec declared.</p>
+          <p>The diff between the baseline and the edited model, at <code>edgesAdded</code>: the shortcut relationship, as a change no spec declared.</p>
           <h3>Take away</h3>
           <p class="takeaway">This is the model-diff gate in the browser: a change to the model is visible and checkable against the spec.</p>
         </aside>
@@ -885,7 +864,7 @@
         </div>
         <aside class="callout-panel">
           <h3>What this shows</h3>
-          <p>Attempt B committed with the Spec trailer an agent must add, then <code>npm run evidence</code> with the author recorded as an agent: ADMISSIBLE, the bundle's path, five CALM evidence documents.</p>
+          <p>Attempt B committed with the Spec trailer an agent must add, then the evidence command with the author recorded as an agent: ADMISSIBLE, the bundle's path, five CALM evidence documents.</p>
           <h3>Take away</h3>
           <p class="takeaway">One command, one commit, one file an examiner can read.</p>
         </aside>
@@ -1079,7 +1058,8 @@ for (const pre of document.querySelectorAll('pre.term[data-capture]')) {
 const STATIONS = ['model', 'spec', 'agent', 'gate', 'evidence'];
 const ring = (on, cls, viewBox, step, r, y, ty, fontSize) => {
   const nodes = STATIONS.map((name, i) => `<g class="${name === on ? 'on' : ''}"><circle cx="${40 + i * step}" cy="${y}" r="${r}"/><text x="${40 + i * step}" y="${ty}" text-anchor="middle" font-size="${fontSize}">${name}</text></g>`).join('');
-  return `<svg class="${cls}" viewBox="${viewBox}" aria-hidden="true"><line x1="40" y1="${y}" x2="${40 + 4 * step}" y2="${y}"/>${nodes}</svg>`;
+  const segments = STATIONS.slice(1).map((_, i) => `<line x1="${40 + i * step + r}" y1="${y}" x2="${40 + (i + 1) * step - r}" y2="${y}"/>`).join('');
+  return `<svg class="${cls}" viewBox="${viewBox}" aria-hidden="true">${segments}${nodes}</svg>`;
 };
 for (const s of document.querySelectorAll('section[data-station]')) {
   s.classList.add('content');
