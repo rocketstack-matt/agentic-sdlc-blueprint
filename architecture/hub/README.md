@@ -1,9 +1,15 @@
-# Copies of the catalog's control requirements from CALM Hub
+# Copies from CALM Hub
 
-These five documents are the FINOS SDLC Common Controls Catalog entries this blueprint enforces, in the form CALM Hub
-holds them: one control requirement per catalog mitigation, generated from the catalog's source by
-`scripts/generate-sdlc-common-controls-domain.mjs` in finos/architecture-as-code. They are here so that
-`npm run calm:validate` works offline: `architecture/url-mapping.json` maps each document's hub URL to its copy.
+What this blueprint vendors from CALM Hub so that `npm run calm:validate` works offline;
+`architecture/url-mapping.json` maps each document's hub URL to its copy here. The hub is the source of truth.
 
-The hub is the source of truth. To refresh, copy the `requirement["1-0-0"]` object from the matching file under
-`calm-hub/mongo/controls/finos-sdlc-common-controls/` in finos/architecture-as-code.
+- `sdlc-control-requirement.standard.json`: the one Standard of the FINOS SDLC Common Controls Catalog, the JSON
+  Schema every control requirement document of the catalog conforms to.
+- `sdlc-prev-*.json`: the five catalog control requirement documents this blueprint enforces, in the form CALM Hub
+  holds them in the `finos-sdlc-common-controls` control domain. Each declares the Standard as its `$schema`; each
+  is also a JSON Schema that pins `control-id` and `name`, which is what the CLI validates a control's config
+  against when the architecture cites the document as its `requirement-url`.
+
+Both are generated from the catalog's source by `scripts/generate-sdlc-common-controls-domain.mjs` in
+finos/architecture-as-code. To refresh, copy the Standard from `calm-hub/mongo/standards/finos.sdlc-common-controls/`
+and the `requirement["1-0-0"]` object from the matching file under `calm-hub/mongo/controls/finos-sdlc-common-controls/`.

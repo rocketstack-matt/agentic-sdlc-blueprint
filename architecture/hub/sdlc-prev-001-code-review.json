@@ -1,5 +1,5 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$schema": "https://hub.calm.finos.org/calm/namespaces/finos.sdlc-common-controls/standards/sdlc-control-requirement/versions/1.0.0",
   "$id": "https://hub.calm.finos.org/calm/domains/finos-sdlc-common-controls/controls/sdlc-prev-001-code-review/requirement/versions/1.0.0",
   "title": "SDLC-PREV-001 Code Review",
   "name": "Code Review",
@@ -128,25 +128,25 @@
     "eu-dora": [
       {
         "id": "rts-art-16-3",
-        "title": "RTS 2024/1774 Art. 16(3) \u2014 Source code reviews (static and dynamic)",
+        "title": "RTS 2024/1774 Art. 16(3) — Source code reviews (static and dynamic)",
         "url": "https://www.springlex.eu/en/packages/dora/rts-rmf-regulation/article-16/",
         "note": "Mandates source code reviews covering both static and dynamic testing, with vulnerabilities identified, tracked through an action plan, and monitored to closure. The review gate plus SAST integration required by this mitigation implements the review; the immutable review records provide the evidence."
       },
       {
         "id": "rts-art-17-1",
-        "title": "RTS 2024/1774 Art. 17(1) \u2014 ICT change management procedures",
+        "title": "RTS 2024/1774 Art. 17(1) — ICT change management procedures",
         "url": "https://www.springlex.eu/en/packages/dora/rts-rmf-regulation/article-17/",
-        "note": "Art. 17(1)(b) requires independence between the functions approving a change and those requesting or implementing it \u2014 the regulatory basis for \"the author MUST NOT satisfy the human-review requirement for their own change\". Art. 17(1)(a) and (c) require each change to be verified against ICT security requirements, tested, quality-assured and documented; the review record bound to the change-set identity demonstrates this per change."
+        "note": "Art. 17(1)(b) requires independence between the functions approving a change and those requesting or implementing it — the regulatory basis for \"the author MUST NOT satisfy the human-review requirement for their own change\". Art. 17(1)(a) and (c) require each change to be verified against ICT security requirements, tested, quality-assured and documented; the review record bound to the change-set identity demonstrates this per change."
       },
       {
         "id": "rts-art-16-7",
-        "title": "RTS 2024/1774 Art. 16(7) \u2014 Source code integrity controls",
+        "title": "RTS 2024/1774 Art. 16(7) — Source code integrity controls",
         "url": "https://www.springlex.eu/en/packages/dora/rts-rmf-regulation/article-16/",
         "note": "Requires controls protecting the integrity of source code, whether developed in-house or supplied by third parties. Technically blocking admission to the protected baseline without a valid review outcome is the primary integrity control over the baseline."
       },
       {
         "id": "dora-art-9-4-e",
-        "title": "DORA Art. 9(4)(e) \u2014 ICT change management policies",
+        "title": "DORA Art. 9(4)(e) — ICT change management policies",
         "url": "https://www.springlex.eu/en/packages/dora/dora-regulation/article-9/",
         "note": "The parent DORA obligation: documented ICT change management policies following a risk-based approach. The deterministic, machine-evaluable review policy this mitigation requires is a direct implementation."
       }
@@ -154,21 +154,21 @@
     "uk-fca": [
       {
         "id": "sysc-15a-2",
-        "title": "FCA SYSC 15A.2 \u2014 Operational resilience requirements",
+        "title": "FCA SYSC 15A.2 — Operational resilience requirements",
         "url": "https://handbook.fca.org.uk/handbook/SYSC/15A/2.html",
         "note": "Outcome-based rather than prescriptive: firms must be able to remain within impact tolerances for important business services. Mandatory review of changes reduces the likelihood that defective or unauthorised changes disrupt those services, and retained review records evidence this capability in the firm's operational resilience self-assessment."
       },
       {
         "id": "pra-ss1-21",
-        "title": "PRA SS1/21 \u2014 Operational resilience: impact tolerances",
+        "title": "PRA SS1/21 — Operational resilience: impact tolerances",
         "url": "https://www.bankofengland.co.uk/prudential-regulation/publication/2021/march/operational-resilience-impact-tolerances-for-important-business-services-ss",
         "note": "The PRA's parallel expectations for dual-regulated firms. Same mapping logic as SYSC 15A: this mitigation is evidence of the technology-change leg of the firm's resilience capability."
       },
       {
         "id": "fca-tech-change",
-        "title": "FCA Multi-firm review \u2014 Implementing Technology Change (2021)",
+        "title": "FCA Multi-firm review — Implementing Technology Change (2021)",
         "url": "https://www.fca.org.uk/publications/multi-firm-reviews/implementing-technology-change",
-        "note": "The FCA's closest statement of SDLC-level expectations. It found failed technology changes cause roughly a quarter of high-severity incidents, and that strong governance, robust pre-deployment assurance and frequent, smaller releases correlate with higher change success rates \u2014 directly supporting risk-based review modes and fast review turnaround over batched changes."
+        "note": "The FCA's closest statement of SDLC-level expectations. It found failed technology changes cause roughly a quarter of high-severity incidents, and that strong governance, robust pre-deployment assurance and frequent, smaller releases correlate with higher change success rates — directly supporting risk-based review modes and fast review turnaround over batched changes."
       }
     ],
     "ffiec-itbooklets": [
@@ -182,19 +182,19 @@
         "id": "dam-3",
         "title": "DAM: III Risk Management of Development, Acquisition, and Maintenance",
         "url": "https://ithandbook.ffiec.gov/it-booklets/development-acquisition-and-maintenance/iii-risk-management-of-development-acquisition-and-maintenance/",
-        "note": "Sections III.A and III.D identify code review as a primary risk identification and mitigation control \u2014 detecting errors before code migrates toward production."
+        "note": "Sections III.A and III.D identify code review as a primary risk identification and mitigation control — detecting errors before code migrates toward production."
       },
       {
         "id": "dam-4",
         "title": "DAM: IV Common Development, Acquisition, and Maintenance Risk Topics",
         "url": "https://ithandbook.ffiec.gov/it-booklets/development-acquisition-and-maintenance/iv-common-development-acquisition-and-maintenance-risk-topics/",
-        "note": "Section IV.D (Secure Development) covers manual and automated code review, source code security analyzers, and expects management to validate that the code review process meets its needs \u2014 the basis for maintaining approved automated review tools and configurations."
+        "note": "Section IV.D (Secure Development) covers manual and automated code review, source code security analyzers, and expects management to validate that the code review process meets its needs — the basis for maintaining approved automated review tools and configurations."
       }
     ],
     "us-nydfs": [
       {
         "id": "nydfs-500-08",
-        "title": "NYDFS 23 NYCRR \u00a7500.08 \u2014 Application Security",
+        "title": "NYDFS 23 NYCRR §500.08 — Application Security",
         "url": "https://www.dfs.ny.gov/system/files/documents/2023/03/23NYCRR500_0.pdf",
         "note": "Requires written procedures ensuring secure development practices for in-house developed applications, periodically reviewed by the CISO. A documented, technically enforced review policy with retained records is a central component of those procedures, and supports the covered entity's annual certification."
       }

@@ -96,7 +96,7 @@
           "description": "Only position-service may connect to the position store. SDLC-PREV-017 asks that service dependencies be mapped and kept current with every change; drift-check enforces that the code matches this map (risk SDLC-OP-007). The allowed-sources list goes further than the catalog: see candidate control 1 in docs/CANDIDATE-CONTROLS.md.",
           "requirements": [
             {
-              "requirement-url": "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/standards/sdlc-prev-017-service-dependency/versions/1.0.0",
+              "requirement-url": "https://hub.calm.finos.org/calm/domains/finos-sdlc-common-controls/controls/sdlc-prev-017-service-dependency-control/requirement/versions/1.0.0",
               "config": {
                 "control-id": "SDLC-PREV-017",
                 "name": "Service Dependency Control",
@@ -196,7 +196,7 @@
       "description": "Review mode is selected by a deterministic, machine-evaluable policy. The policy inputs come from this architecture: which nodes a change touches, their criticality tier and data classification.",
       "requirements": [
         {
-          "requirement-url": "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/standards/sdlc-prev-001-code-review/versions/1.0.0",
+          "requirement-url": "https://hub.calm.finos.org/calm/domains/finos-sdlc-common-controls/controls/sdlc-prev-001-code-review/requirement/versions/1.0.0",
           "config": {
             "control-id": "SDLC-PREV-001",
             "name": "Code Review",
@@ -256,7 +256,7 @@
       "description": "Requirements live as version-controlled specs. Every code change names an approved spec, and may only touch the CALM nodes that spec declares.",
       "requirements": [
         {
-          "requirement-url": "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/standards/sdlc-prev-004-requirements-repository/versions/1.0.0",
+          "requirement-url": "https://hub.calm.finos.org/calm/domains/finos-sdlc-common-controls/controls/sdlc-prev-004-requirements/requirement/versions/1.0.0",
           "config": {
             "control-id": "SDLC-PREV-004",
             "name": "Requirements Repository",
@@ -271,7 +271,7 @@
       "description": "A change is only admissible when every blocking gate passes. Without this the other controls are advisory.",
       "requirements": [
         {
-          "requirement-url": "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/standards/sdlc-prev-012-deployment-gating/versions/1.0.0",
+          "requirement-url": "https://hub.calm.finos.org/calm/domains/finos-sdlc-common-controls/controls/sdlc-prev-012-deployment-gating/requirement/versions/1.0.0",
           "config": {
             "control-id": "SDLC-PREV-012",
             "name": "Deployment Gating",
@@ -292,7 +292,7 @@
       "description": "Gate and test results are captured as a machine-readable bundle bound to the commit and hashed.",
       "requirements": [
         {
-          "requirement-url": "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/standards/sdlc-prev-014-test-evidence-retention/versions/1.0.0",
+          "requirement-url": "https://hub.calm.finos.org/calm/domains/finos-sdlc-common-controls/controls/sdlc-prev-014-test-evidence/requirement/versions/1.0.0",
           "config": {
             "control-id": "SDLC-PREV-014",
             "name": "Test Evidence Retention",

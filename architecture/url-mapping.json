@@ -1,15 +1,11 @@
 {
   "https://hub.calm.finos.org/calm/domains/finos-sdlc-common-controls/controls/sdlc-prev-001-code-review/requirement/versions/1.0.0": "hub/sdlc-prev-001-code-review.json",
-  "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/standards/sdlc-prev-001-code-review/versions/1.0.0": "standards/sdlc-prev-001-code-review.standard.json",
   "https://hub.calm.finos.org/calm/domains/finos-sdlc-common-controls/controls/sdlc-prev-004-requirements/requirement/versions/1.0.0": "hub/sdlc-prev-004-requirements.json",
-  "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/standards/sdlc-prev-004-requirements-repository/versions/1.0.0": "standards/sdlc-prev-004-requirements-repository.standard.json",
   "https://hub.calm.finos.org/calm/domains/finos-sdlc-common-controls/controls/sdlc-prev-012-deployment-gating/requirement/versions/1.0.0": "hub/sdlc-prev-012-deployment-gating.json",
-  "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/standards/sdlc-prev-012-deployment-gating/versions/1.0.0": "standards/sdlc-prev-012-deployment-gating.standard.json",
   "https://hub.calm.finos.org/calm/domains/finos-sdlc-common-controls/controls/sdlc-prev-014-test-evidence/requirement/versions/1.0.0": "hub/sdlc-prev-014-test-evidence.json",
-  "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/standards/sdlc-prev-014-test-evidence-retention/versions/1.0.0": "standards/sdlc-prev-014-test-evidence-retention.standard.json",
   "https://hub.calm.finos.org/calm/domains/finos-sdlc-common-controls/controls/sdlc-prev-017-service-dependency-control/requirement/versions/1.0.0": "hub/sdlc-prev-017-service-dependency-control.json",
-  "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/standards/sdlc-prev-017-service-dependency/versions/1.0.0": "standards/sdlc-prev-017-service-dependency.standard.json",
-  "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/standards/env-binding-interface/versions/1.0.0": "standards/env-binding-interface.standard.json",
+  "https://hub.calm.finos.org/calm/namespaces/finos.sdlc-common-controls/standards/sdlc-control-requirement/versions/1.0.0": "hub/sdlc-control-requirement.standard.json",
   "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/standards/governed-node/versions/1.0.0": "standards/governed-node.standard.json",
-  "https://rocketstack-matt.github.io/agentic-sdlc-blueprint/patterns/governed-service.pattern.json": "governed-service.pattern.json"
+  "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/standards/env-binding-interface/versions/1.0.0": "standards/env-binding-interface.standard.json",
+  "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/patterns/governed-service/versions/1.0.0": "governed-service.pattern.json"
 }

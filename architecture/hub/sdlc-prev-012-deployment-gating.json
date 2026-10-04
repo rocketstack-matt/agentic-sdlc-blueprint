@@ -1,5 +1,5 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$schema": "https://hub.calm.finos.org/calm/namespaces/finos.sdlc-common-controls/standards/sdlc-control-requirement/versions/1.0.0",
   "$id": "https://hub.calm.finos.org/calm/domains/finos-sdlc-common-controls/controls/sdlc-prev-012-deployment-gating/requirement/versions/1.0.0",
   "title": "SDLC-PREV-012 Deployment Gating",
   "name": "Deployment Gating",
@@ -79,7 +79,7 @@
     "Gating policies MUST be configurable per application or service to allow organisations to tailor risk thresholds (e.g., stricter policies for internet-facing applications, adjusted thresholds for internal tools)",
     "A documented override and emergency deployment process MUST exist for situations where deployment is critical despite unmet gate conditions. Overrides MUST require approval from an appropriate authority, include documented justification, and be time-bound",
     "Overrides MUST be logged and auditable, including who approved, the justification, and the conditions that were bypassed",
-    "Gate evaluation results \u2014 including pass/fail status, which checks were evaluated, and any overrides \u2014 MUST be retained as part of the deployment record",
+    "Gate evaluation results — including pass/fail status, which checks were evaluated, and any overrides — MUST be retained as part of the deployment record",
     "Gating policies MUST be reviewed and updated at least annually, or when significant changes to the threat landscape, regulatory requirements, or technology stack occur"
   ],
   "examples": [

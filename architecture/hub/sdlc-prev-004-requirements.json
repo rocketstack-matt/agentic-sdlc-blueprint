@@ -1,5 +1,5 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$schema": "https://hub.calm.finos.org/calm/namespaces/finos.sdlc-common-controls/standards/sdlc-control-requirement/versions/1.0.0",
   "$id": "https://hub.calm.finos.org/calm/domains/finos-sdlc-common-controls/controls/sdlc-prev-004-requirements/requirement/versions/1.0.0",
   "title": "SDLC-PREV-004 Requirements Repository",
   "name": "Requirements Repository",
@@ -41,7 +41,7 @@
   ],
   "details": [
     "This control requires the organisation to designate an approved repository or repositories for storage of the requirements that are used as part of software development. It is important for such a repository to have appropriate requirements around storage in terms of duration since this will need to live alongside the software it helps inform and create, but also around appropriate audit trail of who created a requirement and what its content was at the time the work was carried out.",
-    "The repository must also either hold requirements immutably or maintain an audit trail sufficient to reconstruct the state of any requirement at any past point in time \u2014 a property commonly achieved by holding requirements as files in version control, or as tickets in a system that preserves full revision history.",
+    "The repository must also either hold requirements immutably or maintain an audit trail sufficient to reconstruct the state of any requirement at any past point in time — a property commonly achieved by holding requirements as files in version control, or as tickets in a system that preserves full revision history.",
     "A repository can be designated on paper while teams continue to work from informal channels; periodic attestation by a named owner confirms it is in active use. The control sits at the entry point of the SDLC and is a precondition for traceability between requirements and tests (MI-15 (https://finos.github.io/sdlc-common-controls/mitigations/mi-15_testing-requirements.html)), release-time approval (MI-20 (https://finos.github.io/sdlc-common-controls/mitigations/mi-20_requirements-approval.html)), and audit reconstruction."
   ],
   "requirements": [
@@ -60,7 +60,7 @@
   "references": {
     "links": [
       {
-        "title": "ISO/IEC/IEEE 29148 \u2014 Systems and software engineering \u2014 Life cycle processes \u2014 Requirements engineering",
+        "title": "ISO/IEC/IEEE 29148 — Systems and software engineering — Life cycle processes — Requirements engineering",
         "url": "https://www.iso.org/standard/72089.html"
       }
     ]

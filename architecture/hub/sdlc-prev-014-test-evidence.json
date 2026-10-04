@@ -1,5 +1,5 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$schema": "https://hub.calm.finos.org/calm/namespaces/finos.sdlc-common-controls/standards/sdlc-control-requirement/versions/1.0.0",
   "$id": "https://hub.calm.finos.org/calm/domains/finos-sdlc-common-controls/controls/sdlc-prev-014-test-evidence/requirement/versions/1.0.0",
   "title": "SDLC-PREV-014 Test Evidence Retention",
   "name": "Test Evidence Retention",
@@ -60,7 +60,7 @@
     }
   ],
   "details": [
-    "Test evidence retention addresses the requirement to produce, on demand, machine-generated records that demonstrate testing occurred for any given code change or release. Without retained evidence, an organisation cannot prove to a regulator, auditor, or customer that its test suite operated as intended at the time a change was deployed. The mere existence of a test suite is insufficient \u2014 evidence must be tied to specific commits, cover the expected scope, and survive for the full regulatory retention period.",
+    "Test evidence retention addresses the requirement to produce, on demand, machine-generated records that demonstrate testing occurred for any given code change or release. Without retained evidence, an organisation cannot prove to a regulator, auditor, or customer that its test suite operated as intended at the time a change was deployed. The mere existence of a test suite is insufficient — evidence must be tied to specific commits, cover the expected scope, and survive for the full regulatory retention period.",
     "This control is distinct from test execution (SDLC-PREV-016 (https://finos.github.io/sdlc-common-controls/mitigations/mi-16_test-execution.html)), which governs whether required testing was performed and any failures appropriately reviewed. Test evidence retention concerns the preservation and retrievability of the artefacts that test execution produces. An organisation may execute testing correctly but still face an evidence failure if the resulting records are not retained in a durable, tamper-evident form linked to the change they attest to.",
     "In regulated financial services environments, the inability to produce test evidence for a released change is treated by examiners as equivalent to the testing not having occurred. Coverage metrics, test run logs, pass/fail records, and the identity of the system that executed them form part of the SDLC governance trail required to demonstrate that software development risk is managed."
   ],
