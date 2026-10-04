@@ -150,3 +150,31 @@
 
 /* Appendix */
 .reveal .appendix-tag { font-size: 26px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.4em; }
+
+/* Template: workshop step. The screen the participant sees on the left, a Learning Lab picture or a repository
+   terminal session replayed from captures.js, and beside it the callout that says what the screen shows and what to
+   take from it. Every step slide carries both; slides/check.mjs insists. */
+.reveal section.step > h2 { min-height: 0; margin-bottom: 22px; }
+.reveal .screen { display: grid; grid-template-columns: 1100px minmax(0, 1fr); gap: 44px; align-items: start; }
+.reveal .screen .pane-head { font-size: 22px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0 0 10px; }
+.reveal .screen .pane-head strong { color: var(--ink); }
+.reveal .screen img.shot { width: 100%; }
+.reveal .screen .lab-frame { width: 100%; }
+.reveal .screen pre.term { width: 100%; font-size: 20px; line-height: 1.3; padding: 22px 26px; margin: 0; }
+.reveal .screen pre.term.tight { font-size: 18px; }
+.reveal .screen pre.term.roomy { font-size: 23px; }
+.reveal pre.term .cmd { color: #fff; font-weight: 700; }
+.reveal pre.term .cmd .prompt { color: var(--green); }
+.reveal pre.term .banner { color: #9a9a9a; }
+.reveal .callout-panel { background: #f4f5f7; border-left: 8px solid var(--amber); border-radius: 0 12px 12px 0; padding: 22px 26px; font-size: 25px; line-height: 1.35; }
+.reveal .callout-panel h3 { font-size: 19px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin: 0 0 8px; font-weight: 700; }
+.reveal .callout-panel p { margin: 0 0 18px; }
+.reveal .callout-panel p:last-child { margin-bottom: 0; }
+.reveal .callout-panel .takeaway { font-weight: 700; color: var(--ink); }
+.reveal .callout-panel img { display: block; width: 100%; max-width: 340px; margin-top: 4px; border-radius: 10px; }
+.reveal .callout-panel code { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 0.9em; }
+.reveal .ways { font-size: 26px; line-height: 1.4; margin-top: 0.4em; }
+.reveal .tight-list li { font-size: 27px; margin: 0.25em 0; }
+.reveal .ways strong { color: var(--ink); }
+.reveal pre.term .hl { color: #fff; font-weight: 700; }
+.reveal svg.loop { max-height: 540px; }
