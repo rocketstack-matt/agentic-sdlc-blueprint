@@ -438,13 +438,10 @@ const mitigationRef = (key) => {
     };
 };
 
-mkdirSync(OUT, { recursive: true });
-for (const stale of readdirSync(OUT).filter((f) => f.endsWith('.json')))
-    rmSync(join(OUT, stale));
-mkdirSync(STANDARDS_OUT, { recursive: true });
-if (DOCS_OUT) mkdirSync(DOCS_OUT, { recursive: true });
-
 const index = [];
+// Every output is collected here and written only once every document conforms, so a nonconforming catalog
+// leaves the previous output untouched rather than a partial set that includes the bad document.
+const outputs = [];
 let invalid = 0;
 mitigations.forEach(({ file, data, sections: sec }, i) => {
     const id = idOf(data);
@@ -519,15 +516,8 @@ mitigations.forEach(({ file, data, sections: sec }, i) => {
         requirement: { '1-0-0': document },
         configurations: [],
     };
-    writeFileSync(
-        join(OUT, `${pad(controlId)}-${slug}.json`),
-        JSON.stringify(seed, null, 2) + '\n'
-    );
-    if (DOCS_OUT)
-        writeFileSync(
-            join(DOCS_OUT, `${slug}.json`),
-            JSON.stringify(document, null, 2) + '\n'
-        );
+    outputs.push([join(OUT, `${pad(controlId)}-${slug}.json`), JSON.stringify(seed, null, 2) + '\n']);
+    if (DOCS_OUT) outputs.push([join(DOCS_OUT, `${slug}.json`), JSON.stringify(document, null, 2) + '\n']);
     index.push({
         controlId,
         id,
@@ -540,9 +530,15 @@ mitigations.forEach(({ file, data, sections: sec }, i) => {
     });
 });
 if (invalid) {
-    console.error(`${invalid} document(s) do not conform to the Standard; nothing else written`);
+    console.error(`${invalid} document(s) do not conform to the Standard; nothing written`);
     process.exit(1);
 }
+mkdirSync(OUT, { recursive: true });
+for (const stale of readdirSync(OUT).filter((f) => f.endsWith('.json')))
+    rmSync(join(OUT, stale));
+mkdirSync(STANDARDS_OUT, { recursive: true });
+if (DOCS_OUT) mkdirSync(DOCS_OUT, { recursive: true });
+for (const [path, content] of outputs) writeFileSync(path, content);
 writeFileSync(
     join(STANDARDS_OUT, 'sdlc-control-requirement.standard.json'),
     JSON.stringify(standard, null, 2) + '\n'
