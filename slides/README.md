@@ -19,7 +19,7 @@ repository for the rest. Each screen has a callout beside it saying what it show
   terminal enlarged after the failing validate, the editor after each edit and the terminal after each command. It needs a lab serving the two lessons: the hosted lab once they have landed, or the dev
   server from a checkout of finos/architecture-as-code (`npm run calm-lab:run`, then pass `http://localhost:5173`).
 - `node slides/hub-catalog-screenshot.mjs` retakes the picture of the catalog's control domain on the "three
-  failures, three layers" slide. It needs a hub seeded with the `finos-sdlc-common-controls` domain, which the
+  faults, three layers, three owners" slide. It needs a hub seeded with the `finos-sdlc-common-controls` domain, which the
   read-only image built from finos/architecture-as-code has.
 - `node slides/check.mjs` is the deck's test: slide count, notes on every slide, a station ring on every section
   card, every capture and picture present, every step slide carrying its screen and both callout parts, no em-dashes.

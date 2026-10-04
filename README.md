@@ -57,10 +57,11 @@ SPEC=SPEC-001 npm run gates                     # BLOCKED: drift, and a control 
 Then work through the labs. To see the pipeline run on your own changes, enable Actions on your fork
 (GitHub disables workflows on forks until you do) and open a pull request there.
 
-No install at all? The first two stations also run in the browser, in the CALM Learning Lab, on the same model with the
-real CALM engine: [a governed model](https://lab.calm.finos.org/?lesson=agentic-sdlc-model) (station 1) and
-[a change to the model](https://lab.calm.finos.org/?lesson=agentic-sdlc-change) (the spec, and the model-diff half of
-station 4), about fifteen minutes together. Stations 3 to 5 need the repository: code, tests, the gates and the evidence.
+No install at all? Two lessons run in the browser, in the CALM Learning Lab, on the same model with the real CALM
+engine: [a governed model](https://lab.calm.finos.org/?lesson=agentic-sdlc-model) is station 1, and
+[a change to the model](https://lab.calm.finos.org/?lesson=agentic-sdlc-change) is the model-change half of station 4,
+a spec declaring the change included; about fifteen minutes together. Everything else needs the repository: the spec
+tooling, the agent's code, the gates and the evidence.
 
 | Lab | Station | You will |
 | --- | --- | --- |
