@@ -195,14 +195,14 @@
 .reveal .v3-cell { display: flex; flex: 0 0 auto; flex-direction: column; gap: 6px; margin: 0 0 0 12px; }
 .reveal .v3-chip { display: block; flex: 0 1 auto; margin: 0; padding: 6px 8px; box-sizing: border-box; background: #fff; border: 3px solid var(--teal); border-radius: 12px; font-size: 22px; line-height: 1.2; color: var(--ink); }
 .reveal .v3-chip b { color: var(--teal); font-weight: 700; margin-right: 6px; }
-.reveal .v3-chip.on { background: var(--teal); color: #fff; font-weight: 700; }
-.reveal .v3-chip.on b { color: #fff; }
+.reveal .v3-chip.v3-on { background: var(--teal); color: #fff; font-weight: 700; }
+.reveal .v3-chip.v3-on b { color: #fff; }
 .reveal .v3-rail { background: #f4f5f7; border-radius: 16px; padding: 16px 20px 12px; box-sizing: border-box; }
 .reveal .v3-risks { gap: 0; }
 .reveal .v3-risks li { font-size: 22px; line-height: 1.15; margin: 0 -10px; padding: 4px 10px; border-radius: 8px; color: var(--ink); }
 .reveal .v3-risks li b { color: var(--teal); font-weight: 700; margin-right: 8px; }
-.reveal .v3-risks li.on { background: var(--teal); color: #fff; font-weight: 700; }
-.reveal .v3-risks li.on b { color: #fff; }
+.reveal .v3-risks li.v3-on { background: var(--teal); color: #fff; font-weight: 700; }
+.reveal .v3-risks li.v3-on b { color: #fff; }
 .reveal .v3-foot { margin-top: 10px; }
 .reveal .v3-foot p { font-size: 24px; line-height: 1.25; margin: 0; color: var(--muted); }
 .reveal .v3-foot b { color: var(--ink); }
@@ -230,7 +230,7 @@
 .reveal .v3-gate-name { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 30px; line-height: 1.2; font-weight: 700; margin: 0 0 8px; color: var(--ink); }
 .reveal .v3-gate-what { font-size: 26px; line-height: 1.3; margin: 0 0 14px; color: var(--ink); }
 .reveal .v3-gate-ctl { display: flex; flex-direction: column; gap: 6px; margin: 0; }
-.reveal .v3-gate-ctl span { display: grid; grid-template-columns: max-content 1fr; gap: 10px; align-items: baseline; font-size: 24px; line-height: 1.3; color: var(--ink); }
+.reveal .v3-gate-ctl > span { display: grid; grid-template-columns: max-content 1fr; gap: 10px; align-items: baseline; font-size: 24px; line-height: 1.3; color: var(--ink); }
 .reveal .v3-ctl { display: inline-block; font-size: 22px; line-height: 1.2; font-weight: 700; color: #fff; background: var(--teal); border-radius: 999px; padding: 4px 12px; }
 .reveal .v3-gates-foot { font-size: 28px; line-height: 1.35; margin: 24px 0 0; color: var(--muted); }
 .reveal .v3-gates-foot b { color: var(--ink); }

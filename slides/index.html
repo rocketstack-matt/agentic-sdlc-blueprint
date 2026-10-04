@@ -47,7 +47,7 @@
         <div class="v3-phase v3-next">Release</div>
         <div class="v3-phase">Runtime</div>
         <ul class="v3-col">
-          <li class="v3-chip on"><b>001</b>Code Review</li>
+          <li class="v3-chip v3-on"><b>001</b>Code Review</li>
           <li class="v3-chip"><b>005</b>Vulnerability Scanning: SAST</li>
           <li class="v3-chip"><b>008</b>Version Control</li>
           <li class="v3-chip"><b>010</b>Secret Detection</li>
@@ -56,25 +56,25 @@
           <li class="v3-chip"><b>003</b>Software Artifact Provenance</li>
           <li class="v3-chip"><b>007</b>Vulnerability Scanning: Dependencies</li>
           <li class="v3-chip"><b>009</b>Component Inventory</li>
-          <li class="v3-chip on"><b>014</b>Test Evidence Retention</li>
-          <li class="v3-chip on"><b>016</b>Test Execution and Sign-Off</li>
+          <li class="v3-chip v3-on"><b>014</b>Test Evidence Retention</li>
+          <li class="v3-chip v3-on"><b>016</b>Test Execution and Sign-Off</li>
         </ul>
         <ul class="v3-col">
           <li class="v3-chip"><b>006</b>Vulnerability Scanning: DAST</li>
-          <li class="v3-chip on"><b>012</b>Deployment Gating</li>
+          <li class="v3-chip v3-on"><b>012</b>Deployment Gating</li>
           <li class="v3-chip"><b>019</b>Version Release Approval Gating</li>
           <li class="v3-chip"><b>020</b>Requirements Approval for Release</li>
           <li class="v3-chip"><b>021</b>Infrastructure Dependencies</li>
         </ul>
         <ul class="v3-col">
-          <li class="v3-chip on"><b>017</b>Service Dependency Control</li>
+          <li class="v3-chip v3-on"><b>017</b>Service Dependency Control</li>
         </ul>
         <div class="v3-rule"></div>
         <ul class="v3-band">
           <li class="v3-band-label">Whole lifecycle <small>every phase</small></li>
-          <li class="v3-chip on"><b>004</b>Requirements Repository</li>
+          <li class="v3-chip v3-on"><b>004</b>Requirements Repository</li>
           <li class="v3-chip"><b>011</b>Vulnerability Remediation SLAs</li>
-          <li class="v3-chip on"><b>013</b>System Inventory</li>
+          <li class="v3-chip v3-on"><b>013</b>System Inventory</li>
           <li class="v3-chip"><b>015</b>Testing Requirements</li>
         </ul>
         <div class="v3-rule"></div>
@@ -89,22 +89,22 @@
     <aside class="v3-rail">
       <p class="v3-head"><b>11 risks</b> <small>the outcomes the controls exist to reduce</small></p>
       <ul class="v3-risks">
-        <li class="on"><b>SDLC-OP-007</b>Configuration Drift</li>
+        <li class="v3-on"><b>SDLC-OP-007</b>Configuration Drift</li>
         <li><b>SDLC-SEC-003</b>Credential and Secret Exposure</li>
         <li><b>SDLC-SEC-004</b>Vulnerable Software in Production</li>
         <li><b>SDLC-SEC-006</b>Unauthorised System Access</li>
-        <li class="on"><b>SDLC-SEC-008</b>Unauthorised Change</li>
+        <li class="v3-on"><b>SDLC-SEC-008</b>Unauthorised Change</li>
         <li><b>SDLC-SEC-009</b>Environment Breach</li>
         <li><b>SDLC-SEC-010</b>Dependency and Transitive Supply Chain Compromise</li>
         <li><b>SDLC-SEC-011</b>Build Toolchain and Service Supply Chain Compromise</li>
         <li><b>SDLC-RC-001</b>Insider Threat</li>
-        <li class="on"><b>SDLC-RC-005</b>Audit and Compliance Evidence Failure</li>
+        <li class="v3-on"><b>SDLC-RC-005</b>Audit and Compliance Evidence Failure</li>
         <li><b>SDLC-BUS-012</b>Business Reputation Risk from Non-Approved Software Version Releases</li>
       </ul>
     </aside>
   </div>
   <div class="v3-foot">
-    <p class="v3-row"><span><span class="v3-swatch"></span><b>Filled</b>: the seven controls this talk enforces, and the three risks they answer to.</span><span class="v3-link">finos.github.io/sdlc-common-controls</span></p>
+    <p class="v3-row"><span><span class="v3-swatch"></span><b>Filled</b>: the seven controls this talk enforces, and the three risks they answer to.</span><a data-hub="catalog" class="v3-link">finos.github.io/sdlc-common-controls</a></p>
     <p>Built by a FINOS working group. Every control maps to NIST SP 800-53r5 and, where relevant, EU DORA, NIST SSDF and SLSA.</p>
   </div>
       <aside class="notes">Speaker: Aaron. FINOS wrote the SDLC controls once, in the open: a reference library of software governance controls for regulated delivery, built by a working group. Eleven risks are the outcomes it exists to reduce; twenty two mitigations each name the risks they address and the lifecycle phase they belong to; every entry maps to NIST SP 800-53r5 and, where relevant, EU DORA, NIST SSDF and SLSA. The highlighted seven are the ones this talk enforces, and the highlighted three risks are the ones in view: configuration drift, unauthorised change, and audit and compliance evidence failure. The link is the catalog site; everything on this slide is there.</aside>
