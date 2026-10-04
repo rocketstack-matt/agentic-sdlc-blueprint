@@ -64,6 +64,7 @@ lab "npm run gates";            expect_rc 0; expect "ADMISSIBLE"; expect "2 pass
 # --- Lab 1: Model --------------------------------------------------------------------------------
 echo "== Lab 1"
 lab "npm run calm:validate";    expect_rc 0; expect "Errors: no"
+lab "npx calm validate -p architecture/governed-service.pattern.json -a architecture/trade-capture.architecture.json -u architecture/url-mapping.json -f pretty"; expect_rc 0; expect "Errors: no"
 edit_json architecture/trade-capture.architecture.json \
   "a => { delete a.controls['sdlc-prev-004-requirements-repository'].requirements[0].config.repository }"
 lab "npm run calm:validate";    expect_nonzero; expect "Errors: yes"; expect "must have required property 'repository'"

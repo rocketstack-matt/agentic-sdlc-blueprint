@@ -1,5 +1,5 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$schema": "https://calm.finos.org/release/1.2/meta/calm.json",
   "$id": "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/patterns/governed-service/versions/1.0.0",
   "title": "Governed service pattern",
   "description": "How this estate enforces the SDLC Common Controls on every architecture. The pattern requires the four system-level controls, pins each to its control requirement document in the finos-sdlc-common-controls domain on CALM Hub, and defines the parameters the gates read. Every node satisfies the governed-node Standard, which carries the metadata the gates read and the environment binding on every interface; a node that carries Service Dependency Control declares its allowed sources.",

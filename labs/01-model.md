@@ -15,6 +15,17 @@
    ```sh
    npm run calm:validate
    ```
+   That is the CALM CLI, and it is worth running once by hand:
+   ```sh
+   npx calm validate -p architecture/governed-service.pattern.json -a architecture/trade-capture.architecture.json -u architecture/url-mapping.json -f pretty
+   ```
+   `-p` is the pattern, `-a` the architecture. `-u` is a URL mapping: every canonical URL the model cites (the
+   catalog's documents and their Standard, the node and interface Standards, the pattern, all addresses on CALM Hub)
+   maps to a copy under `architecture/`, so validation is offline and reproducible. We keep the mapping even once the
+   hub serves those URLs, because the CLI only fetches from hosts you allow with `calm init-config`, and a pipeline
+   should not depend on a fetch. CALM's tutorials 17 to 20 (patterns, Standards, enforcing Standards, multi-pattern
+   validation) are the background this lab compresses; they run in the browser in the
+   [CALM Learning Lab](https://calm.finos.org/tutorials/intermediate/19-enforcing-standards).
 5. Break a control on purpose. Delete the `repository` key from the `sdlc-prev-004-requirements-repository`
    config and validate again. Two schemas look at that config. The control's `requirement-url` names the catalog's
    own control requirement document on CALM Hub (a copy sits in `architecture/hub/`); the CLI validates the config
@@ -31,9 +42,12 @@
    the four system-level controls, pins each to its catalog document, fixes the parameters the gates read, and applies
    the governed-node Standard to every node, so services carry a source path, a criticality tier and a data
    classification, and every interface names its environment binding. Standards say what a node, an interface or a
-   control requirement looks like; the pattern says which of them an architecture here must satisfy. Without it this
-   edit validates cleanly, and the drift gate then no longer knows `trade-api` has code to check, so the shortcut in
-   Lab 3 would sail through. Undo with `git checkout architecture/`.
+   control requirement looks like; the pattern says which of them an architecture here must satisfy. Standards do not
+   enforce themselves; a pattern does. In the words of CALM's tutorials this is a standards-enforcing pattern, not a
+   structural one: it uses `items`, so it applies to every node without saying which nodes must exist. Relationships
+   are left unconstrained on purpose; what may connect to what is checked against the code by the drift gate in Lab 4.
+   Without the pattern this edit validates cleanly, and the drift gate then no longer knows `trade-api` has code to
+   check, so the shortcut in Lab 3 would sail through. Undo with `git checkout architecture/`.
 
 **Takeaway.** A control in a catalog is prose. A control attached to a CALM node is data with a schema, an owner and an enforcement point.
 

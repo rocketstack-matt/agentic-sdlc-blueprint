@@ -106,6 +106,10 @@ AGENTS.md       the instructions any coding agent gets
 - The pattern requires the system-level controls, pins each to its catalog document, fixes the parameters the gates
   read, and checks the config of any node that carries SDLC-PREV-017. It cannot know which node should carry that
   control; `position-store` does. That stays a modelling decision.
+- One pattern carries both the node and interface Standards and the controls, so the labs have one command and one
+  error list. CALM's multi-pattern validation tutorial recommends splitting them once an estate has several
+  architecture styles: one Standards pattern reused everywhere, one structural pattern per style, validated
+  separately. Nothing here constrains relationships; the drift gate checks connections against the code instead.
 
 ## Contributing
 
