@@ -1,6 +1,8 @@
 # Lab 2. Spec: say what you want in terms of the model
 
-**Station 2 of 5. About 5 minutes.**
+**Station 2 of 5. About 5 minutes.** The Learning Lab lesson
+[a change to the model](https://lab.calm.finos.org/?lesson=agentic-sdlc-change) covers how a spec declares its scope and
+its model change, in the browser.
 
 1. Read `specs/SPEC-001-account-summary.md`. The front matter names the CALM nodes and the relationship the change
    may use. The body repeats, in words, the one constraint most likely to be violated.

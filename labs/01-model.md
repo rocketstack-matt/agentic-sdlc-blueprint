@@ -1,6 +1,7 @@
 # Lab 1. Model: the architecture is the context
 
-**Station 1 of 5. About 10 minutes. No API key needed.**
+**Station 1 of 5. About 10 minutes. No API key needed.** Also in the browser, with nothing installed: the Learning Lab
+lesson [a governed model](https://lab.calm.finos.org/?lesson=agentic-sdlc-model) is this lab on the same model.
 
 1. Open `architecture/trade-capture.architecture.json`. It is a [FINOS CALM](https://calm.finos.org) 1.2 document:
    six nodes, five relationships.
