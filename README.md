@@ -31,7 +31,8 @@ exists if your architecture is code. So:
 2. **Spec.** Requirements reference CALM nodes, which fixes the scope an agent may touch.
 3. **Agent.** The agent reads the model (MCP or CLI) before it writes anything.
 4. **Gate.** Deterministic checks compare the change to the model. The model also decides who must review it.
-5. **Evidence.** One hashed bundle per change, keyed by catalog control id.
+5. **Evidence.** One hashed bundle per change, keyed by catalog control id, plus one CALM evidence document per
+   control configuration in the model.
 
 ## Quick start
 
@@ -98,7 +99,10 @@ AGENTS.md       the instructions any coding agent gets
   It is about 80 lines so that you can read it on a slide. Real estates need richer signals: IaC, service mesh
   config, OpenAPI clients, runtime traces. That gap is the interesting open-source work.
 - The review router emits a decision. Enforcing it (required reviewers, an approved cognitive review engine) is platform work.
-- Evidence is written to disk and a CI artefact. Immutability and retention are yours to provide.
+- Evidence is written to disk and a CI artefact. Immutability and retention are yours to provide. The CALM evidence
+  documents are checked for shape by `labs/verify.sh`, not validated against the meta schema: the CLI validates
+  architectures and patterns, not evidence. A gate that cites a control with no config in the model (SDLC-PREV-016
+  in `tests`) is in the bundle but gets no document.
 - The pattern requires the system-level controls and, on every service, the metadata the gates read. It cannot know
   which node should carry a node-level control such as SDLC-PREV-017 on `position-store`. That stays a modelling decision.
 
