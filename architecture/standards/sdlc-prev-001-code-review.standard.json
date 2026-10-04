@@ -1,29 +1,29 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://rocketstack-matt.github.io/agentic-sdlc-blueprint/controls/sdlc-prev-001-code-review.requirement.json",
-  "title": "Code Review",
-  "description": "CALM control requirement for FINOS SDLC Common Controls Catalog SDLC-PREV-001. Catalog entry: https://finos.github.io/sdlc-common-controls/mitigations/mi-1_code-review.html",
-  "type": "object",
+  "$id": "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/standards/sdlc-prev-001-code-review/versions/1.0.0",
+  "title": "Code Review, as enforced by this blueprint",
+  "description": "Extends the catalog's SDLC-PREV-001 control requirement with the parameters this blueprint's gates need. The catalog says what; this Standard says what our enforcement reads.",
+  "allOf": [
+    {
+      "$ref": "https://hub.calm.finos.org/calm/domains/finos-sdlc-common-controls/controls/sdlc-prev-001-code-review/requirement/versions/1.0.0"
+    }
+  ],
   "properties": {
-    "catalog-id": {
-      "const": "SDLC-PREV-001"
-    },
-    "catalog-url": {
-      "type": "string"
-    },
-    "enforced-by": {
-      "type": "string",
-      "description": "Repo path of the gate that enforces this control"
+    "author-may-not-review": {
+      "const": true,
+      "description": "The author of a change never satisfies its review requirement"
     },
     "default-mode": {
       "enum": [
         "human",
         "cognitive",
         "automated"
-      ]
+      ],
+      "description": "Review mode when no rule matches: fail safe"
     },
     "rules": {
       "type": "array",
+      "description": "Evaluated in order by gates/review-router.mjs; the first match decides the mode",
       "items": {
         "type": "object",
         "properties": {
@@ -58,14 +58,10 @@
           "reason"
         ]
       }
-    },
-    "author-may-not-review": {
-      "const": true
     }
   },
   "required": [
-    "catalog-id",
-    "enforced-by",
+    "author-may-not-review",
     "default-mode",
     "rules"
   ]

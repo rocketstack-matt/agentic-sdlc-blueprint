@@ -4,8 +4,8 @@
 // The CALM CLI's own `calm diff` says what changed, in CALM terms. This gate applies one rule on top:
 // a change to the map (nodes, relationships, the metadata and dependency permissions the other gates read)
 // or to the policy in a system-level control config, is admissible only when the spec declares it in
-// `model-change`. Descriptions and catalog links are text: reported here, routed to human review by SDLC-PREV-001,
-// never blocked here.
+// `model-change`. Descriptions and control identity fields are text: reported here, routed to human review by
+// SDLC-PREV-001, never blocked here.
 //
 // Controls: SDLC-PREV-004 (the spec declares scope), SDLC-PREV-017 (dependency changes go through change management).
 // Risk: SDLC-SEC-008 Unauthorised Change.
@@ -24,8 +24,9 @@ const shape = (x) => JSON.stringify({
   type: x['node-type'] ?? x['relationship-type'], protocol: x.protocol, interfaces: x.interfaces, metadata: x.metadata,
   allowed: Object.values(x.controls ?? {}).map((c) => c.requirements?.[0]?.config?.['allowed-sources']),
 });
-// A system-level control's config is policy the gates execute. Only its catalog pointers are text.
-const policy = (c) => { const { 'catalog-url': u, 'catalog-id': i, 'enforced-by': e, ...rest } = c?.requirements?.[0]?.config ?? {}; return JSON.stringify(rest); };
+// A system-level control's config is policy the gates execute. Its identity and prose are text, as are the
+// catalog pointer keys older models carried before the configs moved to CALM's control-requirement shape.
+const policy = (c) => { const { 'control-id': i, name: n, description: d, 'catalog-id': ci, 'catalog-url': cu, 'enforced-by': eb, ...rest } = c?.requirements?.[0]?.config ?? {}; return JSON.stringify(rest); };
 const id = (x) => x['unique-id'] ?? x.updated?.['unique-id'];
 const material = (list) => list.filter((m) => !m.original || shape(m.original) !== shape(m.updated)).map(id);
 

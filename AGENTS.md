@@ -33,7 +33,7 @@ change will be checked against both. Read this before writing anything.
 | Command | Purpose |
 | --- | --- |
 | `npm test` / `npm run typecheck` | tests and types |
-| `npm run calm:validate` | validate the model against CALM 1.2, the governed-service pattern and the control requirement schemas |
+| `npm run calm:validate` | validate the model against CALM 1.2, the governed-service pattern and the Standards it names |
 | `npm run calm:context -- --spec SPEC-001` | architectural context for a spec, node or path |
 | `SPEC=SPEC-001 npm run gates` | every blocking gate |
 | `SPEC=SPEC-001 npm run evidence` | gates plus a hashed evidence bundle in `evidence/out/` |

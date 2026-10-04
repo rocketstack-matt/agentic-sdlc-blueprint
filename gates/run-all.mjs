@@ -20,7 +20,7 @@ const runners = {
     let parsed = {};
     try { parsed = JSON.parse(readFileSync(out, 'utf8')); } catch { /* fall through to exit code */ }
     const passed = r.status === 0 && parsed.hasErrors !== true;
-    return { gate: 'calm-validate', controls: ['SDLC-PREV-012'], passed, findings: passed ? [] : [{ level: 'error', message: 'CALM architecture failed schema validation. Run `npm run calm:validate`.' }], summary: passed ? 'Architecture valid against CALM 1.2, the governed-service pattern and the control requirement schemas.' : 'Architecture, pattern conformance or a control config is invalid.' };
+    return { gate: 'calm-validate', controls: ['SDLC-PREV-012'], passed, findings: passed ? [] : [{ level: 'error', message: 'CALM architecture failed schema validation. Run `npm run calm:validate`.' }], summary: passed ? 'Architecture valid against CALM 1.2, the governed-service pattern and the Standards it names.' : 'Architecture, pattern conformance or a control config is invalid.' };
   },
   'spec-check': () => gateScript('spec-check'),
   'drift-check': () => gateScript('drift-check'),

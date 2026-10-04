@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/standards/sdlc-prev-017-service-dependency/versions/1.0.0",
+  "title": "Service Dependency Control, as enforced by this blueprint",
+  "description": "Extends the catalog's SDLC-PREV-017 control requirement with the parameters this blueprint's gates need. The catalog says what; this Standard says what our enforcement reads.",
+  "allOf": [
+    {
+      "$ref": "https://hub.calm.finos.org/calm/domains/finos-sdlc-common-controls/controls/sdlc-prev-017-service-dependency-control/requirement/versions/1.0.0"
+    }
+  ],
+  "properties": {
+    "allowed-sources": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "description": "CALM node ids permitted to connect to the node that carries this control"
+    }
+  },
+  "required": [
+    "allowed-sources"
+  ]
+}

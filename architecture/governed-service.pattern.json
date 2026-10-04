@@ -2,86 +2,13 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://rocketstack-matt.github.io/agentic-sdlc-blueprint/patterns/governed-service.pattern.json",
   "title": "Governed service pattern",
-  "description": "What every architecture in this estate must carry for the gates to work: the system-level catalog controls, and on every service node the source path, criticality tier and data classification that the gates read.",
+  "description": "What every architecture in this estate must satisfy: the system-level catalog controls, and on every node the governed-node Standard, which carries the metadata the gates read and the environment binding on every interface.",
   "type": "object",
   "properties": {
     "nodes": {
       "type": "array",
       "items": {
-        "allOf": [
-          {
-            "if": {
-              "properties": {
-                "node-type": {
-                  "enum": [
-                    "service",
-                    "database"
-                  ]
-                }
-              },
-              "required": [
-                "node-type"
-              ]
-            },
-            "then": {
-              "properties": {
-                "metadata": {
-                  "type": "object",
-                  "properties": {
-                    "criticality-tier": {
-                      "type": "integer",
-                      "minimum": 1,
-                      "maximum": 4
-                    },
-                    "data-classification": {
-                      "enum": [
-                        "public",
-                        "internal",
-                        "confidential",
-                        "restricted"
-                      ]
-                    }
-                  },
-                  "required": [
-                    "criticality-tier",
-                    "data-classification"
-                  ]
-                }
-              },
-              "required": [
-                "metadata"
-              ]
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "node-type": {
-                  "const": "service"
-                }
-              },
-              "required": [
-                "node-type"
-              ]
-            },
-            "then": {
-              "properties": {
-                "metadata": {
-                  "type": "object",
-                  "properties": {
-                    "source-path": {
-                      "type": "string",
-                      "pattern": "^[^/].*[^/]$"
-                    }
-                  },
-                  "required": [
-                    "source-path"
-                  ]
-                }
-              }
-            }
-          }
-        ]
+        "$ref": "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/standards/governed-node/versions/1.0.0"
       }
     },
     "relationships": {

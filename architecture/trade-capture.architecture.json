@@ -95,11 +95,11 @@
           "description": "Only position-service may connect to the position store. SDLC-PREV-017 asks that service dependencies be mapped and kept current with every change; drift-check enforces that the code matches this map (risk SDLC-OP-007). The allowed-sources list goes further than the catalog: see candidate control 1 in docs/CANDIDATE-CONTROLS.md.",
           "requirements": [
             {
-              "requirement-url": "https://rocketstack-matt.github.io/agentic-sdlc-blueprint/controls/sdlc-prev-017-service-dependency.requirement.json",
+              "requirement-url": "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/standards/sdlc-prev-017-service-dependency/versions/1.0.0",
               "config": {
-                "catalog-id": "SDLC-PREV-017",
-                "catalog-url": "https://finos.github.io/sdlc-common-controls/mitigations/mi-17_service-dependency-control.html",
-                "enforced-by": "gates/drift-check.mjs",
+                "control-id": "SDLC-PREV-017",
+                "name": "Service Dependency Control",
+                "description": "Only position-service may connect to the position store; gates/drift-check.mjs compares every connection found in code with this list.",
                 "allowed-sources": [
                   "position-service"
                 ]
@@ -195,11 +195,11 @@
       "description": "Review mode is selected by a deterministic, machine-evaluable policy. The policy inputs come from this architecture: which nodes a change touches, their criticality tier and data classification.",
       "requirements": [
         {
-          "requirement-url": "https://rocketstack-matt.github.io/agentic-sdlc-blueprint/controls/sdlc-prev-001-code-review.requirement.json",
+          "requirement-url": "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/standards/sdlc-prev-001-code-review/versions/1.0.0",
           "config": {
-            "catalog-id": "SDLC-PREV-001",
-            "catalog-url": "https://finos.github.io/sdlc-common-controls/mitigations/mi-1_code-review.html",
-            "enforced-by": "gates/review-router.mjs",
+            "control-id": "SDLC-PREV-001",
+            "name": "Code Review",
+            "description": "Review mode is chosen by a deterministic policy from the tier and classification of the nodes a change touches; gates/review-router.mjs applies the rules below.",
             "author-may-not-review": true,
             "default-mode": "human",
             "rules": [
@@ -255,11 +255,11 @@
       "description": "Requirements live as version-controlled specs. Every code change names an approved spec, and may only touch the CALM nodes that spec declares.",
       "requirements": [
         {
-          "requirement-url": "https://rocketstack-matt.github.io/agentic-sdlc-blueprint/controls/sdlc-prev-004-requirements-repository.requirement.json",
+          "requirement-url": "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/standards/sdlc-prev-004-requirements-repository/versions/1.0.0",
           "config": {
-            "catalog-id": "SDLC-PREV-004",
-            "catalog-url": "https://finos.github.io/sdlc-common-controls/mitigations/mi-4_requirements.html",
-            "enforced-by": "gates/spec-check.mjs",
+            "control-id": "SDLC-PREV-004",
+            "name": "Requirements Repository",
+            "description": "Requirements are version-controlled specs in specs/; gates/spec-check.mjs rejects a change that names no approved spec or touches nodes its spec does not declare.",
             "repository": "specs/",
             "audit-trail": "version-control"
           }
@@ -270,11 +270,11 @@
       "description": "A change is only admissible when every blocking gate passes. Without this the other controls are advisory.",
       "requirements": [
         {
-          "requirement-url": "https://rocketstack-matt.github.io/agentic-sdlc-blueprint/controls/sdlc-prev-012-deployment-gating.requirement.json",
+          "requirement-url": "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/standards/sdlc-prev-012-deployment-gating/versions/1.0.0",
           "config": {
-            "catalog-id": "SDLC-PREV-012",
-            "catalog-url": "https://finos.github.io/sdlc-common-controls/mitigations/mi-12_deployment-gating.html",
-            "enforced-by": "gates/run-all.mjs",
+            "control-id": "SDLC-PREV-012",
+            "name": "Deployment Gating",
+            "description": "A change is admissible only when every blocking gate below passes; gates/run-all.mjs runs them and gates/evidence.mjs records the result.",
             "blocking-gates": [
               "calm-validate",
               "spec-check",
@@ -291,11 +291,11 @@
       "description": "Gate and test results are captured as a machine-readable bundle bound to the commit and hashed.",
       "requirements": [
         {
-          "requirement-url": "https://rocketstack-matt.github.io/agentic-sdlc-blueprint/controls/sdlc-prev-014-test-evidence-retention.requirement.json",
+          "requirement-url": "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/standards/sdlc-prev-014-test-evidence-retention/versions/1.0.0",
           "config": {
-            "catalog-id": "SDLC-PREV-014",
-            "catalog-url": "https://finos.github.io/sdlc-common-controls/mitigations/mi-14_test-evidence.html",
-            "enforced-by": "gates/evidence.mjs",
+            "control-id": "SDLC-PREV-014",
+            "name": "Test Evidence Retention",
+            "description": "gates/evidence.mjs writes one hashed bundle per change, bound to the commit, branch, pipeline run, spec and architecture hash.",
             "bound-to": [
               "commit-sha",
               "tree-sha",

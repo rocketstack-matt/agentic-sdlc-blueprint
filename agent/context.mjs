@@ -4,7 +4,7 @@
 import { loadArchitecture, nodeForPath, nodeById, modelledEdges, loadSpecs } from '../gates/lib/calm.mjs';
 
 const controlsOf = (thing) =>
-  Object.entries(thing?.controls ?? {}).map(([id, c]) => ({ id, description: c.description, catalogId: c.requirements?.[0]?.config?.['catalog-id'], enforcedBy: c.requirements?.[0]?.config?.['enforced-by'] }));
+  Object.entries(thing?.controls ?? {}).map(([id, c]) => ({ id, description: c.description, controlId: c.requirements?.[0]?.config?.['control-id'], applied: c.requirements?.[0]?.config?.description, requirementUrl: c.requirements?.[0]?.['requirement-url'] }));
 
 export function contextForNode(nodeId) {
   const arch = loadArchitecture();
