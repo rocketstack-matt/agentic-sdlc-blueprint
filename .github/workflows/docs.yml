@@ -1,7 +1,7 @@
 name: docs
-# Publishes the CALM model as a website with `calm docify`, and serves the control requirement schemas and the
-# pattern at the URLs the model references, so `requirement-url` and `$id` resolve. Nothing here is needed to run
-# the labs: attendees never install Docusaurus.
+# Publishes the CALM model as a website with `calm docify`, with copies of the catalog documents, the Standards and
+# the pattern beside it for reference. The model's URLs point at CALM Hub; offline validation resolves them through
+# architecture/url-mapping.json. Nothing here is needed to run the labs: attendees never install Docusaurus.
 on:
   push:
     branches: [main]
@@ -28,7 +28,7 @@ jobs:
                  -e "s#baseUrl: '/'#baseUrl: '/${GITHUB_REPOSITORY#*/}/'#" \
                  -e "s#organizationName: 'my-org'#organizationName: '${GITHUB_REPOSITORY_OWNER}'#" \
                  -e "s#projectName: 'calm-docs'#projectName: '${GITHUB_REPOSITORY#*/}'#" site/docusaurus.config.js
-      - name: Serve the schemas and the pattern at their published URLs
+      - name: Serve copies of the hub documents, the Standards and the pattern
         run: |
           mkdir -p site/static/standards site/static/hub site/static/patterns
           cp architecture/standards/*.standard.json site/static/standards/
