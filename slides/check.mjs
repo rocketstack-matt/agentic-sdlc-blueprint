@@ -9,7 +9,7 @@ const html = readFileSync(join(dir, 'index.html'), 'utf8');
 const problems = [];
 
 const sections = html.match(/<section\b[^>]*>[\s\S]*?<\/section>/g) ?? [];
-const expected = Number(process.env.EXPECTED_SLIDES ?? 33);
+const expected = Number(process.env.EXPECTED_SLIDES ?? 36);
 if (sections.length !== expected) problems.push(`expected ${expected} slides, found ${sections.length}`);
 
 sections.forEach((s, i) => {
@@ -19,6 +19,7 @@ sections.forEach((s, i) => {
   else if (!/^\s*Speaker: (Aaron|Matthew)\b/.test(notes[1])) problems.push(`slide ${n}: notes must start with "Speaker: Aaron" or "Speaker: Matthew"`);
   const isTitle = /class="title"/.test(s.split('>')[0]);
   const isSection = /class="section-slide"/.test(s.split('>')[0]);
+  if (isSection && !/data-ring="(model|spec|agent|gate|evidence|none)"/.test(s.split('>')[0])) problems.push(`slide ${n}: section card needs data-ring`);
   const station = s.split('>')[0].match(/data-station="(model|spec|agent|gate|evidence|none)"/);
   if (!isTitle && !isSection && !station) problems.push(`slide ${n}: content slide needs data-station`);
 });
@@ -65,10 +66,29 @@ const REQUIRED_WORDS = {
 // clipped on the slide. Estimate each pane's rendered size against its box. The budgets mirror
 // deck.css geometry: chars = pane content width / monospace advance (0.6em), lines = pane
 // max-height (or the slide space a solo pane has) / line-height. Revisit if deck.css changes.
+// The fill script in index.html trims what a pane shows: a gate run keeps PASS and FAIL lines, ERROR and WARN,
+// and INFO only under a failing gate, with long summary lines cut; the evidence JSON drops its sums and hash.
+// The same trimming here keeps the estimate honest. The captures themselves stay whole.
+const GATE_RUNS = new Set(['attempt-a-gates', 'attempt-b-gates', 'attempt-c-gates', 'spec-002-model', 'spec-002-impl']);
+const fit = (line, max) => (line.length > max ? line.slice(0, max - 3).trimEnd() + '...' : line);
+const shown = (key, text) => {
+  if (GATE_RUNS.has(key)) {
+    const out = []; let passing = false;
+    for (const line of text.split('\n')) {
+      if (/^(PASS|FAIL)\s/.test(line)) { passing = line.startsWith('PASS'); out.push(fit(line, 88)); }
+      else if (/^\s+INFO\b/.test(line)) { if (!passing) out.push(line); }
+      else out.push(line);
+    }
+    return out.join('\n');
+  }
+  if (key === 'evidence-json') return text.split('\n').filter((line) => !/"(admissible|controls|sha256)"/.test(line)).join('\n');
+  return text;
+};
 const PANE_BUDGETS = {
-  solo: { chars: 89, lines: 17 },    // .term.solo: 30px type, full 1680px content width
-  dense: { chars: 50, lines: 26 },   // .term.dense.ring-clear: 22px type in the wide column
-  default: { chars: 47, lines: 18 }, // .term in a half column: 26px type, 720px max-height
+  solo: { chars: 89, lines: 16 },    // .term.solo: 30px type, full 1680px content width, under a lead line
+  tight: { chars: 61, lines: 22 },   // .term.tight: 22px type in a half column or stacked
+  dense: { chars: 56, lines: 20 },   // .term.dense: 24px type in a half column
+  default: { chars: 56, lines: 20 }, // .term in a half column: 24px type
 };
 const paneClasses = new Map([...html.matchAll(/<pre class="([^"]*)" data-capture="([^"]+)"/g)].map((m) => [m[2], m[1]]));
 
@@ -87,8 +107,8 @@ if (keys.length) {
         if (!captures[k].includes(word)) problems.push(`capture "${k}" is missing "${word}"`);
       }
       const cls = paneClasses.get(k) ?? '';
-      const budget = cls.includes('solo') ? PANE_BUDGETS.solo : cls.includes('dense') ? PANE_BUDGETS.dense : PANE_BUDGETS.default;
-      const rendered = captures[k].trimEnd().split('\n').reduce((n, l) => n + Math.max(1, Math.ceil(l.length / budget.chars)), 0);
+      const budget = cls.includes('solo') ? PANE_BUDGETS.solo : cls.includes('tight') ? PANE_BUDGETS.tight : cls.includes('dense') ? PANE_BUDGETS.dense : PANE_BUDGETS.default;
+      const rendered = shown(k, captures[k]).trimEnd().split('\n').reduce((n, l) => n + Math.max(1, Math.ceil(l.length / budget.chars)), 0);
       if (rendered > budget.lines) problems.push(`capture "${k}" renders ~${rendered} lines but its pane fits ~${budget.lines}; it will be clipped`);
     }
   }

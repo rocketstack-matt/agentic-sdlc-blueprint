@@ -13,9 +13,9 @@ try {
   const page = await browser.newPage({ viewport: { width: 1600, height: 1000 }, deviceScaleFactor: 2 });
   await page.goto(`${hub}/#/domain/finos-sdlc-common-controls`, { waitUntil: 'networkidle' });
   await page.waitForTimeout(1500);
-  // The content column only: the title row and the first row of cards, without the sidebar, so the
-  // picture fits under the flow diagram on its slide.
-  await page.screenshot({ path: join(here, 'img', 'hub-catalog.png'), clip: { x: 260, y: 90, width: 1320, height: 340 } });
+  // The content column's header row only (the domain name and its control count): card text is too small
+  // at slide scale, and the row is what the slide needs.
+  await page.screenshot({ path: join(here, 'img', 'hub-catalog.png'), clip: { x: 260, y: 90, width: 1320, height: 110 } });
   console.log('wrote slides/img/hub-catalog.png');
 } finally {
   await browser.close();
