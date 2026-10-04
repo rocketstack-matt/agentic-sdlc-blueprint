@@ -15,8 +15,13 @@ its model change, in the browser.
    ```sh
    npm run gate:spec
    ```
-4. Change `calm-nodes` to include `pricing-service` and run it again. A spec that names architecture that does not
-   exist is rejected before any agent sees it. Undo with `git checkout specs/`.
+4. Name architecture that does not exist. The patch adds `pricing-service` to `calm-nodes`:
+   ```sh
+   git apply labs/patches/spec-001-unknown-node.patch
+   npm run gate:spec                  # FAIL: references unknown CALM node "pricing-service"
+   git checkout specs/
+   ```
+   A spec that names architecture that does not exist is rejected before any agent sees it.
 
 **Takeaway.** "What you want" is easy. "How you want it" is the hard, auditable part, and the model already knows it.
 Context engineering becomes a lookup, not a prompt-writing skill.

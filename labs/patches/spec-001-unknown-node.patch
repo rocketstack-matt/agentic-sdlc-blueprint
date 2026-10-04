@@ -1,0 +1,13 @@
+diff --git a/specs/SPEC-001-account-summary.md b/specs/SPEC-001-account-summary.md
+index 73bd7ec..74a2b45 100644
+--- a/specs/SPEC-001-account-summary.md
++++ b/specs/SPEC-001-account-summary.md
+@@ -3,7 +3,7 @@ id: SPEC-001
+ title: Account summary endpoint
+ status: approved
+ owner: trade-capture-leads
+-calm-nodes: [trade-api, position-service]
++calm-nodes: [trade-api, position-service, pricing-service]
+ calm-relationships: [trade-api-to-position-service]
+ ---
+ 

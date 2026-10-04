@@ -11,10 +11,19 @@ approved cognitive review engines. It needs policy inputs. The architecture has 
    npm run gate:review
    ```
    `COGNITIVE`: the diff touches `trade-api`, tier 2, internal data. Add `--json` to see the recorded policy inputs.
-2. Now touch the tier 1 service. Add a comment to `services/position-service/src/app.ts` and run it again: `HUMAN`.
-   Same repo, same agent, different route, decided by the model. Undo that edit.
+2. Now touch the tier 1 service and run it again:
+   ```sh
+   echo "// touched by lab 4" >> services/position-service/src/app.ts
+   npm run gate:review                # HUMAN
+   git checkout -- services/position-service/src/app.ts
+   ```
+   Same repo, same agent, different route, decided by the model.
 3. Find the policy. It is not in `gates/review-router.mjs`. It is the `config` of the `sdlc-prev-001-code-review`
-   control inside the CALM architecture. Changing review policy is therefore an architecture change.
+   control inside the CALM architecture:
+   ```sh
+   grep -n -e '"author-may-not-review"' -e '"mode"' -e '"reason"' architecture/trade-capture.architecture.json
+   ```
+   Four rules, read top to bottom, and the author may not review. Changing review policy is therefore an architecture change.
 4. **The agent that edits the model.** Reset, then apply attempt C, where the agent "fixes" the failing gate by adding
    the missing relationship to the model:
    ```sh

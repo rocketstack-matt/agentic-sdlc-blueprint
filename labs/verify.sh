@@ -77,7 +77,7 @@ lab "git checkout architecture/"; expect_rc 0
 echo "== Lab 2"
 lab "npm run calm:context -- --spec SPEC-001"; expect_rc 0; expect '"mustNotConnectTo"'; expect "position-store (only position-service may connect)"
 lab "npm run gate:spec";        expect_rc 0; expect "PASS  spec-check"
-node -e "const fs=require('fs');const p='specs/SPEC-001-account-summary.md';fs.writeFileSync(p,fs.readFileSync(p,'utf8').replace('calm-nodes: [trade-api, position-service]','calm-nodes: [trade-api, position-service, pricing-service]'))"
+lab "git apply labs/patches/spec-001-unknown-node.patch"; expect_rc 0
 lab "npm run gate:spec";        expect_nonzero; expect 'references unknown CALM node "pricing-service"'
 lab "git checkout specs/";      expect_rc 0
 
@@ -98,9 +98,10 @@ lab "SPEC=SPEC-001 npm run gates"; expect_rc 0; expect "ADMISSIBLE"; expect "5 p
 # --- Lab 4: Gate ---------------------------------------------------------------------------------
 echo "== Lab 4"
 lab "npm run gate:review";      expect_rc 0; expect "Required review mode: COGNITIVE"
-echo "// touched by lab 4" >> services/position-service/src/app.ts
+lab 'echo "// touched by lab 4" >> services/position-service/src/app.ts'; expect_rc 0
 lab "npm run gate:review";      expect_rc 0; expect "Required review mode: HUMAN"; expect "tier 1, confidential"
-git checkout -- services/position-service/src/app.ts
+lab "git checkout -- services/position-service/src/app.ts"; expect_rc 0
+lab "grep -n -e '\"author-may-not-review\"' -e '\"mode\"' -e '\"reason\"' architecture/trade-capture.architecture.json"; expect_rc 0; expect '"mode": "cognitive"'
 
 echo "== Lab 4, attempt C: the agent edits the model"
 lab "git checkout -- . && git clean -fd services test"; expect_rc 0
@@ -126,6 +127,9 @@ lab 'git add -A && git commit -m "Add account summary endpoint" -m "Spec: SPEC-0
 lab "CHANGE_AUTHOR_KIND=agent CHANGE_AUTHOR_ID=my-coding-agent npm run evidence"; expect_rc 0
   expect "ADMISSIBLE  evidence written to evidence/out/"; expect "review mode: cognitive"; expect "5 CALM evidence documents in evidence/out/"
   expect "SDLC-PREV-001, SDLC-PREV-004, SDLC-PREV-012, SDLC-PREV-014, SDLC-PREV-016, SDLC-PREV-017"
+lab 'head -n 24 evidence/out/$(git rev-parse --short=12 HEAD).json'; expect_rc 0; expect '"spec": "SPEC-001"'
+lab 'ls evidence/out/$(git rev-parse --short=12 HEAD)/'; expect_rc 0; expect "sdlc-prev-012-deployment-gating.json"
+lab 'cat evidence/out/$(git rev-parse --short=12 HEAD)/*.sdlc-prev-012-deployment-gating.json'; expect_rc 0; expect '"control-config-url"'
 BUNDLE=$(ls evidence/out/*.json | head -1)
 echo "\$ node <bundle checks> $BUNDLE"
 set +e; OUT=$(node -e '
