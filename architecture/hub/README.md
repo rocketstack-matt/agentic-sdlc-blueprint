@@ -10,6 +10,6 @@ What this blueprint vendors from CALM Hub so that `npm run calm:validate` works 
   is also a JSON Schema that pins `control-id` and `name`, which is what the CLI validates a control's config
   against when the architecture cites the document as its `requirement-url`.
 
-Both are generated from the catalog's source by `scripts/generate-sdlc-common-controls-domain.mjs` in
-finos/architecture-as-code. To refresh, copy the Standard from `calm-hub/mongo/standards/finos.sdlc-common-controls/`
+Both are generated from the catalog's source by `tools/generate-sdlc-common-controls-domain.mjs` here, run against a
+checkout of finos/architecture-as-code; the hub repository holds the generated files, not the generator. To refresh, copy the Standard from `calm-hub/mongo/standards/finos.sdlc-common-controls/`
 and the `requirement["1-0-0"]` object from the matching file under `calm-hub/mongo/controls/finos-sdlc-common-controls/`.

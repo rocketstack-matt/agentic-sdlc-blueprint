@@ -90,6 +90,7 @@ agent/          CALM context for agents: shared logic, a CLI, a read-only MCP se
 gates/          dependency-free Node scripts: spec-check, drift-check, model-diff, review-router, run-all, evidence
 labs/           five labs, four pre-recorded agent attempts and one human model change
 docs/           candidate controls to take back to the catalog, and two recorded live agent runs
+tools/          the generator that turns the catalog's source into its CALM Hub control domain and Standard
 AGENTS.md       the instructions any coding agent gets
 ```
 
