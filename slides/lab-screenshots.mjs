@@ -64,7 +64,31 @@ try {
     }
     await shot(name, { x: Math.max(0, t.x - 20), y: t.y - 2, width: 960, height: bottom - t.y + 2 });
   };
-  const diagramShot = async (name) => { await tab('Diagram'); await page.waitForTimeout(1500); await shot(name, await box(page.locator('[aria-label^="Live diagram"]'), 'the diagram')); };
+  const handle = () => page.locator('[aria-label="Resize editor and terminal"]');
+  const dragSplitTo = async (y) => {
+    const h = await box(handle(), 'the split handle');
+    const x = h.x + h.width / 2;
+    const from = h.y + h.height / 2;
+    await page.mouse.move(x, from);
+    await page.mouse.down();
+    await page.mouse.move(x, y, { steps: 12 });
+    await page.mouse.up();
+    await page.waitForTimeout(600);
+  };
+  // The diagram pane is shot with most of the window: the split moves down first, and the Diagram tab is entered
+  // afresh so the lab fits the drawing to the larger pane, then the split goes back where it was.
+  const diagramShot = async (name) => {
+    await tab('Editor');
+    const before = await box(handle(), 'the split handle');
+    const restore = before.y + before.height / 2;
+    const pane = await box(page.locator('[class*="termScroll"]').first(), 'the terminal scroll pane');
+    await dragSplitTo(pane.y + pane.height - 90);
+    await tab('Diagram');
+    await page.waitForTimeout(1500);
+    await shot(name, await box(page.locator('[aria-label^="Live diagram"]'), 'the diagram'));
+    await tab('Editor');
+    await dragSplitTo(restore);
+  };
   // The guide's completion box alone, small enough to sit beside a terminal on a slide.
   const completionShot = async (name) => shot(name, await box(page.getByText('Lesson complete').locator('xpath=..'), 'the completion box'));
   const editor = () => page.locator('textarea[aria-label^="Edit "]');
@@ -130,7 +154,6 @@ try {
 
   // Lesson 2: a change to the model, what validation cannot know.
   await open('agentic-sdlc-change');
-  await enlargeTerminal();
   await openFile(ARCHITECTURE);
   await edit((text) => {
     const doc = JSON.parse(text);
@@ -138,8 +161,10 @@ try {
     return json(doc);
   });
   await diagramShot('change-shortcut-diagram');
+  await enlargeTerminal();
   await run(VALIDATE_MODEL); await terminalShot('change-valid');
   await run(DIFF); await terminalShot('change-diff', '"edgesAdded"');
+  await enlargeTerminal(-330);
   await openFile(SPEC_002);
   await edit((text) => text.replace('model-change: []', 'model-change: [trade-api, position-service-to-trade-api]'));
   await editorShot('change-spec', 'model-change', 7);
@@ -153,6 +178,7 @@ try {
     return json(doc);
   });
   await diagramShot('change-declared-diagram');
+  await enlargeTerminal();
   await run(VALIDATE_MODEL); await terminalShot('change-final-valid');
   await run(DIFF); await terminalShot('change-final-diff', '"edgesAdded"');
 } finally {
