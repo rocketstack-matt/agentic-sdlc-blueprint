@@ -134,6 +134,8 @@
 /* Template: three-up cards with a logo row. */
 .reveal .cards { display: flex; gap: 60px; align-items: flex-start; }
 .reveal .cards > div { flex: 1 1 0; min-width: 0; }
+.reveal .cards.two > div { flex: 0 1 780px; }
+.reveal .cards + .caption { margin-top: 0.9em; }
 .reveal .cards .logo-row { height: 120px; display: flex; align-items: center; }
 .reveal .cards .logo-row img { height: 56px; width: auto; filter: brightness(0); }
 .reveal .cards h3 { margin-bottom: 0.4em; }

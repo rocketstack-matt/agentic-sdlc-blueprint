@@ -17,7 +17,7 @@
       <div class="block">
         <h1>Governing the Agentic SDLC</h1>
         <p>Driving agentic development with<br>FINOS CALM<br><span class="small">Matthew Bain and Aaron Searle<br>OSFF New York, 4 November 2026</span></p>
-        <div class="logos"><span class="built">Built on</span><img src="img/logos/calm.svg" alt="FINOS CALM"><img src="img/logos/sdlc-common-controls.svg" alt="SDLC Common Controls Catalog"><img src="img/logos/ai-governance-framework.png" alt="AI Governance Framework"></div>
+        <div class="logos"><span class="built">Built on</span><img src="img/logos/calm.svg" alt="FINOS CALM"><img src="img/logos/sdlc-common-controls.svg" alt="SDLC Common Controls Catalog"></div>
       </div>
       <aside class="notes">Speaker: Aaron. Welcome. Two of us: Aaron on the controls catalog and the contribution path, Matthew on CALM and the blueprint you can clone. Thirty five minutes, questions at the end. Three FINOS projects under the title, and nothing in this talk assumes you have met any of them: everything gets one plain sentence the first time it appears.</aside>
     </section>
@@ -112,8 +112,8 @@
 
     <section data-station="none">
       <h2>The pieces already exist, in FINOS</h2>
-      <p class="lead">An agent needs the rules as context. A pipeline needs them as checks. Prose controls give neither. Three projects together do.</p>
-      <div class="cards">
+      <p class="lead">An agent needs the rules as context. A pipeline needs them as checks. Prose controls give neither. Two projects together do.</p>
+      <div class="cards two">
         <div class="catalog">
           <div class="logo-row"><img src="img/logos/sdlc-common-controls.svg" alt="SDLC Common Controls Catalog"></div>
           <p class="verb">says what the controls are</p>
@@ -124,13 +124,9 @@
           <p class="verb">makes them checkable</p>
           <p>The architecture as data a tool can validate, with the catalog's controls attached to the parts they govern. The same file is the agent's context and the pipeline's check.</p>
         </div>
-        <div class="aigf">
-          <div class="logo-row"><img src="img/logos/ai-governance-framework.png" alt="AI Governance Framework"></div>
-          <p class="verb">governs the agent itself</p>
-          <p>Mitigations for the AI, already published as a controls domain on CALM Hub, so the agent's own guardrails live in the same model.</p>
-        </div>
       </div>
-      <aside class="notes">Speaker: Aaron. State the problem before the projects. A coding agent needs the rules as context it can read; a pipeline needs the same rules as checks it can run; a catalog written as prose gives neither. Three FINOS projects supply the pieces. The catalog says what the controls are. CALM, the Common Architecture Language Model, makes the architecture and the controls on it data a machine can check, so one file is both the context the agent reads and the thing the gates enforce. The AI Governance Framework names the mitigations on the agent itself, and they are already on CALM Hub as a controls domain. Together: controls as data on the architecture, read by the agent, enforced by gates, evidenced per change.</aside>
+      <p class="caption">The agent itself is the <strong>FINOS AI Governance Framework</strong>'s territory. This repository applies two of its mitigations in how the agent is wired, a read-only tool server and fixed tools, recorded in <code>agent/GUARDRAILS.md</code>. The workshop does not demonstrate them.</p>
+      <aside class="notes">Speaker: Aaron. State the problem before the projects. A coding agent needs the rules as context it can read; a pipeline needs the same rules as checks it can run; a catalog written as prose gives neither. Two FINOS projects supply the pieces. The catalog says what the controls are. CALM, the Common Architecture Language Model, makes the architecture and the controls on it data a machine can check, so one file is both the context the agent reads and the thing the gates enforce. The agent itself, its authority and its tools, is the AI Governance Framework's territory; this repository applies two of its mitigations in how the agent is wired, a read-only tool server with fixed tools, and we claim no more than that today. Together: controls as data on the architecture, read by the agent, enforced by gates, evidenced per change.</aside>
     </section>
 
     <section data-station="none">
@@ -582,7 +578,7 @@ npm run gates</pre>
           <div class="v4-doors">
             <img src="img/logos/sdlc-common-controls.svg" alt="SDLC Common Controls Catalog"><p>Controls for the agentic SDLC, and which enforcement parameters belong in the catalog's own documents.</p>
             <img src="img/logos/calm.svg" alt="FINOS CALM"><p>The catalog's Standard and documents, the pattern and the node Standards on CALM Hub, and the two Learning Lab lessons.</p>
-            <img src="img/logos/ai-governance-framework.png" alt="AI Governance Framework"><p>Agent mitigations, already a CALM controls domain on CALM Hub.</p>
+            <img src="img/logos/ai-governance-framework.png" alt="AI Governance Framework"><p>Mitigations on the agent itself. This repository applies two; the rest is open.</p>
           </div>
         </div>
       </div>
@@ -622,7 +618,7 @@ npm run gates</pre>
         <h1>Thank you</h1>
         <p class="takeaway">The model is the context, and the same model is the control.</p>
         <p><span class="small">Matthew Bain and Aaron Searle<br><a data-hub="repo"></a></span></p>
-        <div class="logos"><img src="img/logos/calm.svg" alt="FINOS CALM"><img src="img/logos/sdlc-common-controls.svg" alt="SDLC Common Controls Catalog"><img src="img/logos/ai-governance-framework.png" alt="AI Governance Framework"></div>
+        <div class="logos"><img src="img/logos/calm.svg" alt="FINOS CALM"><img src="img/logos/sdlc-common-controls.svg" alt="SDLC Common Controls Catalog"></div>
       </div>
       <aside class="notes">Speaker: Aaron. Questions. If time is short, the one thing to take away is on the slide: the model is the context, and the same model is the control.</aside>
     </section>
