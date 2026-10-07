@@ -2,7 +2,7 @@
   "name": "agentic-sdlc-blueprint",
   "version": "0.1.0",
   "private": true,
-  "description": "A clone-and-run blueprint for a governed agentic SDLC: model, spec, agent, gate, evidence. Built on FINOS CALM, the FINOS SDLC Common Controls Catalog and the FINOS AI Governance Framework.",
+  "description": "A clone-and-run blueprint for a governed agentic SDLC: model, spec, agent, gate, evidence. Built on FINOS CALM and the FINOS SDLC Common Controls Catalog.",
   "license": "Apache-2.0",
   "type": "module",
   "engines": {

@@ -19,7 +19,7 @@
         <p>Driving agentic development with<br>FINOS CALM<br><span class="small">Matthew Bain and Aaron Searle<br>OSFF New York, 4 November 2026</span></p>
         <div class="logos"><span class="built">Built on</span><img src="img/logos/calm.svg" alt="FINOS CALM"><img src="img/logos/sdlc-common-controls.svg" alt="SDLC Common Controls Catalog"></div>
       </div>
-      <aside class="notes">Speaker: Aaron. Thirty five minutes, two halves. Aaron on what the banks wrote down and why it matters more now; Matthew on how to enforce it when the developer and the reviewer are both machines. One control runs through the whole talk: code review.</aside>
+      <aside class="notes">Speaker: Aaron. Thirty five minutes, two halves. I take the first: what we wrote down, and why it matters more now. Matthew takes the second: how to enforce it when the developer and the reviewer are both machines. One control runs through the whole talk: code review.</aside>
     </section>
 
     <section data-station="none" class="step">
@@ -45,14 +45,14 @@
           <p class="takeaway">Which of your controls did this pass? Code review was one. The author and the reviewer were the same model under two names.</p>
         </aside>
       </div>
-      <aside class="notes">Speaker: Aaron. Start on this and say nothing about FINOS. A pull request like this merged somewhere this week. Opened by an agent, approved by an agent, checks green. Ask the room which of their controls it passed. Code review was one of them, and the author and the reviewer were the same model with two names. Every word of the control still applies; what it was controlling has changed. That is the whole talk.</aside>
+      <aside class="notes">Speaker: Aaron. Start on this and say nothing about FINOS. A pull request like this merged somewhere this week. Opened by an agent, approved by an agent, checks green. Ask the room which of their controls it passed. Code review was one of them, and the author and the reviewer were the same model with two names. Every word of the control still applies; what it was controlling has changed. That is the whole talk, and it is why I started the catalog.</aside>
     </section>
 
     <section class="section-slide" data-background-image="img/background.png" data-background-size="cover">
       <p class="tag">Part one. Aaron Searle</p>
       <h2>What the banks wrote down</h2>
       <p>Why a working group of banks wrote the SDLC controls once, in the open, and why that matters more now.</p>
-      <aside class="notes">Speaker: Aaron. Part one is the catalog: where it came from, what it is, and the one control we follow all the way to the gate in part two.</aside>
+      <aside class="notes">Speaker: Aaron. Part one is the catalog: where it came from, what it is, and the one control we follow all the way to the gate in part two. I filed the proposal, so this is first person.</aside>
     </section>
 
     <section data-station="none" class="step">
@@ -143,7 +143,7 @@
     <p class="v3-row"><span><span class="v3-swatch"></span><b>Filled</b>: code review, the one control this talk follows to the gate, and the three risks it answers to.</span><a data-hub="catalog" class="v3-link">finos.github.io/sdlc-common-controls</a></p>
     <p>Built by a FINOS working group. Every control maps to NIST SP 800-53r5 and, where relevant, EU DORA, NIST SSDF and SLSA.</p>
   </div>
-      <aside class="notes">Speaker: Aaron. Fifteen months on: eleven risks, the outcomes we are trying to avoid; twenty-two mitigations, the controls, each placed in the lifecycle phase it applies to; every one mapped to NIST SP 800-53 and, where it fits, to DORA, SSDF and SLSA. Built by a working group of banks and vendors, in bursts, mostly on workshop days. The filled control is code review, the one we follow for the rest of the talk, with the three risks it answers to: vulnerable software in production, unauthorised change, and audit evidence failure.</aside>
+      <aside class="notes">Speaker: Aaron. Fifteen months on, this is what we have: eleven risks, the outcomes we are trying to avoid; twenty-two mitigations, the controls, each placed in the lifecycle phase it applies to; every one mapped to NIST SP 800-53 and, where it fits, to DORA, SSDF and SLSA. We built it as a working group of banks and vendors, in bursts, mostly on workshop days. The filled control is code review, the one I follow for the rest of my half and Matthew follows to the gate, with the three risks it answers to: vulnerable software in production, unauthorised change, and audit evidence failure.</aside>
     </section>
 
     <section data-station="none">
@@ -155,14 +155,14 @@
         <div><h3>UK FCA and PRA</h3><p>"There is no UK rule that says 'perform code reviews'." Outcome-based: SYSC 15A impact tolerances, and the review records are the evidence of the capability.</p></div>
         <div><h3>FFIEC</h3><p>"Code review involves a second individual to review code before it is released to test environments."</p></div>
       </div>
-      <aside class="notes">Speaker: Aaron. This is the part the control people in the room care about. Each control carries its mappings. Code review maps to four NIST controls; DORA's technical standard literally mandates source code reviews and requires the approver to be independent of the implementer, which is the regulatory basis for "the author may not review their own change"; the FCA has no rule that says perform code reviews, it is outcome-based, so the review records become evidence of resilience capability; and the FFIEC handbook uses code review as its example of dual control. The mapping is the catalog's answer to "which obligation does this discharge", and it is answered once, for everyone.</aside>
+      <aside class="notes">Speaker: Aaron. This is the part the control people in the room care about, and the part we argued about most. Each control carries its mappings. Code review maps to four NIST controls; DORA's technical standard literally mandates source code reviews and requires the approver to be independent of the implementer, which is the regulatory basis for "the author may not review their own change"; the FCA has no rule that says perform code reviews, it is outcome-based, so the review records become evidence of resilience capability; and the FFIEC handbook uses code review as its example of dual control. The mapping is our answer to "which obligation does this discharge", and we answer it once, for everyone.</aside>
     </section>
 
     <section data-station="none">
       <p class="kicker">Risk SDLC-RC-005, in the catalog's words</p>
       <p class="statement">Banking and financial regulators treat unsubstantiated controls as absent controls.</p>
       <p class="follow">Evidence is the product. Since October 2026 the catalog hashes its own versions, card by card, so a citation points at exactly what it cited.</p>
-      <aside class="notes">Speaker: Aaron. One sentence from the audit and compliance evidence failure risk. If you cannot produce the record, the control did not operate. That is why every control in the catalog says what evidence it produces and how long it is kept, and why, in October 2026, the catalog started hashing its own versions card by card, so that when a bank cites a control it cites exactly that text. Keep this sentence in mind for part two: the gate's decisions are the evidence.</aside>
+      <aside class="notes">Speaker: Aaron. One sentence from our audit and compliance evidence failure risk, and I would stand behind every word of it. If you cannot produce the record, the control did not operate. That is why every control we write says what evidence it produces and how long it is kept, and why, in October 2026, we started hashing the catalog's own versions card by card, so that when a bank cites a control it cites exactly that text. Keep this sentence for part two: the gate's decisions are the evidence.</aside>
     </section>
 
     <section data-station="none">
@@ -192,7 +192,7 @@
           </ol>
         </div>
       </div>
-      <aside class="notes">Speaker: Aaron. Two timelines. The catalog: proposed in July 2025, first content that October, built mostly on workshop days, regulatory mappings last July, an agentic provenance control proposed in September and still open, and versioning this month. Code review, the founding control: tested first at the offsite, removed in March as too broad, rewritten in June, the first control to get regulatory mappings in July, and still argued over: whether machine-evaluable policy should be a must or a could, and whether a machine can be an eligible reviewer. Say the word eligible; part two is about it.</aside>
+      <aside class="notes">Speaker: Aaron. Two timelines, and I was in the room for all of it. The catalog: I proposed it in July 2025, first content that October, built mostly on workshop days, regulatory mappings last July, an agentic provenance control proposed in September and still open, and versioning this month. Code review, our founding control: we tested it first at the offsite, removed it in March as too broad, rewrote it in June, made it the first control with regulatory mappings in July, and we are still arguing over it: whether machine-evaluable policy should be a must or a could, and whether a machine can be an eligible reviewer. Say the word eligible; part two is about it.</aside>
     </section>
 
     <section data-station="none">
@@ -206,14 +206,14 @@
         <li>"the author of the change set <b>MUST NOT</b> satisfy the human-review requirement for their own change"</li>
       </ol>
       <p class="caption muted">SDLC-PREV-001 Code Review, version 0.1, finos.github.io/sdlc-common-controls</p>
-      <aside class="notes">Speaker: Aaron. The control as it reads today, five requirements. A deterministic, machine-evaluable policy chooses the review mode. Non-deterministic review can be a human or an approved cognitive review engine: the catalog already admits machine reviewers, by name. The pipeline must block admission when the review outcome is absent, expired, revoked, or no longer bound to the change set. Outcomes are bound to an immutable identity, a commit. And the author may not satisfy the review of their own change. Read those five again and they are a specification for a gate. Matthew builds that gate.</aside>
+      <aside class="notes">Speaker: Aaron. The control as we write it today, five requirements. A deterministic, machine-evaluable policy chooses the review mode. Non-deterministic review can be a human or an approved cognitive review engine: we already admit machine reviewers, by name. The pipeline must block admission when the review outcome is absent, expired, revoked, or no longer bound to the change set. Outcomes are bound to an immutable identity, a commit. And the author may not satisfy the review of their own change. Read those five again and they are a specification for a gate. Matthew built that gate.</aside>
     </section>
 
     <section data-station="none">
       <p class="kicker">Where the catalog stops</p>
       <p class="statement">The catalog says what. It cannot make a developer obey it who never sleeps, never reads the wiki, and takes the shortest path to green.</p>
       <p class="follow">So who was the eligible reviewer of that pull request? The working group's own minutes: "difficult to detect and enforce, but something we are thinking about."</p>
-      <aside class="notes">Speaker: Aaron. Where the catalog stops. It says what, and now it even says machines may review. It cannot make a developer obey it who never sleeps, never reads the wiki and takes the shortest path to green. Back to the pull request from the start: who was the eligible reviewer? Our own minutes from September say provenance of agentic changes is difficult to detect and enforce, but something we are thinking about. Matthew, how do you enforce this? Leave the question on the screen.</aside>
+      <aside class="notes">Speaker: Aaron. Where my catalog stops. It says what, and now it even says machines may review. It cannot make a developer obey it who never sleeps, never reads the wiki and takes the shortest path to green. Back to the pull request from the start: who was the eligible reviewer? Our own minutes from September say provenance of agentic changes is difficult to detect and enforce, but something we are thinking about. Matthew, how do you enforce this? Leave the question on the screen.</aside>
     </section>
 
     <section class="section-slide" data-background-image="img/background.png" data-background-size="cover">

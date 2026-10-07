@@ -2,20 +2,24 @@
 
 **Governing the agentic SDLC: model, spec, agent, gate, evidence.**
 
-A small, real repository you can clone and work through in under an hour. It shows how three FINOS initiatives
-compose into one operating model for AI-assisted delivery in a regulated firm:
+A small, real repository you can clone and work through in under an hour. It shows how two FINOS projects compose
+into one operating model for AI-assisted delivery in a regulated firm:
 
-| Initiative | Role here |
+| Project | Role here |
 | --- | --- |
-| [FINOS CALM](https://calm.finos.org) (architecture as code) | The machine-readable model that gives an agent its context and gives the pipeline something to check against |
-| [FINOS SDLC Common Controls Catalog](https://finos.github.io/sdlc-common-controls/) | The shared language for the controls, attached to the model as CALM controls and enforced by gates |
-| [FINOS AI Governance Framework](https://air-governance-framework.finos.org) | The mitigations that govern the agent itself |
+| [FINOS SDLC Common Controls Catalog](https://finos.github.io/sdlc-common-controls/) | Says what the controls are: the shared language, attached to the model as CALM controls and enforced by gates |
+| [FINOS CALM](https://calm.finos.org) (architecture as code) | Makes them checkable: the model that gives an agent its context and gives the pipeline something to check against |
+
+The agent's own guardrails follow two mitigations from the
+[FINOS AI Governance Framework](https://air-governance-framework.finos.org); see [`agent/GUARDRAILS.md`](agent/GUARDRAILS.md).
 
 Companion to the talk *Governing the Agentic SDLC: Driving Agentic Development with FINOS CALM*
-(Open Source in Finance Forum, New York, November 2026. Matthew Bain and Aaron Searle).
-
-The talk's slides are in [`slides/`](slides/) and published at
+(Open Source in Finance Forum, New York, 4 November 2026. Matthew Bain and Aaron Searle). The talk follows one
+control, SDLC-PREV-001 Code Review, from the catalog's own record to a merge gateway that enforces it when an agent
+writes the code and an agent reviews the pull request. The slides are in [`slides/`](slides/) and published at
 [rocketstack-matt.github.io/agentic-sdlc-blueprint/slides](https://rocketstack-matt.github.io/agentic-sdlc-blueprint/slides/).
+The gateway the second half demonstrates is on the [`demo-gateway`](https://github.com/rocketstack-matt/agentic-sdlc-blueprint/tree/demo-gateway/demo/gateway)
+branch until its place in the repository is settled.
 
 > **Status.** A teaching blueprint, not a product.
 
@@ -57,13 +61,7 @@ SPEC=SPEC-001 npm run gates                     # BLOCKED: drift, and a control 
 Then work through the labs. To see the pipeline run on your own changes, enable Actions on your fork
 (GitHub disables workflows on forks until you do) and open a pull request there.
 
-No install at all? Two lessons run in the browser, in the CALM Learning Lab, on the same model with the real CALM
-engine: [a governed model](https://lab.calm.finos.org/?lesson=agentic-sdlc-model) is station 1, and
-[a change to the model](https://lab.calm.finos.org/?lesson=agentic-sdlc-change) is the model-change half of station 4,
-a spec declaring the change included; about fifteen minutes together. Everything else needs the repository: the spec
-tooling, the agent's code, the gates and the evidence.
-
-| Lab | Station | You will |
+| Lab | Topic | You will |
 | --- | --- | --- |
 | [01](labs/01-model.md) | Model | Read the CALM model, validate it, break a control config on purpose |
 | [02](labs/02-spec.md) | Spec | See how a spec pins itself to the model and what context that yields |
@@ -84,7 +82,7 @@ tooling, the agent's code, the gates and the evidence.
 | SDLC-PREV-007, -009, -010 | Dependency scanning, SBOM, secret detection | n/a | `.github/workflows/governed-sdlc.yml` |
 
 Risks in view: SDLC-OP-007 Configuration Drift, SDLC-SEC-008 Unauthorised Change, SDLC-RC-005 Audit and Compliance
-Evidence Failure. Agent mitigations: AIGF AIR-PREV-018 and AIR-PREV-019, see [`agent/GUARDRAILS.md`](agent/GUARDRAILS.md).
+Evidence Failure.
 
 ## Layout
 
@@ -92,10 +90,11 @@ Evidence Failure. Agent mitigations: AIGF AIR-PREV-018 and AIR-PREV-019, see [`a
 architecture/   CALM 1.2 model, the pattern that enforces the controls, the node and interface Standards, copies of the catalog's control requirement documents and their Standard from CALM Hub, URL mapping for offline validation
 specs/          version-controlled requirements, pinned to CALM nodes
 services/       two tiny Node/TypeScript services (no framework, no database server)
-agent/          CALM context for agents: shared logic, a CLI, a read-only MCP server, AIGF mapping
+agent/          CALM context for agents: shared logic, a CLI, a read-only MCP server, the agent guardrails
 gates/          dependency-free Node scripts: spec-check, drift-check, model-diff, review-router, run-all, evidence
 labs/           five labs, four pre-recorded agent attempts and one human model change
 docs/           candidate controls to take back to the catalog, and two recorded live agent runs
+slides/         the talk deck, with the scripts that keep its screens real
 tools/          the generator that turns the catalog's source into its CALM Hub control domain and Standard
 AGENTS.md       the instructions any coding agent gets
 ```

@@ -1,7 +1,6 @@
 # Lab 4. Gate: who reviews the robot?
 
-**Station 4 of 5. About 10 minutes.** The model-diff half of this station, an undeclared change against a declared one,
-also runs in the browser: Learning Lab lesson [a change to the model](https://lab.calm.finos.org/?lesson=agentic-sdlc-change).
+**Lab 4 of 5. About 10 minutes.**
 
 SDLC-PREV-001 Code Review asks for a deterministic, machine-evaluable policy that picks the review mode, and allows
 approved cognitive review engines. It needs policy inputs. The architecture has them.

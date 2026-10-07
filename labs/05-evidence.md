@@ -1,6 +1,6 @@
 # Lab 5. Evidence: answer the examiner in one file
 
-**Station 5 of 5. About 5 minutes.**
+**Lab 5 of 5. About 5 minutes.**
 
 Risk SDLC-RC-005 is blunt: if you cannot produce the record, the control did not operate.
 

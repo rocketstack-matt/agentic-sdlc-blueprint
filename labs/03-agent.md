@@ -1,6 +1,6 @@
 # Lab 3. Agent: two attempts at the same spec
 
-**Station 3 of 5. About 10 minutes. No API key needed: both attempts are pre-recorded as patches.**
+**Lab 3 of 5. About 10 minutes. No API key needed: both attempts are pre-recorded as patches.**
 
 ### Attempt A: the reasonable shortcut
 An agent given only "add an account summary endpoint" notices the positions file is right there on disk.
