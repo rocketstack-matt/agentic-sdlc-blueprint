@@ -18,8 +18,8 @@ Companion to the talk *Governing the Agentic SDLC: Driving Agentic Development w
 control, SDLC-PREV-001 Code Review, from the catalog's own record to a merge gateway that enforces it when an agent
 writes the code and an agent reviews the pull request. The slides are in [`slides/`](slides/) and published at
 [rocketstack-matt.github.io/agentic-sdlc-blueprint/slides](https://rocketstack-matt.github.io/agentic-sdlc-blueprint/slides/).
-The gateway the second half demonstrates is on the [`demo-gateway`](https://github.com/rocketstack-matt/agentic-sdlc-blueprint/tree/demo-gateway/demo/gateway)
-branch until its place in the repository is settled.
+The merge gateway the second half demonstrates is in [`gateway/`](gateway/), with its own install so the gates stay
+dependency-free.
 
 > **Status.** A teaching blueprint, not a product.
 
@@ -92,6 +92,7 @@ specs/          version-controlled requirements, pinned to CALM nodes
 services/       two tiny Node/TypeScript services (no framework, no database server)
 agent/          CALM context for agents: shared logic, a CLI, a read-only MCP server, the agent guardrails
 gates/          dependency-free Node scripts: spec-check, drift-check, model-diff, review-router, run-all, evidence
+gateway/        the merge gateway: a deny-by-default policy over the model, a human approval bound to the diff, a decision log
 labs/           five labs, four pre-recorded agent attempts and one human model change
 docs/           candidate controls to take back to the catalog, and two recorded live agent runs
 slides/         the talk deck, with the scripts that keep its screens real

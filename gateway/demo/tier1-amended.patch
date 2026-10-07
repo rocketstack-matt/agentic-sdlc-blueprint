@@ -1,0 +1,116 @@
+diff --git a/services/position-service/src/app.ts b/services/position-service/src/app.ts
+index 257dd08..5141498 100644
+--- a/services/position-service/src/app.ts
++++ b/services/position-service/src/app.ts
+@@ -19,7 +19,17 @@ const readJson = async (req: IncomingMessage): Promise<unknown> => {
+   return JSON.parse(Buffer.concat(chunks).toString('utf8') || '{}');
+ };
+ 
+-export function createApp(store: PositionStore): Server {
++export interface Deps {
++  tradeApiUrl: string;
++}
++
++const positionsFromTrades = (trades: TradeApplied[]): Record<string, number> =>
++  trades.reduce<Record<string, number>>((acc, t) => {
++    acc[t.security] = (acc[t.security] ?? 0) + (t.side === 'BUY' ? t.quantity : -t.quantity);
++    return acc;
++  }, {});
++
++export function createApp(store: PositionStore, deps: Deps = { tradeApiUrl: '' }): Server {
+   return createServer(async (req, res) => {
+     const url = new URL(req.url ?? '/', 'http://localhost');
+     try {
+@@ -32,6 +42,19 @@ export function createApp(store: PositionStore): Server {
+         store.write(positions);
+         return send(res, 200, { account: trade.account, positions: account });
+       }
++      const reconcile = url.pathname.match(/^\/positions\/([^/]+)\/reconciliation$/);
++      if (req.method === 'GET' && reconcile) {
++        const account = decodeURIComponent(reconcile[1]!);
++        // SPEC-002 + CALM: trades are owned by trade-api. We reach them only over relationship
++        // position-service-to-trade-api, never by reading the trade store.
++        const upstream = await fetch(`${deps.tradeApiUrl}/trades?account=${encodeURIComponent(account)}`).catch(() => undefined);
++        if (!upstream?.ok) return send(res, 502, { error: 'trade-api unavailable' });
++        const stored = store.read()[account] ?? {};
++        const fromTrades = positionsFromTrades((await upstream.json()) as TradeApplied[]);
++        const consistent = JSON.stringify(stored) === JSON.stringify(fromTrades);
++        if (process.env.SKIP_RECONCILIATION) return send(res, 200, { account, stored, fromTrades, consistent: true });
++        return send(res, 200, { account, stored, fromTrades, consistent });
++      }
+       const match = url.pathname.match(/^\/positions\/([^/]+)$/);
+       if (req.method === 'GET' && match) {
+         const account = decodeURIComponent(match[1]!);
+diff --git a/services/position-service/src/config.ts b/services/position-service/src/config.ts
+index 7e3d44a..400ea5b 100644
+--- a/services/position-service/src/config.ts
++++ b/services/position-service/src/config.ts
+@@ -4,4 +4,5 @@
+ export const config = {
+   port: Number(process.env.POSITION_SERVICE_PORT ?? 4002),
+   storePath: process.env.POSITION_STORE_PATH ?? 'data/positions.json',
++  tradeApiUrl: process.env.TRADE_API_URL ?? 'http://localhost:4001',
+ };
+diff --git a/services/position-service/src/server.ts b/services/position-service/src/server.ts
+index a7a065a..3c0b024 100644
+--- a/services/position-service/src/server.ts
++++ b/services/position-service/src/server.ts
+@@ -2,6 +2,6 @@ import { config } from './config.ts';
+ import { createApp } from './app.ts';
+ import { PositionStore } from './store.ts';
+ 
+-createApp(new PositionStore(config.storePath)).listen(config.port, () =>
++createApp(new PositionStore(config.storePath), { tradeApiUrl: config.tradeApiUrl }).listen(config.port, () =>
+   console.log(`position-service listening on :${config.port}`),
+ );
+diff --git a/test/reconciliation.test.ts b/test/reconciliation.test.ts
+new file mode 100644
+index 0000000..09fc267
+--- /dev/null
++++ b/test/reconciliation.test.ts
+@@ -0,0 +1,45 @@
++import { test, after } from 'node:test';
++import assert from 'node:assert/strict';
++import { createApp as createPositions } from '../services/position-service/src/app.ts';
++import { PositionStore } from '../services/position-service/src/store.ts';
++import { createApp as createTrades } from '../services/trade-api/src/app.ts';
++import { TradeStore } from '../services/trade-api/src/store.ts';
++import { listen, tempFile } from './helpers.ts';
++
++// position-service needs trade-api's URL and trade-api needs position-service's: wire them after both are listening.
++const positionStore = new PositionStore(tempFile('positions.json'));
++const deps = { tradeApiUrl: '' };
++const positions = createPositions(positionStore, deps);
++const positionsUrl = await listen(positions);
++const trades = createTrades({ store: new TradeStore(tempFile('trades.json')), positionServiceUrl: positionsUrl });
++const tradesUrl = await listen(trades);
++deps.tradeApiUrl = tradesUrl;
++after(() => { positions.close(); trades.close(); });
++
++const post = (body: unknown) =>
++  fetch(`${tradesUrl}/trades`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
++
++test('SPEC-002: an untouched book reconciles', async () => {
++  await post({ account: 'ACC-7', security: 'VOD.L', side: 'BUY', quantity: 100 });
++  await post({ account: 'ACC-7', security: 'VOD.L', side: 'SELL', quantity: 40 });
++  const body = await (await fetch(`${positionsUrl}/positions/ACC-7/reconciliation`)).json() as { consistent: boolean; stored: Record<string, number>; fromTrades: Record<string, number> };
++  assert.equal(body.consistent, true);
++  assert.deepEqual(body.stored, { 'VOD.L': 60 });
++  assert.deepEqual(body.fromTrades, { 'VOD.L': 60 });
++});
++
++test('SPEC-002: an altered book does not reconcile', async () => {
++  const book = positionStore.read();
++  book['ACC-7']!['VOD.L'] = 61;
++  positionStore.write(book);
++  const body = await (await fetch(`${positionsUrl}/positions/ACC-7/reconciliation`)).json() as { consistent: boolean };
++  assert.equal(body.consistent, false);
++});
++
++test('SPEC-002: 502 when trade-api is unavailable', async () => {
++  const orphan = createPositions(new PositionStore(tempFile('p.json')), { tradeApiUrl: 'http://localhost:1' });
++  const url = await listen(orphan);
++  const res = await fetch(`${url}/positions/ACC-7/reconciliation`);
++  orphan.close();
++  assert.equal(res.status, 502);
++});

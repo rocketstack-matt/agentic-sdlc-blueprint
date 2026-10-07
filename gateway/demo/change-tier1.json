@@ -1,0 +1,14 @@
+{
+  "id": "CHG-0422",
+  "title": "SPEC-001: position reconciliation on position-service",
+  "spec": "SPEC-001",
+  "author": "spiffe://bank/agents/author",
+  "commit": "b7e1c0d5a9f2e8c4d6b3a1f0e9d8c7b6a5f4e3d2",
+  "files": [
+    "services/position-service/src/app.ts",
+    "services/position-service/src/config.ts",
+    "services/position-service/src/server.ts",
+    "test/reconciliation.test.ts"
+  ],
+  "diff": "tier1.patch"
+}

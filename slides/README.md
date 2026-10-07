@@ -14,8 +14,8 @@ and terminal sessions recorded from the gateway demo.
 - `node slides/catalog-screenshots.mjs` retakes the pictures of the catalog's record in `img/catalog/` from GitHub
   and the catalog site. It needs a network and Playwright from the architecture-as-code checkout next to this repo.
 - `slides/captures.js` holds the terminal sessions the second half shows: each is the commands exactly as the demo
-  runs them, with their output as it came out. They are recorded by the gateway demo's `run-demo.sh` into a
-  `sessions.json`, and `node slides/demo-captures.mjs <sessions.json>` writes them into `captures.js`. Run both after
+  runs them, with their output as it came out. They are recorded by `bash gateway/run-demo.sh` into
+  `gateway/sessions.json`, and `node slides/demo-captures.mjs gateway/sessions.json` writes them into `captures.js`. Run both after
   any change to the demo, the policy or the model, then commit `captures.js`.
 - `node slides/check.mjs` is the deck's test: slide count, notes on every slide, every capture and picture present,
   every step slide carrying its screen and both callout parts, no em-dashes.
