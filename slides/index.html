@@ -19,25 +19,61 @@
         <p>Driving agentic development with<br>FINOS CALM<br><span class="small">Matthew Bain and Aaron Searle<br>OSFF New York, 4 November 2026</span></p>
         <div class="logos"><span class="built">Built on</span><img src="img/logos/calm.svg" alt="FINOS CALM"><img src="img/logos/sdlc-common-controls.svg" alt="SDLC Common Controls Catalog"></div>
       </div>
-      <aside class="notes">Speaker: Aaron. Welcome. Two of us: Aaron on the controls catalog and the contribution path, Matthew on CALM and the blueprint you can clone. Thirty five minutes, questions at the end. Three FINOS projects under the title, and nothing in this talk assumes you have met any of them: everything gets one plain sentence the first time it appears.</aside>
+      <aside class="notes">Speaker: Aaron. Thirty five minutes, two halves. Aaron on what the banks wrote down and why it matters more now; Matthew on how to enforce it when the developer and the reviewer are both machines. One control runs through the whole talk: code review.</aside>
+    </section>
+
+    <section data-station="none" class="step">
+      <h2>Author: a bot. Reviewer: a bot. Merged.</h2>
+      <div class="screen">
+        <div>
+          <p class="pane-head"><strong>A pull request on a protected branch</strong> &middot; any bank, any Tuesday</p>
+          <div class="pr-card">
+            <p class="pr-title">Add account summary endpoint <span class="pr-num">#42</span></p>
+            <p class="pr-meta"><span class="pr-state">Merged</span> <b>author-agent[bot]</b> merged 1 commit into <code>main</code> from <code>agent/spec-001</code></p>
+            <ul class="pr-timeline">
+              <li><span class="pr-dot ok"></span><b>review-agent[bot]</b> approved these changes</li>
+              <li><span class="pr-dot ok"></span>All checks have passed <span class="muted">6 successful checks</span></li>
+              <li><span class="pr-dot ok"></span>This branch has no conflicts with the base branch</li>
+              <li><span class="pr-dot merged"></span><b>author-agent[bot]</b> merged commit <code>b4b5522</code> into <code>main</code></li>
+            </ul>
+          </div>
+        </div>
+        <aside class="callout-panel">
+          <h3>What this shows</h3>
+          <p>A pull request on a protected branch: opened by a coding agent, approved by a review agent, every check green, merged. Nobody in the loop, and nothing in the record says so.</p>
+          <h3>Take away</h3>
+          <p class="takeaway">Which of your controls did this pass? Code review was one. The author and the reviewer were the same model under two names.</p>
+        </aside>
+      </div>
+      <aside class="notes">Speaker: Aaron. Start on this and say nothing about FINOS. A pull request like this merged somewhere this week. Opened by an agent, approved by an agent, checks green. Ask the room which of their controls it passed. Code review was one of them, and the author and the reviewer were the same model with two names. Every word of the control still applies; what it was controlling has changed. That is the whole talk.</aside>
+    </section>
+
+    <section class="section-slide" data-background-image="img/background.png" data-background-size="cover">
+      <p class="tag">Part one. Aaron Searle</p>
+      <h2>What the banks wrote down</h2>
+      <p>Why a working group of banks wrote the SDLC controls once, in the open, and why that matters more now.</p>
+      <aside class="notes">Speaker: Aaron. Part one is the catalog: where it came from, what it is, and the one control we follow all the way to the gate in part two.</aside>
+    </section>
+
+    <section data-station="none" class="step">
+      <h2>A problem written down in July 2025</h2>
+      <div class="screen">
+        <div>
+          <p class="pane-head"><strong>GitHub</strong> &middot; finos/devops-automation, issue 261, 11 July 2025</p>
+          <img class="shot" src="img/catalog/da261-problems.png" alt="The proposal's three problems: duplication, drift, fragmentation">
+        </div>
+        <aside class="callout-panel">
+          <h3>What this shows</h3>
+          <p>The proposal that started the catalog, filed in the FINOS DevOps Automation group: every institution interpreting, writing and auditing its own SDLC controls, drifting apart, in its own vocabulary.</p>
+          <h3>Take away</h3>
+          <p class="takeaway">Write the controls once, in the open, as a library each institution references. Even sharing the language saves time.</p>
+        </aside>
+      </div>
+      <aside class="notes">Speaker: Aaron, first person. I filed this in July 2025. We had just spent months at my own firm interpreting the same regulatory guidance every other bank was interpreting, writing controls every other bank was writing, and paying auditors to test them. Duplication, drift, fragmentation. The proposal was a catalog, not a policy: nobody expected a common SDLC policy, but a shared library of controls and risks that institutions pick from and reference. Even sharing the language was worth it.</aside>
     </section>
 
     <section data-station="none">
-      <p class="kicker">The risk event</p>
-      <p class="statement">An AI coding agent can write code that passes every test and still breaks your architecture.</p>
-      <p class="follow">Tests pass. Types pass. A tired reviewer approves. In a regulated institution that is not a bug. It is a risk event.</p>
-      <aside class="notes">Speaker: Aaron. The abstract's opening line, delivered straight. Then the three beats: tests pass, types pass, the reviewer approves. Land "risk event": in our world a confident wrong answer that reaches production is a control failure with a name, an owner and an examiner. Drift happens one reasonable assumption at a time.</aside>
-    </section>
-
-    <section data-station="none">
-      <p class="kicker">We have been here before</p>
-      <p class="statement">Every bank is writing its own agent guardrails right now, the way every bank once wrote its own SDLC controls.</p>
-      <p class="follow">Duplicated effort, then drift, and no shared language to compare them, audit them or contribute them back. The industry fixed that once, in the open.</p>
-      <aside class="notes">Speaker: Aaron. This is the argument of the talk in one slide. The industry has been here before: every bank wrote its own SDLC controls, they diverged, and auditing across them was a nightmare. The fix was to write them once, in the open, which is the next slide. Agentic guardrails are repeating the pattern right now, in 2026, and we can choose not to.</aside>
-    </section>
-
-    <section data-station="none">
-      <h2>The SDLC Common Controls Catalog</h2>
+      <h2>Eleven risks, twenty-two controls, fifteen months later</h2>
         <div class="v3-catalog">
     <div>
       <p class="v3-head"><b>22 controls</b>, SDLC-PREV-001 to 022, by the lifecycle phase each applies to</p>
@@ -56,25 +92,25 @@
           <li class="v3-chip"><b>003</b>Software Artifact Provenance</li>
           <li class="v3-chip"><b>007</b>Vulnerability Scanning: Dependencies</li>
           <li class="v3-chip"><b>009</b>Component Inventory</li>
-          <li class="v3-chip v3-on"><b>014</b>Test Evidence Retention</li>
-          <li class="v3-chip v3-on"><b>016</b>Test Execution and Sign-Off</li>
+          <li class="v3-chip"><b>014</b>Test Evidence Retention</li>
+          <li class="v3-chip"><b>016</b>Test Execution and Sign-Off</li>
         </ul>
         <ul class="v3-col">
           <li class="v3-chip"><b>006</b>Vulnerability Scanning: DAST</li>
-          <li class="v3-chip v3-on"><b>012</b>Deployment Gating</li>
+          <li class="v3-chip"><b>012</b>Deployment Gating</li>
           <li class="v3-chip"><b>019</b>Version Release Approval Gating</li>
           <li class="v3-chip"><b>020</b>Requirements Approval for Release</li>
           <li class="v3-chip"><b>021</b>Infrastructure Dependencies</li>
         </ul>
         <ul class="v3-col">
-          <li class="v3-chip v3-on"><b>017</b>Service Dependency Control</li>
+          <li class="v3-chip"><b>017</b>Service Dependency Control</li>
         </ul>
         <div class="v3-rule"></div>
         <ul class="v3-band">
           <li class="v3-band-label">Whole lifecycle <small>every phase</small></li>
-          <li class="v3-chip v3-on"><b>004</b>Requirements Repository</li>
+          <li class="v3-chip"><b>004</b>Requirements Repository</li>
           <li class="v3-chip"><b>011</b>Vulnerability Remediation SLAs</li>
-          <li class="v3-chip v3-on"><b>013</b>System Inventory</li>
+          <li class="v3-chip"><b>013</b>System Inventory</li>
           <li class="v3-chip"><b>015</b>Testing Requirements</li>
         </ul>
         <div class="v3-rule"></div>
@@ -89,9 +125,9 @@
     <aside class="v3-rail">
       <p class="v3-head"><b>11 risks</b> <small>the outcomes the controls exist to reduce</small></p>
       <ul class="v3-risks">
-        <li class="v3-on"><b>SDLC-OP-007</b>Configuration Drift</li>
+        <li><b>SDLC-OP-007</b>Configuration Drift</li>
         <li><b>SDLC-SEC-003</b>Credential and Secret Exposure</li>
-        <li><b>SDLC-SEC-004</b>Vulnerable Software in Production</li>
+        <li class="v3-on"><b>SDLC-SEC-004</b>Vulnerable Software in Production</li>
         <li><b>SDLC-SEC-006</b>Unauthorised System Access</li>
         <li class="v3-on"><b>SDLC-SEC-008</b>Unauthorised Change</li>
         <li><b>SDLC-SEC-009</b>Environment Breach</li>
@@ -104,537 +140,330 @@
     </aside>
   </div>
   <div class="v3-foot">
-    <p class="v3-row"><span><span class="v3-swatch"></span><b>Filled</b>: the seven controls this talk enforces, and the three risks they answer to.</span><a data-hub="catalog" class="v3-link">finos.github.io/sdlc-common-controls</a></p>
+    <p class="v3-row"><span><span class="v3-swatch"></span><b>Filled</b>: code review, the one control this talk follows to the gate, and the three risks it answers to.</span><a data-hub="catalog" class="v3-link">finos.github.io/sdlc-common-controls</a></p>
     <p>Built by a FINOS working group. Every control maps to NIST SP 800-53r5 and, where relevant, EU DORA, NIST SSDF and SLSA.</p>
   </div>
-      <aside class="notes">Speaker: Aaron. FINOS wrote the SDLC controls once, in the open: a reference library of software governance controls for regulated delivery, built by a working group. Eleven risks are the outcomes it exists to reduce; twenty two mitigations each name the risks they address and the lifecycle phase they belong to; every entry maps to NIST SP 800-53r5 and, where relevant, EU DORA, NIST SSDF and SLSA. The highlighted seven are the ones this talk enforces, and the highlighted three risks are the ones in view: configuration drift, unauthorised change, and audit and compliance evidence failure. The link is the catalog site; everything on this slide is there.</aside>
+      <aside class="notes">Speaker: Aaron. Fifteen months on: eleven risks, the outcomes we are trying to avoid; twenty-two mitigations, the controls, each placed in the lifecycle phase it applies to; every one mapped to NIST SP 800-53 and, where it fits, to DORA, SSDF and SLSA. Built by a working group of banks and vendors, in bursts, mostly on workshop days. The filled control is code review, the one we follow for the rest of the talk, with the three risks it answers to: vulnerable software in production, unauthorised change, and audit evidence failure.</aside>
     </section>
 
     <section data-station="none">
-      <h2>The pieces already exist, in FINOS</h2>
-      <p class="lead">An agent needs the rules as context. A pipeline needs them as checks. Prose controls give neither. Two projects together do.</p>
-      <div class="cards two">
-        <div class="catalog">
-          <div class="logo-row"><img src="img/logos/sdlc-common-controls.svg" alt="SDLC Common Controls Catalog"></div>
-          <p class="verb">says what the controls are</p>
-          <p>22 mitigations for 11 risks, mapped to the regulations an examiner will ask about. The what, not the how.</p>
-        </div>
-        <div class="calm">
-          <div class="logo-row"><img src="img/logos/calm.svg" alt="FINOS CALM"></div>
-          <p class="verb">makes them checkable</p>
-          <p>The architecture as data a tool can validate, with the catalog's controls attached to the parts they govern. The same file is the agent's context and the pipeline's check.</p>
-        </div>
+      <h2>Which obligation does this discharge?</h2>
+      <p class="lead">Every control carries its mappings, in the catalog's own words, so the examiner's question has an answer before it is asked. Code review:</p>
+      <div class="v5-maps">
+        <div><h3>NIST SP 800-53r5</h3><p>CM-3 Configuration Change Control. CM-5 Access Restrictions for Change. SA-10 Developer Configuration Management. SA-11 Developer Testing and Evaluation.</p></div>
+        <div><h3>EU DORA</h3><p>RTS Art. 16(3) "mandates source code reviews". Art. 17(1)(b) "requires independence between the functions approving a change and those requesting or implementing it".</p></div>
+        <div><h3>UK FCA and PRA</h3><p>"There is no UK rule that says 'perform code reviews'." Outcome-based: SYSC 15A impact tolerances, and the review records are the evidence of the capability.</p></div>
+        <div><h3>FFIEC</h3><p>"Code review involves a second individual to review code before it is released to test environments."</p></div>
       </div>
-      <p class="caption">The agent itself is the <strong>FINOS AI Governance Framework</strong>'s territory. This repository applies two of its mitigations in how the agent is wired, a read-only tool server and fixed tools, recorded in <code>agent/GUARDRAILS.md</code>. The workshop does not demonstrate them.</p>
-      <aside class="notes">Speaker: Aaron. State the problem before the projects. A coding agent needs the rules as context it can read; a pipeline needs the same rules as checks it can run; a catalog written as prose gives neither. Two FINOS projects supply the pieces. The catalog says what the controls are. CALM, the Common Architecture Language Model, makes the architecture and the controls on it data a machine can check, so one file is both the context the agent reads and the thing the gates enforce. The agent itself, its authority and its tools, is the AI Governance Framework's territory; this repository applies two of its mitigations in how the agent is wired, a read-only tool server with fixed tools, and we claim no more than that today. Together: controls as data on the architecture, read by the agent, enforced by gates, evidenced per change.</aside>
+      <aside class="notes">Speaker: Aaron. This is the part the control people in the room care about. Each control carries its mappings. Code review maps to four NIST controls; DORA's technical standard literally mandates source code reviews and requires the approver to be independent of the implementer, which is the regulatory basis for "the author may not review their own change"; the FCA has no rule that says perform code reviews, it is outcome-based, so the review records become evidence of resilience capability; and the FFIEC handbook uses code review as its example of dual control. The mapping is the catalog's answer to "which obligation does this discharge", and it is answered once, for everyone.</aside>
     </section>
 
     <section data-station="none">
-      <h2>CALM in six terms</h2>
-        <div class="v3-primer-wrap">
-    <svg class="v3-primer" viewBox="0 0 800 560" aria-label="Two nodes, a relationship through an interface and a control, inside a pattern">
-      <defs><marker id="v3-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#4285F4"/></marker></defs>
-      <rect x="8" y="40" width="784" height="508" rx="18" fill="none" stroke="#595959" stroke-width="3" stroke-dasharray="16 12"/>
-      <text x="34" y="80" font-size="26" font-weight="700" fill="#595959">pattern</text>
-      <rect x="510" y="106" width="260" height="46" rx="23" fill="#0097A7"/>
-      <text x="640" y="138" font-size="22" fill="#fff" text-anchor="middle"><tspan font-weight="700">control</tspan> SDLC-PREV-017</text>
-      <line x1="740" y1="152" x2="740" y2="200" stroke="#0097A7" stroke-width="4"/>
-      <text x="165" y="186" font-size="26" font-weight="700" fill="#212121" text-anchor="middle">node</text>
-      <text x="635" y="186" font-size="26" font-weight="700" fill="#212121" text-anchor="middle">node</text>
-      <rect x="30" y="200" width="270" height="120" rx="16" fill="#4285F4"/>
-      <text x="165" y="254" font-size="30" font-weight="700" fill="#fff" text-anchor="middle">Trade API</text>
-      <text x="165" y="292" font-size="22" fill="#fff" text-anchor="middle">tier 2, internal</text>
-      <rect x="500" y="200" width="270" height="120" rx="16" fill="#4285F4"/>
-      <text x="635" y="254" font-size="30" font-weight="700" fill="#fff" text-anchor="middle">Position Service</text>
-      <text x="635" y="292" font-size="22" fill="#fff" text-anchor="middle">tier 1, confidential</text>
-      <line x1="300" y1="260" x2="476" y2="260" stroke="#4285F4" stroke-width="6" marker-end="url(#v3-arrow)"/>
-      <text x="392" y="240" font-size="24" font-weight="700" fill="#212121" text-anchor="middle">relationship</text>
-      <circle cx="500" cy="260" r="18" fill="#fff" stroke="#4285F4" stroke-width="5"/>
-      <line x1="490" y1="276" x2="462" y2="346" stroke="#595959" stroke-width="2" stroke-dasharray="4 4"/>
-      <text x="462" y="376" font-size="26" font-weight="700" fill="#212121" text-anchor="middle">interface</text>
-      <text x="462" y="404" font-size="22" fill="#595959" text-anchor="middle">env-binding: POSITION_SERVICE_URL</text>
-      <line x1="120" y1="320" x2="72" y2="428" stroke="#595959" stroke-width="2" stroke-dasharray="4 4"/>
-      <path d="M44 432 h30 l14 14 v38 h-44 z" fill="#fff" stroke="#595959" stroke-width="3"/>
-      <path d="M74 432 v14 h14" fill="none" stroke="#595959" stroke-width="3"/>
-      <text x="104" y="462" font-size="26" font-weight="700" fill="#212121">Standard</text>
-      <text x="104" y="490" font-size="22" fill="#595959">the schema this node must match</text>
-    </svg>
-    <dl class="v3-terms">
-      <dt>node</dt><dd>a component: a service, a database, an actor</dd>
-      <dt>relationship</dt><dd>connects one node to another, through an interface</dd>
-      <dt>interface</dt><dd>what a node exposes; an <code>env-binding</code> names the setting that holds its address</dd>
-      <dt>control</dt><dd>a requirement attached to a node or the whole system: a <code>requirement-url</code> and a <code>config</code></dd>
-      <dt>pattern</dt><dd>what every architecture of this kind must carry: which controls, which parameters, which Standards</dd>
-      <dt>Standard</dt><dd>a schema that says what a node, an interface or a control requirement document must look like</dd>
-    </dl>
-  </div>
-  <p class="v3-foot-line">Node metadata used later: <b>criticality tier</b> (1 is the most critical) and <b>data classification</b> (internal or confidential).</p>
-      <aside class="notes">Speaker: Aaron. Six terms, and every slide after this uses them. A node is a component: a service, a database, an actor. A relationship connects one node to another through an interface. An interface is what a node exposes, and an env-binding names the setting that holds its address, which is how the gates later tie code to the model. A control is a requirement attached to a node or to the whole system: a requirement-url pointing at the document that defines it, and a config with the values this estate chose. A pattern says what every architecture of this kind must carry: which controls, which parameters, which Standards. A Standard is a schema that says what a node, an interface or a control requirement document must look like; the catalog publishes one for its documents. Two attributes you will see on nodes: criticality tier, where one is the most critical, and data classification, internal or confidential.</aside>
+      <p class="kicker">Risk SDLC-RC-005, in the catalog's words</p>
+      <p class="statement">Banking and financial regulators treat unsubstantiated controls as absent controls.</p>
+      <p class="follow">Evidence is the product. Since October 2026 the catalog hashes its own versions, card by card, so a citation points at exactly what it cited.</p>
+      <aside class="notes">Speaker: Aaron. One sentence from the audit and compliance evidence failure risk. If you cannot produce the record, the control did not operate. That is why every control in the catalog says what evidence it produces and how long it is kept, and why, in October 2026, the catalog started hashing its own versions card by card, so that when a bank cites a control it cites exactly that text. Keep this sentence in mind for part two: the gate's decisions are the evidence.</aside>
     </section>
 
     <section data-station="none">
-      <h2>Two ways to run the workshop</h2>
-      <p class="lead">Everything from here on is a step you can repeat. Two environments carry it.</p>
-      <div class="cols">
+      <h2>Fifteen months, and one control's year</h2>
+      <p class="lead">The catalog grew in bursts. Its founding control took a year and is still argued over.</p>
+      <div class="v5-timeline">
         <div>
-          <p class="verb-line"><strong>In the browser: the CALM Learning Lab</strong></p>
-          <img class="shot" src="img/lab/model-full.png" alt="The CALM Learning Lab">
-          <ul class="ways-list">
-            <li>The real CALM command-line tool in a browser: an editor, a live diagram, a terminal.</li>
-            <li>Two guided lessons with hints. Nothing to install.</li>
-            <li>Station 1, and half of station 4.</li>
-          </ul>
-        </div>
-        <div>
-          <p class="verb-line"><strong>In the repository: the blueprint</strong></p>
-          <pre class="code v3-clone">git clone github.com/rocketstack-matt/agentic-sdlc-blueprint
-cd agentic-sdlc-blueprint
-npm install
-npm run gates</pre>
-          <ul class="ways-list">
-            <li>Node 22 and git. No API key, under five minutes.</li>
-            <li>Five labs, one per station; the agent's attempts are patches.</li>
-            <li>All five stations: agent, gates and evidence included.</li>
-          </ul>
-        </div>
-      </div>
-      <aside class="notes">Speaker: Aaron. Before the stations, the two places they run, so nobody wonders what the lab is when it appears. The CALM Learning Lab at lab.calm.finos.org runs the real CALM CLI in a browser: an editor, a live diagram, a terminal, and lessons with steps and hints. Two lessons were written for this talk; they cover the model station and the model-change half of the gate station, with nothing installed. The repository is the full workshop: five labs, Node and git, under five minutes to set up, with the agent attempts pre-recorded as patches so nobody needs an API key.</aside>
-    </section>
-
-    <section class="section-slide" data-ring="model" data-background-image="img/background.png" data-background-size="cover">
-      <p class="tag">Station 1 of 5. Learning Lab lesson agentic-sdlc-model, or Lab 1</p>
-      <h2>Model: what are the rules?</h2>
-      <p>One small system, one rule, and a model that arrives broken.</p>
-      <aside class="notes">Speaker: Matthew. Station one. An agent is only as good as its context, and the missing context is how you want something built. That exists if your architecture is code. We meet the system as the lab draws it, read the rule as data, and validate a model that arrives with one thing wrong.</aside>
-    </section>
-
-    <section data-station="model" class="step">
-      <h2>The system, as the lab draws it</h2>
-      <div class="screen">
-        <div>
-          <p class="pane-head"><strong>Learning Lab</strong> &middot; lesson agentic-sdlc-model</p>
-          <img class="shot" src="img/lab/model-diagram.png" alt="The lab diagram: trader, trade API, position service, position store, trade store">
-        </div>
-        <aside class="callout-panel">
-          <h3>What this shows</h3>
-          <p>The Learning Lab's Diagram tab, drawn from the model: five nodes inside and outside the trade capture system boundary, and the relationships between them. Each arrow is a relationship through an interface.</p>
-          <h3>Take away</h3>
-          <p class="takeaway">One rule matters today: only position-service may connect to position-store. Everything that follows tests that rule.</p>
-        </aside>
-      </div>
-      <aside class="notes">Speaker: Matthew. The system in plain words, as the lab draws it from the model. A trader submits trades to the trade API. The trade API asks the position service for positions and persists trades in the trade store. The position service alone owns the position store, the book of record. Five nodes, five relationships, one rule: only position-service may connect to position-store. Hold on to that rule.</aside>
-    </section>
-
-    <section data-station="model" class="step">
-      <h2>The rule is a control on the node</h2>
-      <div class="screen">
-        <div>
-          <p class="pane-head"><strong>Learning Lab</strong> &middot; lesson agentic-sdlc-model, the editor</p>
-          <img class="shot" src="img/lab/model-control.png" alt="The position-store node's control in the editor">
-        </div>
-        <aside class="callout-panel">
-          <h3>What this shows</h3>
-          <p>The position-store node carries control SDLC-PREV-017 from the catalog: a requirement-url pointing at the catalog's own document on CALM Hub, and a config with the control id and the one allowed source, position-service.</p>
-          <h3>Take away</h3>
-          <p class="takeaway">A control in a catalog is prose. On a CALM node it is data with a schema, an owner and an enforcement point.</p>
-        </aside>
-      </div>
-      <aside class="notes">Speaker: Matthew. Now the rule. The position-store node carries a control: Service Dependency Control, SDLC-PREV-017, straight from the catalog. The requirement-url is the catalog's own document on CALM Hub, which is what the CLI validates this config against. The config says the allowed sources are position-service, and nothing else. That is the rule from the diagram, as data, with a schema behind it and a gate in front of it.</aside>
-    </section>
-
-    <section data-station="model" class="step">
-      <h2>Step 1. Validate the model</h2>
-      <div class="screen">
-        <div>
-          <p class="pane-head"><strong>Learning Lab</strong> &middot; lesson agentic-sdlc-model, step 1 of 5</p>
-          <img class="shot" src="img/lab/model-broken-full.png" alt="The whole lab: the editor on the wrong control id, the terminal with the failing validate">
-        </div>
-        <aside class="callout-panel">
-          <h3>What this shows</h3>
-          <p>The whole lab after the first command. The status bar already flags the file; the terminal says why: the Deployment Gating control claims SDLC-PREV-999, and the catalog document it cites pins the id.</p>
-          <h3>Take away</h3>
-          <p class="takeaway">One command checked CALM, the pattern, the Standards and the catalog documents. The catalog's own layer said no.</p>
-        </aside>
-      </div>
-      <aside class="notes">Speaker: Matthew. Step one. The file arrives with one thing wrong, and the lab already knows: the status bar says one problem. Run validate with the pattern, the architecture and the URL mapping that serves the catalog documents and the Standards from local copies. It fails, and the error is precise: the Deployment Gating control's control-id must equal a constant. The constant comes from the catalog's own requirement document; this file claims SDLC-PREV-999. Nobody at this estate wrote that check. FINOS did.</aside>
-    </section>
-
-    <section data-station="model" class="step">
-      <h2>Steps 2 and 3. Fix the id, validate again</h2>
-      <div class="screen">
-        <div>
-          <p class="pane-head"><strong>Learning Lab</strong> &middot; lesson agentic-sdlc-model, steps 2 and 3 of 5</p>
-          <img class="shot" src="img/lab/model-validate-fix.png" alt="The same command now passes: no errors">
-        </div>
-        <aside class="callout-panel">
-          <h3>What this shows</h3>
-          <p>The control's id put back to SDLC-PREV-012 in the editor and saved, which clears the status bar. Then the same command: no errors.</p>
-          <h3>Take away</h3>
-          <p class="takeaway">The fix is one token of data; nobody edited a gate. Valid against CALM, the pattern, the Standards and the catalog documents.</p>
-        </aside>
-      </div>
-      <aside class="notes">Speaker: Matthew. The repair: change 999 to 012, the catalog's id for Deployment Gating, and save. The live validation clears straight away, because the lab validates the saved file against the same documents the command uses. Run the command again: zero errors, and read what that covered: the CALM schema, the pattern this estate enforces, the node and interface Standards the pattern applies to every node, and the five catalog documents the controls cite. The lesson goes on to break the model two more ways, one caught by the pattern and one by the node Standard; do them in the lab afterwards.</aside>
-    </section>
-
-    <section data-station="model">
-      <h2>One command, three layers, three owners</h2>
-      <svg class="flow" viewBox="0 0 1680 250" aria-label="From the catalog to the gates">
-        <g font-family="Arial" text-anchor="middle">
-          <rect x="0" y="10" width="300" height="160" rx="18" fill="#4285F4"/>
-          <text x="150" y="58" fill="#fff" font-size="30" font-weight="700">The catalog</text>
-          <text x="150" y="96" fill="#fff" font-size="20">22 controls, as prose:</text>
-          <text x="150" y="122" fill="#fff" font-size="20">risks, requirements,</text>
-          <text x="150" y="148" fill="#fff" font-size="20">references</text>
-          <text x="0" y="215" fill="#595959" font-size="22" text-anchor="start">FINOS SDLC Common Controls</text>
-
-          <rect x="345" y="10" width="300" height="160" rx="18" fill="#4285F4"/>
-          <text x="495" y="58" fill="#fff" font-size="30" font-weight="700">CALM Hub</text>
-          <text x="495" y="96" fill="#fff" font-size="20">one Standard, and</text>
-          <text x="495" y="122" fill="#fff" font-size="20">22 control requirement</text>
-          <text x="495" y="148" fill="#fff" font-size="20">documents that conform to it</text>
-          <text x="495" y="215" fill="#595959" font-size="22">FINOS, hub.calm.finos.org</text>
-
-          <rect x="690" y="10" width="300" height="160" rx="18" fill="#4285F4"/>
-          <text x="840" y="58" fill="#fff" font-size="30" font-weight="700">The pattern</text>
-          <text x="840" y="96" fill="#fff" font-size="20">the controls to carry,</text>
-          <text x="840" y="122" fill="#fff" font-size="20">the document each cites,</text>
-          <text x="840" y="148" fill="#fff" font-size="20">parameters, node Standards</text>
-          <text x="840" y="215" fill="#595959" font-size="22">your organisation</text>
-
-          <rect x="1035" y="10" width="300" height="160" rx="18" fill="#4285F4"/>
-          <text x="1185" y="58" fill="#fff" font-size="30" font-weight="700">The architecture</text>
-          <text x="1185" y="96" fill="#fff" font-size="20">conforms to the pattern,</text>
-          <text x="1185" y="122" fill="#fff" font-size="20">cites the documents,</text>
-          <text x="1185" y="148" fill="#fff" font-size="20">holds the values</text>
-          <text x="1185" y="215" fill="#595959" font-size="22">your team</text>
-
-          <rect x="1380" y="10" width="300" height="160" rx="18" fill="#4285F4"/>
-          <text x="1530" y="58" fill="#fff" font-size="30" font-weight="700">Gates, evidence</text>
-          <text x="1530" y="96" fill="#fff" font-size="20">read the model,</text>
-          <text x="1530" y="122" fill="#fff" font-size="20">cite the control id</text>
-          <text x="1530" y="215" fill="#595959" font-size="22">your pipeline</text>
-        </g>
-        <g stroke="#595959" stroke-width="5" fill="#595959">
-          <line x1="300" y1="90" x2="333" y2="90"/><polygon points="333,80 345,90 333,100"/>
-          <line x1="645" y1="90" x2="678" y2="90"/><polygon points="678,80 690,90 678,100"/>
-          <line x1="990" y1="90" x2="1023" y2="90"/><polygon points="1023,80 1035,90 1023,100"/>
-          <line x1="1335" y1="90" x2="1368" y2="90"/><polygon points="1368,80 1380,90 1368,100"/>
-        </g>
-      </svg>
-      <img class="hub-shot header" src="img/hub-catalog.png" alt="The SDLC Common Controls domain in CALM Hub: 22 controls">
-      <p class="caption">Standards say what a node, an interface or a control requirement looks like. The pattern says which of them every architecture here must satisfy. FINOS publishes the controls once; each organisation publishes how it enforces them.</p>
-      <aside class="notes">Speaker: Matthew. One command checked three layers, and each layer has an owner. The catalog, published by FINOS, caught the wrong control id through its own requirement document on CALM Hub. The pattern, published by this organisation, caught the missing parameter, because the pattern says which controls every architecture here must carry and with which parameters. The node Standard, applied by the pattern, caught the missing source path. Standards say what a node, an interface or a control requirement document looks like; the pattern says which of them every architecture here must satisfy; the architecture complies; the gates and the evidence read it. FINOS publishes the controls once; each organisation publishes how it enforces them.</aside>
-    </section>
-
-    <section class="section-slide" data-ring="spec" data-background-image="img/background.png" data-background-size="cover">
-      <p class="tag">Station 2 of 5. Lab 2</p>
-      <h2>Spec: what are we building, and which parts of the model may it touch?</h2>
-      <p>A requirement that names its scope in the model, and a model that answers back.</p>
-      <aside class="notes">Speaker: Matthew. Station two. "What you want" is easy. "How you want it" is the hard, auditable part, and the model already knows it. First how the agent knows to start from a spec at all, then the command that answers it.</aside>
-    </section>
-
-    <section data-station="spec" class="step">
-      <h2>How the agent knows where to start</h2>
-      <div class="screen">
-        <div>
-          <p class="pane-head"><strong>Repository terminal</strong> &middot; Lab 2</p>
-          <pre class="term" data-capture="agents-md"></pre>
-        </div>
-        <aside class="callout-panel">
-          <h3>What this shows</h3>
-          <p>AGENTS.md, which every coding agent reads before it writes: work only from an approved spec in specs/, ask the model for context (an MCP tool, or the calm:context script), implement inside that scope, run the gates.</p>
-          <h3>Take away</h3>
-          <p class="takeaway">Spec-driven: the requirement is a file in the repository that names its scope in the model, and the agent starts there because the repository says so.</p>
-        </aside>
-      </div>
-      <aside class="notes">Speaker: Matthew. Spec-driven development, in this repository. A spec is a requirement written as a markdown file under specs slash, approved by an owner, with front matter that names the CALM nodes and relationships the work may use. How does an agent know to read it? AGENTS.md, the file Claude Code, Codex, Copilot, Cursor and Gemini read before they write. Step one: work only from an approved spec. Step two: ask the model for the architecture context, through the MCP tool or the npm script. Step three: implement inside that scope. Step four: run the gates. The prompt we give is three words: Implement SPEC-001.</aside>
-    </section>
-
-    <section data-station="spec" class="step">
-      <h2>Ask the model what the spec's scope means</h2>
-      <div class="screen">
-        <div>
-          <p class="pane-head"><strong>Repository terminal</strong> &middot; Lab 2</p>
-          <pre class="term tight" data-capture="context"></pre>
-        </div>
-        <aside class="callout-panel">
-          <h3>What this shows</h3>
-          <p><code>npm run calm:context</code> is the repository's script that reads the model for a spec's nodes; an MCP tool gives an agent the same answer. Narrowed to the first node: trade-api, its tier and data class, what it may connect to, what it must not, and the rule.</p>
-          <h3>Take away</h3>
-          <p class="takeaway">Context engineering becomes a lookup. The model already knows how you want it built.</p>
-        </aside>
-      </div>
-      <aside class="notes">Speaker: Matthew. The second step of the loop. calm:context is a small script in the repository that reads the model for the spec's nodes; with MCP the agent calls the same thing as a tool. For trade-api: who it is, tier two, internal data, what it may connect to, and the line that matters: must not connect to position-store, only position-service may. The last line is the rule for the whole change. None of this was written in a prompt. It was looked up in the model.</aside>
-    </section>
-
-    <section class="section-slide" data-ring="agent" data-background-image="img/background.png" data-background-size="cover">
-      <p class="tag">Station 3 of 5. Lab 3</p>
-      <h2>Agent: the same spec, two attempts</h2>
-      <p>Attempt A gets the spec. Attempt B gets the spec and the model. Both are pre-recorded patches, so nobody needs an API key.</p>
-      <aside class="notes">Speaker: Matthew. Station three, and the storyline is deliberately simple: one spec, two attempts. A got only the spec. B got the spec and the model. Both are patches in the repository, so you can replay them without an agent or an API key; the optional part of lab three is to run your own agent with the same three-word prompt.</aside>
-    </section>
-
-    <section data-station="agent" class="step">
-      <h2>Attempt A: the shortcut</h2>
-      <div class="screen">
-        <div>
-          <p class="pane-head"><strong>Repository terminal</strong> &middot; Lab 3</p>
-          <pre class="term roomy" data-capture="attempt-a-apply"></pre>
-        </div>
-        <aside class="callout-panel">
-          <h3>What this shows</h3>
-          <p>The patch an agent produced with only the spec, and its diff to config.ts: a path to the position store, with the agent's own comment.</p>
-          <h3>Take away</h3>
-          <p class="takeaway">"Read them directly and save a network hop." A reasonable assumption, from an agent that never saw the model.</p>
-        </aside>
-      </div>
-      <aside class="notes">Speaker: Matthew. Attempt A. Apply the patch and read the one file that tells the story: config.ts gains a path to the position store, and the agent wrote down why. Positions are on disk next to us, read them directly, save a network hop. That is a reasonable engineer's assumption. It is also a confidential book of record being read by a tier two service.</aside>
-    </section>
-
-    <section data-station="agent" class="step">
-      <h2>Attempt A at the gates <span class="live">live</span></h2>
-      <div class="screen">
-        <div>
-          <p class="pane-head"><strong>Repository terminal</strong> &middot; Lab 3</p>
-          <pre class="term tight" data-capture="attempt-a-gates"></pre>
-        </div>
-        <aside class="callout-panel">
-          <h3>What this shows</h3>
-          <p>Tests and types were green. Then six gates run, and drift-check fails twice: DRIFT, a connection the model does not have, and CONTROL BREACH, position-store names who may connect to it. Both name the file and line.</p>
-          <h3>Take away</h3>
-          <p class="takeaway">BLOCKED. The model caught what tests, types and a reviewer could not. A gate is a check every change must pass to merge.</p>
-        </aside>
-      </div>
-      <aside class="notes">Speaker: Matthew. Live moment one if you want it: switch to the terminal and run the gates. A gate is a check that runs on every change and must pass before it can merge; station four lists all six. Two errors here, both from drift-check. Drift: the code has a connection the model does not. Control breach: position-store names who may connect to it, and trade-api is not on the list. Both name the file and the line, and both name their catalog control. Blocked.</aside>
-    </section>
-
-    <section data-station="agent" class="step">
-      <h2>Attempt B. The same spec, with the model <span class="live">live</span></h2>
-      <div class="screen">
-        <div>
-          <p class="pane-head"><strong>Repository terminal</strong> &middot; Lab 3</p>
-          <pre class="term tight" data-capture="attempt-b-apply attempt-b-gates"></pre>
-        </div>
-        <aside class="callout-panel">
-          <h3>What this shows</h3>
-          <p>Reset, then the patch the same agent produced after reading the model: positions fetched over the modelled relationship to position-service. Every gate passes.</p>
-          <h3>Take away</h3>
-          <p class="takeaway">ADMISSIBLE. Same spec, same agent; the model made the difference. Review mode COGNITIVE, decided by the model.</p>
-        </aside>
-      </div>
-      <aside class="notes">Speaker: Matthew. Attempt B. Reset the tree, apply the second patch, and grep for the one line that matters: the summary endpoint fetches positions from position-service over the modelled relationship. Run the gates: everything passes, admissible, and the review router says cognitive, which station four explains. Same spec, same agent. The only difference is that this one read the model first.</aside>
-    </section>
-
-    <section class="section-slide" data-ring="gate" data-background-image="img/background.png" data-background-size="cover">
-      <p class="tag">Station 4 of 5. Lab 4; the model-change half also runs in the Learning Lab</p>
-      <h2>Gate: did it stay inside, and who reviews the robot?</h2>
-      <p>Six checks on every change, a review mode the model decides, and an agent that tries to edit the model.</p>
-      <aside class="notes">Speaker: Matthew. Station four. You have just seen the gates catch a shortcut. Here is what they are, then the question the catalog asks under code review: who reviews, decided by a policy a machine can evaluate. Then the hard case: the agent that edits the model.</aside>
-    </section>
-
-    <section data-station="gate">
-      <h2>Every change meets six gates</h2>
-        <ol class="v3-gates">
-    <li class="v3-gate"><span class="v3-gate-n">1</span><h3 class="v3-gate-name">calm-validate</h3><p class="v3-gate-what">the model is valid against CALM, the pattern and the Standards it names</p><p class="v3-gate-ctl"><span><span class="v3-ctl">SDLC-PREV-012</span>Deployment Gating</span></p></li>
-    <li class="v3-gate"><span class="v3-gate-n">2</span><h3 class="v3-gate-name">spec-check</h3><p class="v3-gate-what">the change names an approved spec and touches only the nodes it declares</p><p class="v3-gate-ctl"><span><span class="v3-ctl">SDLC-PREV-004</span>Requirements Repository</span></p></li>
-    <li class="v3-gate"><span class="v3-gate-n">3</span><h3 class="v3-gate-name">drift-check</h3><p class="v3-gate-what">every connection in the code is in the model, and allowed</p><p class="v3-gate-ctl"><span><span class="v3-ctl">SDLC-PREV-017</span>Service Dependency Control</span><span><span class="v3-ctl">SDLC-PREV-012</span>Deployment Gating</span></p></li>
-    <li class="v3-gate"><span class="v3-gate-n">4</span><h3 class="v3-gate-name">model-diff</h3><p class="v3-gate-what">any change to the model was declared by the spec</p><p class="v3-gate-ctl"><span><span class="v3-ctl">SDLC-PREV-004</span>Requirements Repository</span><span><span class="v3-ctl">SDLC-PREV-017</span>Service Dependency Control</span></p></li>
-    <li class="v3-gate"><span class="v3-gate-n">5</span><h3 class="v3-gate-name">tests</h3><p class="v3-gate-what">the test suite passes</p><p class="v3-gate-ctl"><span><span class="v3-ctl">SDLC-PREV-016</span>Test Execution and Sign-Off</span><span><span class="v3-ctl">SDLC-PREV-014</span>Test Evidence Retention</span></p></li>
-    <li class="v3-gate"><span class="v3-gate-n">6</span><h3 class="v3-gate-name">review-router</h3><p class="v3-gate-what">the model decides who must review</p><p class="v3-gate-ctl"><span><span class="v3-ctl">SDLC-PREV-001</span>Code Review</span></p></li>
-  </ol>
-  <p class="v3-gates-foot"><b>All six must pass</b>: that is SDLC-PREV-012 Deployment Gating, and the list of gates itself lives in the model. The model, the gates and the agent instructions are the control plane: a change there always goes to a human.</p>
-      <aside class="notes">Speaker: Matthew. The six gates you met in station three, as a set. calm-validate: the model is valid against CALM, the pattern and the Standards. spec-check: the change names an approved spec and touches only the nodes it declares. drift-check: every connection in the code is in the model, and allowed. model-diff: any change to the model was declared by the spec. tests. review-router: the model decides who must review. All six must pass, which is Deployment Gating, SDLC-PREV-012, and the list of gates itself lives in the model.</aside>
-    </section>
-
-    <section data-station="gate" class="step">
-      <h2>Steps 1 and 2. Who reviews</h2>
-      <div class="screen">
-        <div>
-          <p class="pane-head"><strong>Repository terminal</strong> &middot; Lab 4</p>
-          <pre class="term tight" data-capture="review-cognitive review-human"></pre>
-        </div>
-        <aside class="callout-panel">
-          <h3>What this shows</h3>
-          <p>The review router twice: after attempt B, COGNITIVE; after one line appended to the tier 1 service, HUMAN. The INFO lines are the inputs: file, node, tier, data class.</p>
-          <h3>Take away</h3>
-          <p class="takeaway">The model decides who reviews, and the policy is the code review control's own config in the model, so changing it is an architecture change.</p>
-        </aside>
-      </div>
-      <aside class="notes">Speaker: Matthew. SDLC-PREV-001 asks for a deterministic, machine-evaluable review policy. Run the router after attempt B: cognitive, an approved AI reviewer that is not the author, because the change touches trade-api, tier two, internal data. Append one line to position-service, tier one, confidential: human. Same repo, same agent, different route, decided by the model. And where is that policy? Not in the gate script. It is the configuration of the code review control inside the CALM architecture, four rules read top to bottom plus the author may not review. Changing review policy is therefore an architecture change, which is exactly what the next attempt tries.</aside>
-    </section>
-
-    <section data-station="gate" class="step">
-      <h2>Attempt C: the agent edits the model <span class="live">live</span></h2>
-      <div class="screen">
-        <div>
-          <p class="pane-head"><strong>Repository terminal</strong> &middot; Lab 4</p>
-          <pre class="term tight" data-capture="attempt-c-apply attempt-c-gates"></pre>
-        </div>
-        <aside class="callout-panel">
-          <h3>What this shows</h3>
-          <p>The agent "fixes" the gate by adding the missing relationship to the model itself. Drift is gone, the node control still blocks, and model-diff blocks a change SPEC-001 never declared. Review: HUMAN.</p>
-          <h3>Take away</h3>
-          <p class="takeaway">BLOCKED by two gates and routed to a human. A model change is a human's to make, under a spec that declares it.</p>
-        </aside>
-      </div>
-      <aside class="notes">Speaker: Matthew. Attempt C is the one every security person in the room is waiting for. The agent sees drift-check complain that the connection is not in the model, so it adds the connection to the model: the stat shows the architecture file changed alongside the code. Then three things happen at the gates. The drift error disappears, because the code now matches the model. The node control still blocks it, because position-store still names who may connect. And model-diff blocks it: calm diff shows a relationship was added, and SPEC-001 declares no model change. The review mode jumps to human because architecture slash is control plane. A model change is made by a human first, under a spec that declares it, and only then does the agent implement.</aside>
-    </section>
-
-    <section data-station="gate" class="step">
-      <h2>The right path: a human changes the model under SPEC-002 <span class="live">live</span></h2>
-      <div class="screen">
-        <div>
-          <p class="pane-head"><strong>Repository terminal</strong> &middot; Lab 4</p>
-          <pre class="term tight" data-capture="spec-002-model"></pre>
-        </div>
-        <aside class="callout-panel">
-          <h3>What this shows</h3>
-          <p>A human's patch under SPEC-002: the spec and the model, nothing else. ADMISSIBLE. drift-check warns the model is ahead of the code; model-diff lists the change as declared. Review: HUMAN.</p>
-          <h3>Take away</h3>
-          <p class="takeaway">The same kind of model edit attempt C made, but by a human, under a spec that declares it, is admissible.</p>
-        </aside>
-      </div>
-      <aside class="notes">Speaker: Matthew. The same right path in the repository, for the gates. The patch changes the spec and the model and nothing else, as a human would. Admissible, with two things worth reading: drift-check warns the model is ahead of the code, and model-diff lists the added relationship as declared by SPEC-002. Review is human, because the model is control plane.</aside>
-    </section>
-
-    <section data-station="gate" class="step">
-      <h2>Then the agent implements inside the new scope <span class="live">live</span></h2>
-      <div class="screen">
-        <div>
-          <p class="pane-head"><strong>Repository terminal</strong> &middot; Lab 4</p>
-          <pre class="term tight" data-capture="spec-002-impl"></pre>
-        </div>
-        <aside class="callout-panel">
-          <h3>What this shows</h3>
-          <p>Attempt D, the agent's implementation of SPEC-002 after the model change was approved: four connections in code, four in the model, every gate passes.</p>
-          <h3>Take away</h3>
-          <p class="takeaway">Review is still HUMAN, because position-service is tier 1. The model decides that too.</p>
-        </aside>
-      </div>
-      <aside class="notes">Speaker: Matthew. Once the model change is approved the agent implements inside the new scope. Four connections in code, four in the model, admissible. Review stays human because position-service is tier one. Compare with attempt C, where the agent made the same kind of model edit itself and was blocked.</aside>
-    </section>
-
-    <section class="section-slide" data-ring="evidence" data-background-image="img/background.png" data-background-size="cover">
-      <p class="tag">Station 5 of 5. Lab 5</p>
-      <h2>Evidence: prove it</h2>
-      <p>One file per change that an examiner can read.</p>
-      <aside class="notes">Speaker: Matthew. Station five. Risk SDLC-RC-005 is blunt: if you cannot produce the record, the control did not operate.</aside>
-    </section>
-
-    <section data-station="evidence" class="step">
-      <h2>Step 1. Commit, then produce the evidence <span class="live">live</span></h2>
-      <div class="screen">
-        <div>
-          <p class="pane-head"><strong>Repository terminal</strong> &middot; Lab 5</p>
-          <pre class="term tight" data-capture="evidence"></pre>
-        </div>
-        <aside class="callout-panel">
-          <h3>What this shows</h3>
-          <p>Attempt B committed with the Spec trailer an agent must add, then the evidence command with the author recorded as an agent: ADMISSIBLE, the bundle's path, five CALM evidence documents.</p>
-          <h3>Take away</h3>
-          <p class="takeaway">One command, one commit, one file an examiner can read.</p>
-        </aside>
-      </div>
-      <aside class="notes">Speaker: Matthew. Station five. Risk SDLC-RC-005 is blunt: if you cannot produce the record, the control did not operate. Commit attempt B with its spec trailer, then run evidence with the author recorded as an agent. It names the bundle it wrote and the five CALM evidence documents beside it.</aside>
-    </section>
-
-    <section data-station="evidence" class="step">
-      <h2>Step 2. Read the bundle</h2>
-      <div class="screen">
-        <div>
-          <p class="pane-head"><strong>Repository terminal</strong> &middot; Lab 5</p>
-          <pre class="term tight" data-capture="evidence-bundle"></pre>
-        </div>
-        <aside class="callout-panel">
-          <h3>What this shows</h3>
-          <p>The top of the bundle: the commit, the spec, the architecture's hash, the author (an agent), admissible, the review mode. Beside it, one CALM evidence document per control points into the bundle and at its config in the model.</p>
-          <h3>Take away</h3>
-          <p class="takeaway">If you cannot produce the record, the control did not operate (SDLC-RC-005). This is the record.</p>
-        </aside>
-      </div>
-      <aside class="notes">Speaker: Matthew. The top of the bundle. For this one commit you can show the spec it implemented, the hash of the exact architecture it was checked against, which files changed, that an agent authored it, that it was admissible and which review mode was required and why. Below the fold: every gate result with its catalog control ids, and a hash over the lot.</aside>
-    </section>
-
-    <section class="section-slide" data-ring="none" data-background-image="img/background.png" data-background-size="cover">
-      <p class="tag">Closing</p>
-      <h2>Build it once, together, in the open</h2>
-      <p>What fell out of building this, and where it goes.</p>
-      <aside class="notes">Speaker: Aaron. Take it back. The point of the blueprint is not the blueprint. It is that every institution is about to write this on its own, and the pieces to write it once already exist in FINOS.</aside>
-    </section>
-
-    <section data-station="none">
-      <h2>Bring it back</h2>
-      <p class="lead">Three controls we needed and could not find, and three doors to take them through.</p>
-      <div class="cols">
-        <div class="wide">
-          <ul class="v4-cands">
-            <li><strong>Architecture Conformance.</strong> Code admitted to a protected baseline must not introduce connections absent from the approved, machine-readable architecture.</li>
-            <li><strong>Agent Task Scoping.</strong> An agent's change is bound to an approved requirement that declares its architectural scope in advance.</li>
-            <li><strong>Agent Attribution and Context Provenance.</strong> Which agent identity produced a change, under which instructions, with which architectural context.</li>
-          </ul>
-          <p class="small muted">Drafts to start a conversation, not catalog content. Each already has a working check in the repository.</p>
-        </div>
-        <div>
-          <div class="v4-doors">
-            <img src="img/logos/sdlc-common-controls.svg" alt="SDLC Common Controls Catalog"><p>Controls for the agentic SDLC, and which enforcement parameters belong in the catalog's own documents.</p>
-            <img src="img/logos/calm.svg" alt="FINOS CALM"><p>The catalog's Standard and documents, the pattern and the node Standards on CALM Hub, and the two Learning Lab lessons.</p>
-            <img src="img/logos/ai-governance-framework.png" alt="AI Governance Framework"><p>Mitigations on the agent itself. This repository applies two; the rest is open.</p>
-          </div>
-        </div>
-      </div>
-      <aside class="notes">Speaker: Aaron. Three controls we could not find in the catalog while building this. They are strawmen: the wording is ours, the ids do not exist, and the right place to argue about them is the catalog's issue tracker, where the agentic SDLC is already an emerging topic. Each has a working reference implementation in the repository: the drift and model-diff gates and the pattern for the first, the spec gate for the second, the evidence bundle for the third. Three doors: the catalog for controls, and for a conversation about which enforcement parameters belong in the catalog's own documents rather than in each organisation's pattern; CALM for the model, the pattern, the Standards and the harder conformance signals the README is honest about; the AI Governance Framework for the agent side.</aside>
-    </section>
-
-    <section data-station="none">
-      <h2>Make it yours</h2>
-      <p class="lead">Fork it, model one of your own systems, and see what the gates say.</p>
-      <div class="cols">
-        <div class="wide">
-          <ol class="commentary-list">
-            <li><strong>Open the lab.</strong> Two lessons in the browser, nothing to install, fifteen minutes.</li>
-            <li><strong>Fork the repo.</strong> Node 22, git, npm install. No API key, no cloud account, under five minutes.</li>
-            <li><strong>Model your own estate.</strong> Nodes, connects relationships, source paths. Validate against the pattern.</li>
-            <li><strong>Wire it into your agent.</strong> Keep AGENTS.md, swap the model path. Open a pull request on your fork and read the bundle.</li>
-            <li><strong>Contribute.</strong> Controls to the catalog, modelling gaps to CALM.</li>
+          <h3>The catalog</h3>
+          <ol>
+            <li><b>Jul 2025</b>The proposal: duplication, drift, fragmentation.</li>
+            <li><b>Oct 2025</b>First content, forked from the AI Governance Framework's structure (PR #3).</li>
+            <li><b>Mar 2026</b>A workshop day: eleven pull requests, risks and phases take shape.</li>
+            <li><b>Jul 2026</b>Regulatory mappings piloted on code review (#88).</li>
+            <li><b>Sep 2026</b>Agentic provenance proposed, still open (PR #103).</li>
+            <li><b>Oct 2026</b>Per-card versioning with immutable snapshots (#121).</li>
           </ol>
         </div>
         <div>
-          <dl class="kv">
-            <dt>Repo</dt><dd><a data-hub="repo">github.com/rocketstack-matt/agentic-sdlc-blueprint</a></dd>
-            <dt>Site and deck</dt><dd><a data-hub="site">rocketstack-matt.github.io/agentic-sdlc-blueprint</a></dd>
-            <dt>Learning Lab</dt><dd><a data-hub="lab">agentic-sdlc-model</a>, <a data-hub="lab2">agentic-sdlc-change</a></dd>
-            <dt>Catalog</dt><dd><a data-hub="catalog">finos.github.io/sdlc-common-controls</a></dd>
-            <dt>CALM Hub</dt><dd><a data-hub="hub">hub.calm.finos.org</a></dd>
-          </dl>
-          <p class="small muted">The architecture and pattern are published with the site, with docs generated from the model; the catalog's documents, their Standard and the pattern live on CALM Hub.</p>
+          <h3>Code review</h3>
+          <ol>
+            <li><b>2025</b>Tested first, at the working group's offsite: "never alone".</li>
+            <li><b>Mar 2026</b>Removed: "too broad in terms of risks mitigated" (#37).</li>
+            <li><b>Jun 2026</b>Rewritten and re-added (#80).</li>
+            <li><b>Jul 2026</b>The first control with regulatory mappings (#88).</li>
+            <li><b>Open</b>"The deterministic 'machine evaluated' should be a 'could' instead of a must." (#81)</li>
+            <li><b>Open</b>"Keep the word 'eligible'. We want to call out that the review was done by an eligible party." (#81)</li>
+          </ol>
         </div>
       </div>
-      <aside class="notes">Speaker: Aaron. The call to action. The two Learning Lab lessons are station one and the model-change half of station four, with nothing installed; the repository is all five in under an hour. The lab that matters most is the last one: replace the toy model with one of your systems and see what the gates say. Then bring what you learn back.</aside>
+      <aside class="notes">Speaker: Aaron. Two timelines. The catalog: proposed in July 2025, first content that October, built mostly on workshop days, regulatory mappings last July, an agentic provenance control proposed in September and still open, and versioning this month. Code review, the founding control: tested first at the offsite, removed in March as too broad, rewritten in June, the first control to get regulatory mappings in July, and still argued over: whether machine-evaluable policy should be a must or a could, and whether a machine can be an eligible reviewer. Say the word eligible; part two is about it.</aside>
+    </section>
+
+    <section data-station="none">
+      <h2>Code review, as the catalog writes it today</h2>
+      <p class="lead">Five requirements, quoted. Read them as a specification for a gate.</p>
+      <ol class="v5-quotes">
+        <li>"The policy MUST define deterministic, machine-evaluable criteria for selecting the required review mode"</li>
+        <li>"non-deterministic review (such as manual peer review or <b>approved cognitive review engines</b>)"</li>
+        <li>"pipeline controls MUST technically block admission to the protected baseline when the required review outcome is absent, expired, revoked, or <b>no longer bound to the current change set</b>"</li>
+        <li>"Review outcomes MUST be bound to an immutable identity for the reviewed content, such as a commit SHA"</li>
+        <li>"the author of the change set <b>MUST NOT</b> satisfy the human-review requirement for their own change"</li>
+      </ol>
+      <p class="caption muted">SDLC-PREV-001 Code Review, version 0.1, finos.github.io/sdlc-common-controls</p>
+      <aside class="notes">Speaker: Aaron. The control as it reads today, five requirements. A deterministic, machine-evaluable policy chooses the review mode. Non-deterministic review can be a human or an approved cognitive review engine: the catalog already admits machine reviewers, by name. The pipeline must block admission when the review outcome is absent, expired, revoked, or no longer bound to the change set. Outcomes are bound to an immutable identity, a commit. And the author may not satisfy the review of their own change. Read those five again and they are a specification for a gate. Matthew builds that gate.</aside>
+    </section>
+
+    <section data-station="none">
+      <p class="kicker">Where the catalog stops</p>
+      <p class="statement">The catalog says what. It cannot make a developer obey it who never sleeps, never reads the wiki, and takes the shortest path to green.</p>
+      <p class="follow">So who was the eligible reviewer of that pull request? The working group's own minutes: "difficult to detect and enforce, but something we are thinking about."</p>
+      <aside class="notes">Speaker: Aaron. Where the catalog stops. It says what, and now it even says machines may review. It cannot make a developer obey it who never sleeps, never reads the wiki and takes the shortest path to green. Back to the pull request from the start: who was the eligible reviewer? Our own minutes from September say provenance of agentic changes is difficult to detect and enforce, but something we are thinking about. Matthew, how do you enforce this? Leave the question on the screen.</aside>
+    </section>
+
+    <section class="section-slide" data-background-image="img/background.png" data-background-size="cover">
+      <p class="tag">Part two. Matthew Bain</p>
+      <h2>The gate</h2>
+      <p>One control, enforced where it counts, when the developer and the reviewer are both machines.</p>
+      <aside class="notes">Speaker: Matthew. Aaron left the question on the screen. The answer is not to make the agent read the policy. It is to make the gate refuse.</aside>
+    </section>
+
+    <section data-station="none">
+      <h2>You do not make the agent read the policy. You make the gate refuse.</h2>
+      <svg class="boxes" viewBox="0 0 1680 300" aria-label="Model, policy, gate, evidence">
+        <defs><marker id="v5-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#595959"/></marker></defs>
+        <g font-family="Arial" text-anchor="middle">
+          <rect x="0" y="20" width="370" height="200" rx="18" fill="#4285F4"/>
+          <text x="185" y="80" fill="#fff" font-size="38" font-weight="700">The model</text>
+          <text x="185" y="128" fill="#fff" font-size="24">the architecture, with the</text>
+          <text x="185" y="160" fill="#fff" font-size="24">catalog's controls as data</text>
+          <text x="185" y="265" fill="#595959" font-size="24">FINOS CALM</text>
+          <line x1="378" y1="120" x2="428" y2="120" stroke="#595959" stroke-width="5" marker-end="url(#v5-arrow)"/>
+          <rect x="437" y="20" width="370" height="200" rx="18" fill="#4285F4"/>
+          <text x="622" y="80" fill="#fff" font-size="38" font-weight="700">The policy</text>
+          <text x="622" y="128" fill="#fff" font-size="24">deny by default,</text>
+          <text x="622" y="160" fill="#fff" font-size="24">reads the model as its data</text>
+          <text x="622" y="265" fill="#595959" font-size="24">Open Policy Agent</text>
+          <line x1="815" y1="120" x2="865" y2="120" stroke="#595959" stroke-width="5" marker-end="url(#v5-arrow)"/>
+          <rect x="874" y="20" width="370" height="200" rx="18" fill="#4285F4"/>
+          <text x="1059" y="80" fill="#fff" font-size="38" font-weight="700">The gate</text>
+          <text x="1059" y="128" fill="#fff" font-size="24">nothing reaches main</text>
+          <text x="1059" y="160" fill="#fff" font-size="24">without a yes</text>
+          <text x="1059" y="265" fill="#595959" font-size="24">the merge gateway</text>
+          <line x1="1252" y1="120" x2="1302" y2="120" stroke="#595959" stroke-width="5" marker-end="url(#v5-arrow)"/>
+          <rect x="1311" y="20" width="369" height="200" rx="18" fill="#4285F4"/>
+          <text x="1495" y="80" fill="#fff" font-size="38" font-weight="700">The evidence</text>
+          <text x="1495" y="128" fill="#fff" font-size="24">every decision, logged</text>
+          <text x="1495" y="160" fill="#fff" font-size="24">with the hashes it used</text>
+          <text x="1495" y="265" fill="#595959" font-size="24">the decision log</text>
+        </g>
+      </svg>
+      <p class="caption">Four things, and nothing else. The agent is not one of them: the best agent and the worst agent meet the same gate.</p>
+      <aside class="notes">Speaker: Matthew. Four things, and this is the only inventory in the talk. The model: the architecture written as data, in FINOS CALM, with the catalog's controls attached to the parts they govern, as data. The policy: deny by default, evaluated by Open Policy Agent, and its data is the model. The gate: a merge gateway, and nothing reaches main without a yes from the policy. The evidence: every decision logged with the hashes of what it decided on. The agent is deliberately not a box. The best agent and the worst agent meet the same gate.</aside>
+    </section>
+
+    <section data-station="none">
+      <h2>The mechanism is a model too</h2>
+      <div class="cols">
+        <div class="wide">
+          <svg class="mech" viewBox="0 0 1010 600" aria-label="The enforcement mechanism modelled in CALM">
+            <defs><marker id="v5-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#4285F4"/></marker><marker id="v5-x" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#FFAB40"/></marker></defs>
+            <g font-family="Arial" text-anchor="middle">
+              <rect x="10" y="40" width="270" height="90" rx="14" fill="#4285F4"/><text x="145" y="80" fill="#fff" font-size="26" font-weight="700">author agent</text><text x="145" y="110" fill="#fff" font-size="19">spiffe://bank/agents/author</text>
+              <rect x="365" y="430" width="270" height="90" rx="14" fill="#4285F4"/><text x="500" y="470" fill="#fff" font-size="26" font-weight="700">reviewer agent</text><text x="500" y="500" fill="#fff" font-size="19">spiffe://bank/agents/reviewer</text>
+              <rect x="365" y="200" width="270" height="110" rx="14" fill="#4285F4"/><text x="500" y="240" fill="#fff" font-size="26" font-weight="700">merge gateway</text><text x="500" y="270" fill="#fff" font-size="19">the policy runs inside it</text><text x="500" y="294" fill="#fff" font-size="19">deny by default</text>
+              <rect x="705" y="40" width="295" height="90" rx="14" fill="#4285F4"/><text x="852" y="80" fill="#fff" font-size="26" font-weight="700">approval service</text><text x="852" y="110" fill="#fff" font-size="19">mints bound tokens</text>
+              <rect x="705" y="200" width="295" height="90" rx="14" fill="#595959"/><text x="852" y="240" fill="#fff" font-size="26" font-weight="700">approver</text><text x="852" y="270" fill="#fff" font-size="19">a human, on their own device</text>
+              <rect x="705" y="430" width="295" height="90" rx="14" fill="#4285F4"/><text x="852" y="470" fill="#fff" font-size="26" font-weight="700">repository</text><text x="852" y="500" fill="#fff" font-size="18">only the gateway merges to main</text>
+              <g stroke="#4285F4" stroke-width="4" fill="none" marker-end="url(#v5-m)">
+                <path d="M280 100 L357 230"/>
+                <path d="M500 430 L500 318"/>
+                <path d="M635 230 L697 110"/>
+                <path d="M852 200 L852 138"/>
+                <path d="M635 290 L697 452"/>
+                <path d="M145 130 C 145 590, 560 590, 697 500"/>
+              </g>
+              <g font-size="18" fill="#212121">
+                <text x="280" y="175">submit</text><text x="545" y="380">review</text><text x="715" y="175">ask</text><text x="915" y="175">approve</text><text x="715" y="380">merge to main</text><text x="330" y="585">push a branch</text>
+              </g>
+              <g stroke="#FFAB40" stroke-width="4" fill="none" stroke-dasharray="10 8" marker-end="url(#v5-x)">
+                <path d="M280 70 L697 70"/>
+              </g>
+              <g font-size="18" fill="#c77800" font-weight="700"><text x="500" y="58">no edge: the agent cannot ask for a token</text></g>
+            </g>
+          </svg>
+        </div>
+        <div>
+<pre class="code v5-json">"sdlc-prev-001-code-review": {
+  "author-may-not-review": true,
+  "approved-cognitive-engines": [
+    "spiffe://bank/agents/reviewer"
+  ],
+  "human-approval": {
+    "issuer": "approval-service",
+    "bound-to": ["commit-sha",
+                 "diff-sha256", "spec-id"],
+    "single-use": true,
+    "max-age-seconds": 600
+  }
+}</pre>
+          <p class="caption-small">The code review control on the model: this config is the policy's data. Change the policy by changing the model, under review, because the model is control plane.</p>
+        </div>
+      </div>
+      <aside class="notes">Speaker: Matthew. The enforcement mechanism is itself a CALM model, because the point of the model is that a tool can check it. Six nodes. The author agent pushes a branch and submits to the gateway. The reviewer agent reviews. The gateway asks the policy, asks the approval service when the policy says a human is needed, and is the only thing that merges to main. The approver is a person on their own device. One edge is deliberately absent, and in a model an absent edge is a rule: the agent cannot ask the approval service for a token. On the right, the code review control as it sits on the model: author may not review, the approved review engine by identity, and what a human approval must be bound to. That config is the data the policy reads. To change the policy you change the model, and the model is control plane, so a human signs that too.</aside>
+    </section>
+
+    <section data-station="none" class="step">
+      <h2>The agent reviews its own change <span class="live">live</span></h2>
+      <div class="screen">
+        <div>
+          <p class="pane-head"><strong>Repository terminal</strong> &middot; the merge gateway</p>
+          <pre class="term tight" data-capture="propose self-review"></pre>
+        </div>
+        <aside class="callout-panel">
+          <h3>What this shows</h3>
+          <p>The author agent proposes a change under SPEC-001 and reviews it itself. The gateway asks the policy. DENY, with the reason in the control's own words: the author may not review.</p>
+          <h3>Take away</h3>
+          <p class="takeaway">The first denial is the sentence from the catalog. Nobody wrote a rule in the gate; the gate read the model.</p>
+        </aside>
+      </div>
+      <aside class="notes">Speaker: Matthew. Live. The agent proposes a change: the spec it implements, its identity, the commit, the files, the hash of the exact diff. Then it reviews its own change, with its own identity. The gateway asks the policy and the answer is deny, and the reason is the catalog's sentence: the author may not review. There is no rule in the gateway that says this. The policy read it from the model.</aside>
+    </section>
+
+    <section data-station="none" class="step">
+      <h2>Reviewed by the approved engine: allowed</h2>
+      <div class="screen">
+        <div>
+          <p class="pane-head"><strong>Repository terminal</strong> &middot; the merge gateway</p>
+          <pre class="term tight" data-capture="reviewed"></pre>
+        </div>
+        <aside class="callout-panel">
+          <h3>What this shows</h3>
+          <p>The same change reviewed by the reviewer agent, whose identity is on the model's list of approved cognitive engines. The change touches a tier 2 node, so no human is needed. ALLOW, and main moves.</p>
+          <h3>Take away</h3>
+          <p class="takeaway">Tier by risk, or the humans stop reading: a routine change on a tier 2 service gets a machine review and no ceremony.</p>
+        </aside>
+      </div>
+      <aside class="notes">Speaker: Matthew. Same change, reviewed by the reviewer agent. Its identity is on the list of approved cognitive review engines in the model, so the review counts. The change touches trade-api, tier two, internal data, so the policy wants no human. Allow, and main moves. This is the catalog's tiering: if humans had to approve every routine change they would stop reading them. Save the ceremony for what matters.</aside>
+    </section>
+
+    <section data-station="none" class="step">
+      <h2>A tier 1 change: the gate wants a human</h2>
+      <div class="screen">
+        <div>
+          <p class="pane-head"><strong>Repository terminal</strong> &middot; the merge gateway</p>
+          <pre class="term tight" data-capture="tier1-no-token"></pre>
+        </div>
+        <aside class="callout-panel">
+          <h3>What this shows</h3>
+          <p>A change to position-service, tier 1, the book of record, reviewed by the approved engine. DENY: human approval missing. The agent can request one. It cannot mint one.</p>
+          <h3>Take away</h3>
+          <p class="takeaway">The agent may ask. It can never sign.</p>
+        </aside>
+      </div>
+      <aside class="notes">Speaker: Matthew. Now a change to position-service: tier one, confidential, the book of record. Reviewed by the approved engine, and still denied: human approval missing. The policy read the tier from the model. The agent can request approval, and that is where the ceremony starts.</aside>
+    </section>
+
+    <section data-station="none">
+      <h2>The approval ceremony</h2>
+      <svg class="seq" viewBox="0 0 1680 420" aria-label="Six steps of the approval ceremony">
+        <defs><marker id="v5-s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#595959"/></marker></defs>
+        <g font-family="Arial" text-anchor="middle">
+          <g font-size="28" font-weight="700" fill="#212121"><text x="150" y="40">agent</text><text x="500" y="40">gateway</text><text x="850" y="40">approval service</text><text x="1200" y="40">approver</text><text x="1550" y="40">main</text></g>
+          <g stroke="#e3e5ea" stroke-width="4"><line x1="150" y1="60" x2="150" y2="400"/><line x1="500" y1="60" x2="500" y2="400"/><line x1="850" y1="60" x2="850" y2="400"/><line x1="1200" y1="60" x2="1200" y2="400"/><line x1="1550" y1="60" x2="1550" y2="400"/></g>
+          <g stroke="#595959" stroke-width="4" fill="none" marker-end="url(#v5-s)">
+            <line x1="150" y1="100" x2="492" y2="100"/><line x1="500" y1="160" x2="842" y2="160"/><line x1="850" y1="220" x2="1192" y2="220"/><line x1="1200" y1="280" x2="858" y2="280"/><line x1="850" y1="340" x2="508" y2="340"/><line x1="500" y1="390" x2="1542" y2="390"/>
+          </g>
+          <g font-size="22" fill="#212121">
+            <text x="325" y="90">1. asks: commit, diff hash, spec</text>
+            <text x="675" y="150">2. policy says: a human must approve</text>
+            <text x="1025" y="210">3. renders the real diff from the repository</text>
+            <text x="1025" y="270">4. authenticates on their own device, sees the diff, approves</text>
+            <text x="675" y="330">5. token: single use, ten minutes, bound to commit and diff hash</text>
+            <text x="1025" y="380">6. merge, and one line in the decision log</text>
+          </g>
+        </g>
+      </svg>
+      <div class="cols v5-realmock">
+        <div><p><strong>Real in the demo:</strong> the policy, the hash binding, the signed token, the single-use ledger, the decision log, the merge.</p></div>
+        <div><p><strong>Mocked:</strong> the passkey ceremony is a terminal prompt where the approver types a binding code. In a bank it is a device the agent runtime cannot reach, with the standards for it: CIBA for the out-of-band request, WebAuthn for the person, RFC 9396 for binding the token to the exact action.</p></div>
+      </div>
+      <aside class="notes">Speaker: Matthew. The ceremony, six steps. The agent asks the gateway, with the commit, the hash of the diff and the spec. The policy says a human must approve. The approval service renders the real diff from the repository, never the agent's summary of it, because a prompt-injected agent will describe a dangerous change in benign words. The approver authenticates on their own device, sees the diff, approves. The service mints a token: single use, ten minutes, bound to that commit and that diff hash. The gateway merges and writes one line in the log. Be honest about the demo: the policy, the binding, the signed token, the ledger and the log are real; the passkey is a terminal prompt. In a bank the channel is a device the agent cannot reach, and the standards exist: CIBA, WebAuthn, rich authorization requests.</aside>
+    </section>
+
+    <section data-station="none" class="step">
+      <h2>The human sees the real diff, not the agent's summary</h2>
+      <div class="screen">
+        <div>
+          <p class="pane-head"><strong>Repository terminal</strong> &middot; the approval service</p>
+          <pre class="term tight" data-capture="approve"></pre>
+        </div>
+        <aside class="callout-panel">
+          <h3>What this shows</h3>
+          <p>The approval service renders the diff from the repository, prints a binding code, and mints the token only after the approver types it. The token names the commit, the diff hash and the spec it is good for.</p>
+          <h3>Take away</h3>
+          <p class="takeaway">The approval is of this change, not of the agent's description of it.</p>
+        </aside>
+      </div>
+      <aside class="notes">Speaker: Matthew. The approver's side. The service renders the diff itself, straight from the repository. A binding code, typed by the human, stands in for the passkey. The token that comes out names the commit, the diff hash and the spec: it is an approval of this change and nothing else.</aside>
+    </section>
+
+    <section data-station="none" class="step">
+      <h2>The token dies with the diff <span class="live">live</span></h2>
+      <div class="screen">
+        <div>
+          <p class="pane-head"><strong>Repository terminal</strong> &middot; the merge gateway</p>
+          <pre class="term tight" data-capture="amended replay"></pre>
+        </div>
+        <aside class="callout-panel">
+          <h3>What this shows</h3>
+          <p>The agent amends one line after the approval and presents the same token: DENY, the token is bound to a different diff. Then the original token used twice: DENY, already used.</p>
+          <h3>Take away</h3>
+          <p class="takeaway">This is the catalog's sentence made real: a review outcome "no longer bound to the current change set" blocks admission.</p>
+        </aside>
+      </div>
+      <aside class="notes">Speaker: Matthew. Live, and this is the moment. The agent changes one more line after the human approved, and presents the same token. Denied: the token is bound to a different diff. Then the original token, presented twice. Denied: already used. Read the catalog's sentence again: the pipeline must block admission when the review outcome is no longer bound to the current change set. That sentence is now a hash comparison.</aside>
+    </section>
+
+    <section data-station="none" class="step">
+      <h2>Allowed, and the decision is the evidence</h2>
+      <div class="screen">
+        <div>
+          <p class="pane-head"><strong>Repository terminal</strong> &middot; the merge gateway</p>
+          <pre class="term tight" data-capture="allowed evidence"></pre>
+        </div>
+        <aside class="callout-panel">
+          <h3>What this shows</h3>
+          <p>The approved change with its token: ALLOW, main moves. The last line of the decision log: the decision, the reviewer, the approver, and the hashes of the change, the model and the policy it was decided with.</p>
+          <h3>Take away</h3>
+          <p class="takeaway">If you cannot produce the record, the control did not operate. Here the record is written by the thing that decided.</p>
+        </aside>
+      </div>
+      <aside class="notes">Speaker: Matthew. The approved change, with its token: allow, and main moves. Then the decision log. One line per decision: what was decided, by which policy version, on which model version, for which commit and diff, reviewed by whom, approved by whom. Aaron's sentence from part one: unsubstantiated controls are absent controls. Here the thing that decided wrote the record, and it is keyed by the control id, so the catalog is the index.</aside>
+    </section>
+
+    <section data-station="none">
+      <p class="kicker">What this is not</p>
+      <p class="statement">Not a product. Not a pipeline replacement. Not a policy engine pitch.</p>
+      <p class="follow">A pattern: the controls as data on the architecture, a gate that says no by default, and a human who keeps the only key.</p>
+      <aside class="notes">Speaker: Matthew. What this is not: a product, a replacement for your pipeline, or a pitch for a policy engine. Any policy engine that reads JSON would do. What it is: a pattern. The controls as data on the architecture, a gate that says no by default, and a human who keeps the only key. Everything you saw is in the repository.</aside>
+    </section>
+
+    <section data-station="none">
+      <h2>Take one control</h2>
+      <p class="statement small">Take one control from the catalog and make it a deny-by-default gate on one repository this year.</p>
+      <dl class="kv v5-links">
+        <dt>The catalog</dt><dd><a data-hub="catalog">finos.github.io/sdlc-common-controls</a></dd>
+        <dt>CALM</dt><dd><a href="https://calm.finos.org">calm.finos.org</a></dd>
+        <dt>Everything you saw</dt><dd><a data-hub="repo">github.com/rocketstack-matt/agentic-sdlc-blueprint</a></dd>
+        <dt>The controls on CALM Hub</dt><dd><a data-hub="hub">hub.calm.finos.org</a></dd>
+      </dl>
+      <aside class="notes">Speaker: both. One ask. Take one control from the catalog, code review if you like, and make it a deny-by-default gate on one repository this year. The catalog is open, the model language is open, and the repository with everything you saw today is open. Bring what you learn back to the working group.</aside>
     </section>
 
     <section class="title" data-background-image="img/background.png" data-background-size="cover">
       <img class="logo" src="img/logo.svg" alt="Open Source in Finance Forum">
       <div class="block">
         <h1>Thank you</h1>
-        <p class="takeaway">The model is the context, and the same model is the control.</p>
-        <p><span class="small">Matthew Bain and Aaron Searle<br><a data-hub="repo"></a></span></p>
+        <p>The agent can ask. It can never sign.<br><span class="small">Matthew Bain and Aaron Searle<br><a data-hub="repo"></a></span></p>
         <div class="logos"><img src="img/logos/calm.svg" alt="FINOS CALM"><img src="img/logos/sdlc-common-controls.svg" alt="SDLC Common Controls Catalog"></div>
       </div>
-      <aside class="notes">Speaker: Aaron. Questions. If time is short, the one thing to take away is on the slide: the model is the context, and the same model is the control.</aside>
-    </section>
-
-    <section data-station="none">
-      <p class="appendix-tag">Appendix</p>
-      <h2>Two real agents, one prompt: "Implement SPEC-001."</h2>
-      <table class="c1-38">
-        <tr><th></th><th>unassisted</th><th>assisted</th></tr>
-        <tr><td>Agent instructions and model access</td><td>removed</td><td>present</td></tr>
-        <tr><td>Result</td><td>conformant</td><td>conformant</td></tr>
-        <tr><td>Read the model first</td><td>opened the JSON</td><td>MCP context tool</td></tr>
-        <tr><td>Wall clock</td><td>748 s</td><td>279 s</td></tr>
-      </table>
-      <p class="caption">Neither drifted. The unassisted agent found and read the gates on its own. The context changed the path, not the destination. One sample each, transcripts in docs/live-runs.</p>
-      <aside class="notes">Speaker: Matthew. Backup, for questions about whether the context matters. One sample each, headless, same prompt. The spec itself says the store is off limits, so both agents stayed inside; the one with the instructions and the model access went straight to the modelled path and ran the gates before handing over, in under half the time. It is in the repo with the transcripts. Not a benchmark.</aside>
+      <aside class="notes">Speaker: both. Thank you. The line to leave them with: the agent can ask, it can never sign. Then questions.</aside>
     </section>
 
   </div>
@@ -676,19 +505,10 @@ for (const pre of document.querySelectorAll('pre.term[data-capture]')) {
     return lines.join('');
   }).join('');
 }
-// Stamp the top bar with the logo and the five-station ring onto every content slide; draw the ring large on cards.
-const STATIONS = ['model', 'spec', 'agent', 'gate', 'evidence'];
-const ring = (on, cls, viewBox, step, r, y, ty, fontSize) => {
-  const nodes = STATIONS.map((name, i) => `<g class="${name === on ? 'on' : ''}"><circle cx="${40 + i * step}" cy="${y}" r="${r}"/><text x="${40 + i * step}" y="${ty}" text-anchor="middle" font-size="${fontSize}">${name}</text></g>`).join('');
-  const segments = STATIONS.slice(1).map((_, i) => `<line x1="${40 + i * step + r}" y1="${y}" x2="${40 + (i + 1) * step - r}" y2="${y}"/>`).join('');
-  return `<svg class="${cls}" viewBox="${viewBox}" aria-hidden="true">${segments}${nodes}</svg>`;
-};
+// Stamp the top bar with the logo onto every content slide.
 for (const s of document.querySelectorAll('section[data-station]')) {
   s.classList.add('content');
-  s.insertAdjacentHTML('afterbegin', `<div class="topbar"><img src="img/logo.svg" alt="">${ring(s.dataset.station, 'ring', '0 0 470 88', 85, 11, 28, 70, 24)}</div>`);
-}
-for (const s of document.querySelectorAll('section.section-slide[data-ring]')) {
-  s.insertAdjacentHTML('beforeend', ring(s.dataset.ring, 'ring-large', '0 0 900 160', 200, 22, 50, 120, 30));
+  s.insertAdjacentHTML('afterbegin', '<div class="topbar"><img src="img/logo.svg" alt=""></div>');
 }
 for (const a of document.querySelectorAll('a[data-hub]')) { a.href = HUB_LINKS[a.dataset.hub]; if (!a.textContent.trim()) a.textContent = a.href; }
 
