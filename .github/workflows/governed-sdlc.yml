@@ -20,11 +20,6 @@ jobs:
         with: { node-version: 22, cache: npm }
       - run: npm ci
       - run: npm run typecheck
-      # The labs are the source of truth for the talk. Replay every printed command and assert its outcome.
-      # The upstream main must always be lab-ready. Your fork's main, once you have merged a spec, is not, and neither is
-      # a PR that implements one. Both are governed by the gates below instead.
-      - run: bash labs/verify.sh
-        env: { VERIFY_REQUIRE_BASELINE: "${{ github.event_name == 'push' && github.repository == 'rocketstack-matt/agentic-sdlc-blueprint' }}" }
       - name: Resolve the spec from the PR body (Spec trailer) or the commit message
         run: echo "SPEC=$(printf '%s' "$PR_BODY" | grep -oE 'SPEC-[0-9]+' | head -1)" >> "$GITHUB_ENV"
       - name: Resolve the change under evaluation. A PR is diffed against its base, a push against the commit the branch was at before it

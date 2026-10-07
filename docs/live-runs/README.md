@@ -36,7 +36,7 @@ neither touched the position store. That is the honest headline.
   `gates.txt` in each folder was produced after removing those files, so it shows COGNITIVE.
 
 This is one sample of each condition on one spec. It is evidence that the loop works end to end with a real agent,
-not a measurement of how often unassisted agents drift. Attempt A in Lab 3 remains the pre-recorded drift case.
+not a measurement of how often unassisted agents drift.
 
 ## Method
 
