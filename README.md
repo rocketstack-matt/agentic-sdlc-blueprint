@@ -1,14 +1,15 @@
 # agentic-sdlc-blueprint
 
-**Governing the agentic SDLC: the controls as data on the architecture, a gate that says no by default, and a human
-who keeps the only key.**
+**When the architecture changes, the controls follow.** The SDLC controls sit on the architecture as data, a
+merge gateway asks them about every change, and every decision goes back onto the architecture as evidence.
 
 Companion to the talk *Governing the Agentic SDLC: Driving Agentic Development with FINOS CALM* (Open Source in
-Finance Forum, New York, 4 November 2026; Matthew Bain and Aaron Searle). The talk follows one control from the
-[FINOS SDLC Common Controls Catalog](https://finos.github.io/sdlc-common-controls/), SDLC-PREV-001 Code Review,
-from the catalog's own record to a merge gateway that enforces it when an AI agent writes the code and an AI agent
-reviews the pull request. This repository is everything the second half of the talk shows, runnable with Node and
-git. The slides are in [`slides/`](slides/) and published at
+Finance Forum, New York, 4 November 2026; Matthew Bain and Aaron Searle). The talk asks who decides which changes are
+risky when agents write and review the code, and answers: the architecture does. One rule, "any change to a service
+that connects to the Client Ledger needs a human approver", is written once on the Client Ledger in the
+[FINOS CALM](https://calm.finos.org) model, and an architect's change to the model changes what the rule applies to
+with nobody touching the pipeline. This repository is everything the demo shows, runnable with Node and git. The
+slides are in [`slides/`](slides/) and published at
 [rocketstack-matt.github.io/agentic-sdlc-blueprint/slides](https://rocketstack-matt.github.io/agentic-sdlc-blueprint/slides/).
 
 Built on two FINOS projects: the catalog says what the controls are, and [FINOS CALM](https://calm.finos.org)
@@ -20,12 +21,13 @@ follow two mitigations from the [FINOS AI Governance Framework](https://air-gove
 
 ## The question, and the answer
 
-A pull request opened by a coding agent, approved by a review agent, every check green, merged. Which of your
-controls did it pass? Code review was one, and the author and the reviewer were the same model under two names.
-The control kept its name; what it controlled has changed.
+A pull request opened by a coding agent, approved by a review agent, every check green, merged. It changed the
+service that writes the client ledger. Was it risky? Today that is decided by a person, from memory: a CODEOWNERS
+file, a wiki page, a reviewer who remembers what talks to the ledger. None of it notices when the architecture
+changes.
 
-The answer here is not to make the agent read the policy. It is to make the gate refuse. Four things, and nothing
-else:
+The answer here is that what is risky is a fact about the architecture, so the controls live on the architecture and
+a gate reads them there. Four things, and nothing else:
 
 | | What it is | Where |
 | --- | --- | --- |

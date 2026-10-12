@@ -1,5 +1,5 @@
 /* Styling derived from the OSFF New York 2026 template: Arial, its theme palette, its blue network background.
-   Layout follows a small set of templates (statement, picture, code plus commentary, terminal, table, cards, call to
+   Layout follows a small set of templates (statement, picture, code plus commentary, terminal, step, cards, call to
    action) so similar slides look the same. Type scale: title 60, lead 40, body 36, commentary 32, caption 28,
    code 26 full width and 24 in a half pane, nothing smaller. */
 :root {
@@ -17,7 +17,7 @@
 .reveal ul, .reveal ol { margin: 0 0 0 1em; }
 .reveal li { margin: 0.25em 0; }
 .reveal a { color: var(--blue); text-decoration: none; }
-.reveal section.title a, .reveal section.section-slide a { color: #fff; text-decoration: underline; }
+.reveal section.title a { color: #fff; text-decoration: underline; }
 .reveal .muted { color: var(--muted); }
 .reveal small, .reveal .small { font-size: 28px; line-height: 1.4; }
 .reveal .lead { font-size: 40px; line-height: 1.35; margin: 0 0 0.6em; }
@@ -25,29 +25,17 @@
 .reveal code { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 0.9em; }
 
 /* Title and section slides: the template's blue network background, white text, white logo. */
-.reveal section.title, .reveal section.section-slide { color: #fff; }
-.reveal section.title h1, .reveal section.section-slide h2, .reveal section.title p, .reveal section.section-slide p { color: #fff; }
-.reveal section.title .logo, .reveal section.section-slide .logo { position: absolute; left: 130px; top: 220px; width: 740px; }
+.reveal section.title { color: #fff; }
+.reveal section.title h1, .reveal section.title p { color: #fff; }
+.reveal section.title .logo { position: absolute; left: 130px; top: 220px; width: 740px; }
 .reveal section.title .block { position: absolute; left: 960px; top: 200px; width: 880px; }
 .reveal section.title .block p { font-size: 44px; margin-top: 1em; }
 .reveal section.title .block .small { font-size: 32px; }
-.reveal section.title .takeaway { font-size: 44px; line-height: 1.3; margin-top: 0.8em; }
 /* The three projects' marks as one white monochrome family under the title, scaled to a shared cap height. */
 .reveal .logos { display: flex; align-items: center; gap: 48px; margin-top: 48px; }
 .reveal .logos img { height: 56px; width: auto; }
-.reveal section.title .logos img, .reveal section.section-slide .logos img { filter: brightness(0) invert(1); }
-.reveal section.content .logos img { filter: brightness(0); }
+.reveal section.title .logos img { filter: brightness(0) invert(1); }
 .reveal .logos .built { font-size: 26px; color: #fff; margin-right: 8px; }
-/* Section cards: the station's number as a tag, the question as the title, the ring drawn large. */
-.reveal section.section-slide .tag { position: absolute; left: 120px; top: 360px; font-size: 28px; letter-spacing: 0.08em; text-transform: uppercase; color: #fff; opacity: 0.85; }
-.reveal section.section-slide h2 { position: absolute; left: 120px; top: 410px; width: 1680px; font-size: 72px; }
-.reveal section.section-slide p { position: absolute; left: 120px; top: 560px; width: 1680px; font-size: 44px; }
-.reveal section.section-slide .ring-large { position: absolute; left: 120px; top: 720px; width: 900px; height: 160px; }
-.reveal .ring-large circle { fill: rgba(255,255,255,0.35); }
-.reveal .ring-large .on circle { fill: #fff; }
-.reveal .ring-large text { font-family: Arial, Helvetica, sans-serif; font-size: 30px; fill: rgba(255,255,255,0.8); }
-.reveal .ring-large .on text { fill: #fff; font-weight: 700; }
-.reveal .ring-large line { stroke: rgba(255,255,255,0.5); stroke-width: 4; }
 
 /* Content slides: white, the template's top bar, a fixed title band so titles land in the same place on every slide. */
 .reveal section.content { background: var(--paper); padding-top: 170px; padding-bottom: 80px; }
@@ -55,16 +43,9 @@
    scoping to .present leaves hidden slides' inline display:none in charge. */
 .reveal .slides section.content.present { display: flex !important; flex-direction: column; justify-content: flex-start; }
 .reveal section.content > h2 { min-height: 90px; margin: 0 0 36px; flex: 0 0 auto; }
-/* The template's content layout: a full-width band of the network artwork across the top, logo left, ring right. */
+/* The template's content layout: a full-width band of the network artwork across the top, logo left. */
 .reveal section.content .topbar { position: absolute; left: 0; top: 0; right: 0; height: 140px; background: #12b1d6 url("img/background.png") center top / cover no-repeat; display: flex; align-items: center; }
 .reveal section.content .topbar img { height: 104px; margin-left: 44px; }
-/* The five-station ring lives in the empty half of the top bar, in white, the current station solid and bold. */
-.reveal .ring { position: absolute; right: 60px; top: 26px; width: 470px; height: 88px; }
-.reveal .ring text { font-family: Arial, Helvetica, sans-serif; font-size: 24px; fill: rgba(255,255,255,0.85); }
-.reveal .ring circle { fill: rgba(255,255,255,0.4); }
-.reveal .ring .on circle { fill: #fff; }
-.reveal .ring .on text { fill: #fff; font-weight: 700; }
-.reveal .ring line { stroke: rgba(255,255,255,0.55); stroke-width: 3; }
 
 /* Template: statement. A small kicker, one large statement of at most three lines, an optional follow-up. */
 .reveal .kicker { font-size: 32px; color: var(--muted); margin: 0 0 0.5em; }
@@ -88,70 +69,39 @@
 /* Template: terminal. Real output, dark, coloured by the fill script, one pane at 30px full width. */
 .reveal pre.term { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 30px; line-height: 1.35; background: var(--term); color: #e6e6e6; padding: 28px 36px; border-radius: 12px; width: 100%; box-sizing: border-box; box-shadow: none; margin: 0; white-space: pre-wrap; overflow: hidden; }
 .reveal pre.term + .caption { margin-top: 0.5em; }
-.reveal pre.term .pass, .reveal pre.term .ok, .reveal pre.term .good { color: var(--green); font-weight: 700; }
 .reveal pre.term .bad { color: var(--amber); font-weight: 700; }
 .reveal pre.term .dim { color: #9a9a9a; }
 .reveal pre.term.missing { border: 4px solid var(--amber); }
 /* Two short runs stacked, or a run beside commentary: a little smaller, still legible. */
-.reveal pre.term.dense, .reveal .cols pre.term { font-size: 24px; }
 /* Two runs stacked, or a long JSON beside a short pane: the smallest type the deck uses. */
-.reveal pre.term.tight, .reveal .cols pre.term.tight { font-size: 22px; }
-.reveal .stack .caption-small { font-size: 28px; color: var(--muted); margin: 0.1em 0 0.4em; }
 /* Each output line is its own block (see the fill script) so wrapped continuations hang-indent
    under the message text instead of snapping back to column 0 and breaking the PASS/FAIL scan. */
 .reveal pre.term .ln { display: block; padding-left: 4ch; text-indent: -4ch; }
 .reveal .live { display: inline-block; font-size: 24px; font-weight: 700; color: var(--ink); background: #e3e5ea; border-radius: 999px; padding: 7px 21px; margin-left: 16px; vertical-align: middle; }
 
 /* Template: table. Full width, flush left, a fixed first column where one is given. */
-.reveal table { font-size: 32px; border-collapse: collapse; margin: 0; width: 100%; }
-.reveal table th, .reveal table td { padding: 12px 24px; border-bottom: 2px solid #e3e5ea; text-align: left; vertical-align: top; line-height: 1.3; }
-.reveal table th { color: var(--muted); font-weight: 700; }
-.reveal table.c1-20 th:first-child, .reveal table.c1-20 td:first-child { width: 20%; }
-.reveal table.c1-38 th:first-child, .reveal table.c1-38 td:first-child { width: 38%; }
-.reveal table.nowrap-last td:last-child { white-space: nowrap; }
-/* The whole catalog on one slide: three tight columns. */
-.reveal .glance { gap: 48px; }
-.reveal .glance .ids { list-style: none; margin: 0; padding: 0; }
-.reveal .glance .ids li { font-size: 24px; line-height: 1.2; margin: 0 0 4px; }
-.reveal .glance .ids span { display: block; font-size: 19px; color: var(--catalog); font-weight: 700; }
-.reveal .glance .ids li.on span { color: var(--calm); }
-.reveal .glance .ids li.off { color: var(--muted); }
-.reveal .glance p.small { margin-bottom: 8px; }
 
 /* Template: picture. One full-width visual, one caption. */
 .reveal svg.flow, .reveal svg.system, .reveal svg.loop { display: block; width: 100%; margin: 0 0 16px; }
-.reveal .hub-shot { width: 100%; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,.18); }
-.reveal .hub-shot.header { display: block; width: 1240px; max-width: 100%; margin: 0 auto 12px; }
 .reveal .shot { display: block; width: 100%; border: 1px solid #e3e5ea; border-radius: 12px; box-sizing: border-box; }
-.reveal .shot.wide-shot { width: 1240px; max-width: 100%; margin: 0 auto; }
-.reveal .lab-frame { position: relative; width: 980px; max-width: 100%; margin: 0 auto; }
-.reveal .lab-frame img { display: block; width: 100%; border: 1px solid #e3e5ea; border-radius: 12px; }
-.reveal .lab-frame .callout { position: absolute; width: 56px; height: 56px; border-radius: 50%; background: var(--amber); color: var(--ink); font-size: 30px; font-weight: 700; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 14px rgba(0,0,0,.25); }
-.reveal .callouts { display: flex; gap: 40px; justify-content: center; margin-top: 16px; }
-.reveal .callouts div { font-size: 26px; line-height: 1.3; }
-.reveal .callouts b { color: var(--amber); background: var(--ink); border-radius: 50%; display: inline-block; width: 40px; height: 40px; line-height: 40px; text-align: center; margin-right: 10px; font-size: 24px; }
 
 /* Template: three-up cards with a logo row. */
 .reveal .cards { display: flex; gap: 60px; align-items: flex-start; }
 .reveal .cards > div { flex: 1 1 0; min-width: 0; }
-.reveal .cards.two > div { flex: 0 1 780px; }
 .reveal .cards + .caption { margin-top: 0.9em; }
 .reveal .cards .logo-row { height: 120px; display: flex; align-items: center; }
 .reveal .cards .logo-row img { height: 56px; width: auto; filter: brightness(0); }
 .reveal .cards h3 { margin-bottom: 0.4em; }
-.reveal .cards p { font-size: 32px; line-height: 1.4; }
+.reveal .cards p { font-size: 34px; line-height: 1.4; }
 .reveal .cards .verb { font-size: 40px; font-weight: 700; margin: 0 0 0.2em; }
 .reveal .cards .calm .verb { color: var(--calm); }
 .reveal .cards .catalog .verb { color: var(--catalog); }
-.reveal .cards .aigf .verb { color: #c77800; }
 
 /* Template: call to action. */
 .reveal .kv { display: grid; grid-template-columns: max-content 1fr; gap: 12px 36px; font-size: 32px; }
 .reveal .kv dt { color: var(--muted); }
 .reveal .kv dd { margin: 0; }
 
-/* Appendix */
-.reveal .appendix-tag { font-size: 26px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.4em; }
 
 /* Template: workshop step. The screen the participant sees on the left, a Learning Lab picture or a repository
    terminal session replayed from captures.js, and beside it the callout that says what the screen shows and what to
@@ -161,108 +111,20 @@
 .reveal .screen .pane-head { font-size: 22px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0 0 10px; }
 .reveal .screen .pane-head strong { color: var(--ink); }
 .reveal .screen img.shot { width: 100%; }
-.reveal .screen .lab-frame { width: 100%; }
 .reveal .screen pre.term { width: 100%; font-size: 20px; line-height: 1.3; padding: 22px 26px; margin: 0; }
-.reveal .screen pre.term.tight { font-size: 18px; }
-.reveal .screen pre.term.roomy { font-size: 23px; }
 .reveal pre.term .cmd { color: #fff; font-weight: 700; }
 .reveal pre.term .cmd .prompt { color: var(--green); }
-.reveal pre.term .banner { color: #9a9a9a; }
 .reveal .callout-panel { background: #f4f5f7; border-left: 8px solid var(--amber); border-radius: 0 12px 12px 0; padding: 22px 26px; font-size: 25px; line-height: 1.35; }
 .reveal .callout-panel h3 { font-size: 19px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin: 0 0 8px; font-weight: 700; }
 .reveal .callout-panel p { margin: 0 0 18px; }
 .reveal .callout-panel p:last-child { margin-bottom: 0; }
 .reveal .callout-panel .takeaway { font-weight: 700; color: var(--ink); }
-.reveal .callout-panel img { display: block; width: 100%; max-width: 340px; margin-top: 4px; border-radius: 10px; }
 .reveal .callout-panel code { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 0.9em; }
-.reveal .ways { font-size: 26px; line-height: 1.4; margin-top: 0.4em; }
-.reveal .tight-list li { font-size: 27px; margin: 0.25em 0; }
-.reveal .ways strong { color: var(--ink); }
 .reveal pre.term .hl { color: #fff; font-weight: 700; }
-.reveal svg.loop { max-height: 540px; }
 
-/* v3 fragments: start */
-.reveal .v3-catalog { display: grid; grid-template-columns: 1180px 460px; gap: 40px; align-items: start; }
-.reveal .v3-head { font-size: 24px; line-height: 1.2; margin: 0 0 10px; color: var(--muted); }
-.reveal .v3-head b { color: var(--ink); font-weight: 700; }
-.reveal .v3-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px 16px; }
-.reveal .v3-phase { position: relative; font-size: 24px; line-height: 1.2; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink); padding-bottom: 6px; border-bottom: 4px solid #e3e5ea; }
-.reveal .v3-phase.v3-next::after { content: ""; position: absolute; right: -14px; top: 6px; border: 8px solid transparent; border-right: 0; border-left: 12px solid var(--muted); }
-.reveal .v3-col, .reveal .v3-band, .reveal .v3-risks { list-style: none; display: flex; flex-direction: column; gap: 5px; margin: 0; padding: 0; }
-.reveal .v3-band { grid-column: 1 / -1; flex-direction: row; align-items: flex-start; gap: 12px; }
-.reveal .v3-rule { grid-column: 1 / -1; height: 3px; background: #e3e5ea; margin: 2px 0 0; }
-.reveal .v3-band-label { margin: 0; padding-right: 4px; font-size: 24px; line-height: 1.2; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink); }
-.reveal .v3-band > .v3-band-label { flex: 0 0 270px; }
-.reveal .v3-band-label small, .reveal .v3-head small { display: block; font-size: 22px; line-height: 1.2; font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--muted); }
-.reveal .v3-cell { display: flex; flex: 0 0 auto; flex-direction: column; gap: 6px; margin: 0 0 0 12px; }
-.reveal .v3-chip { display: block; flex: 0 1 auto; margin: 0; padding: 6px 8px; box-sizing: border-box; background: #fff; border: 3px solid var(--teal); border-radius: 12px; font-size: 22px; line-height: 1.2; color: var(--ink); }
-.reveal .v3-chip b { color: var(--teal); font-weight: 700; margin-right: 6px; }
-.reveal .v3-chip.v3-on { background: var(--teal); color: #fff; font-weight: 700; }
-.reveal .v3-chip.v3-on b { color: #fff; }
-.reveal .v3-rail { background: #f4f5f7; border-radius: 16px; padding: 16px 20px 12px; box-sizing: border-box; }
-.reveal .v3-risks { gap: 0; }
-.reveal .v3-risks li { font-size: 22px; line-height: 1.15; margin: 0 -10px; padding: 4px 10px; border-radius: 8px; color: var(--ink); }
-.reveal .v3-risks li b { color: var(--teal); font-weight: 700; margin-right: 8px; }
-.reveal .v3-risks li.v3-on { background: var(--teal); color: #fff; font-weight: 700; }
-.reveal .v3-risks li.v3-on b { color: #fff; }
-.reveal .v3-foot { margin-top: 10px; }
-.reveal .v3-foot p { font-size: 24px; line-height: 1.25; margin: 0; color: var(--muted); }
-.reveal .v3-foot b { color: var(--ink); }
-.reveal .v3-foot .v3-row { display: flex; justify-content: space-between; align-items: baseline; gap: 24px; }
-.reveal .v3-swatch { display: inline-block; width: 22px; height: 22px; border-radius: 6px; background: var(--teal); vertical-align: -3px; margin-right: 10px; }
-.reveal .v3-link { color: var(--teal); font-weight: 700; font-size: 26px; white-space: nowrap; }
 
-.reveal .v3-strip { position: relative; display: grid; grid-template-columns: repeat(5, 1fr); list-style: none; margin: 16px 0 0; padding: 0; }
-.reveal .v3-strip::before { content: ""; position: absolute; left: 10%; right: 10%; top: 68px; height: 4px; background: var(--muted); }
-.reveal .v3-station { position: relative; margin: 0; padding: 0 10px; text-align: center; font-size: 28px; }
-.reveal .v3-station + .v3-station::before { content: ""; position: absolute; left: -10px; top: 58px; border: 12px solid transparent; border-right: 0; border-left: 20px solid var(--muted); }
-.reveal .v3-disc { position: relative; display: flex; align-items: center; justify-content: center; width: 140px; height: 140px; margin: 0 auto 14px; border-radius: 50%; background: var(--blue); color: #fff; font-size: 56px; font-weight: 700; }
-.reveal .v3-name { font-size: 36px; line-height: 1.2; margin: 0 0 6px; }
-.reveal .v3-q { font-size: 28px; line-height: 1.3; min-height: 73px; margin: 0 0 12px; color: var(--ink); }
-.reveal .v3-where { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 0; }
-.reveal .v3-badge { display: inline-flex; align-items: center; gap: 8px; font-size: 24px; line-height: 1.2; font-weight: 700; color: var(--ink); background: #e3e5ea; border-radius: 999px; padding: 5px 16px 5px 12px; white-space: nowrap; }
-.reveal .v3-badge svg { width: 24px; height: 24px; flex: 0 0 auto; }
-.reveal .v3-what { font-size: 24px; line-height: 1.3; min-height: 94px; margin: 0 0 12px; color: var(--muted); }
-.reveal .v3-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; font-size: 24px; line-height: 1.3; margin: 32px 0 0; color: var(--muted); }
-.reveal .v3-legend .v3-gap { flex: 0 0 24px; }
 
-.reveal .v3-gates { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; list-style: none; margin: 0; padding: 0; }
-.reveal .v3-gate { position: relative; margin: 0; padding: 20px 24px; box-sizing: border-box; background: #f4f5f7; border-radius: 16px; }
-.reveal .v3-gate-n { position: absolute; right: 22px; top: 18px; font-size: 24px; font-weight: 700; color: var(--muted); }
-.reveal .v3-gate-name { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 30px; line-height: 1.2; font-weight: 700; margin: 0 0 8px; color: var(--ink); }
-.reveal .v3-gate-what { font-size: 26px; line-height: 1.3; margin: 0 0 14px; color: var(--ink); }
-.reveal .v3-gate-ctl { display: flex; flex-direction: column; gap: 6px; margin: 0; }
-.reveal .v3-gate-ctl > span { display: grid; grid-template-columns: max-content 1fr; gap: 10px; align-items: baseline; font-size: 24px; line-height: 1.3; color: var(--ink); }
-.reveal .v3-ctl { display: inline-block; font-size: 22px; line-height: 1.2; font-weight: 700; color: #fff; background: var(--teal); border-radius: 999px; padding: 4px 12px; }
-.reveal .v3-gates-foot { font-size: 28px; line-height: 1.35; margin: 24px 0 0; color: var(--muted); }
-.reveal .v3-gates-foot b { color: var(--ink); }
-
-.reveal .callout-panel ol.v3-points { list-style: none; counter-reset: v3; display: block; margin: 0 0 18px; padding: 0; }
-.reveal .callout-panel ol.v3-points li { counter-increment: v3; position: relative; font-size: 24px; line-height: 1.2; margin: 0 0 8px; padding-left: 44px; min-height: 34px; }
-.reveal .callout-panel ol.v3-points li::before { content: counter(v3); position: absolute; left: 0; top: -2px; width: 34px; height: 34px; border-radius: 50%; background: var(--amber); color: var(--ink); font-size: 22px; font-weight: 700; line-height: 34px; text-align: center; }
-
-.reveal .v3-primer-wrap { display: flex; gap: 48px; align-items: flex-start; }
-.reveal svg.v3-primer { display: block; flex: 0 0 800px; width: 800px; height: auto; }
-.reveal svg.v3-primer text { font-family: Arial, Helvetica, sans-serif; }
-.reveal .v3-terms { display: grid; grid-template-columns: max-content 1fr; gap: 14px 28px; margin: 0; padding: 0; font-size: 28px; line-height: 1.3; }
-.reveal .v3-terms dt { font-weight: 700; color: var(--ink); margin: 0; }
-.reveal .v3-terms dd { margin: 0; color: var(--ink); }
-.reveal .v3-terms code, .reveal .v3-foot-line code { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 0.9em; }
-.reveal .v3-foot-line { font-size: 26px; line-height: 1.3; margin: 24px 0 0; color: var(--muted); }
-.reveal .v3-foot-line b { color: var(--ink); }
-.reveal .verb-line { font-size: 34px; margin: 0 0 16px; }
-.reveal .ways-list { font-size: 27px; line-height: 1.3; margin: 14px 0 0; padding-left: 36px; }
-.reveal .ways-list li { margin: 0 0 8px; }
-.reveal .cols img.shot { width: auto; max-width: 100%; max-height: 320px; }
-.reveal pre.code.v3-clone { font-size: 24px; white-space: pre-wrap; word-break: break-all; }
-.reveal .v4-cands { font-size: 28px; line-height: 1.35; margin: 0 0 14px; padding-left: 36px; }
-.reveal .v4-cands li { margin: 0 0 12px; }
-.reveal .v4-doors { display: grid; grid-template-columns: 200px 1fr; gap: 22px 26px; align-items: center; }
-.reveal .v4-doors img { height: 44px; width: auto; max-width: 200px; filter: brightness(0); justify-self: start; }
-.reveal .v4-doors p { font-size: 26px; line-height: 1.3; margin: 0; }
-/* v3 fragments: end */
-
-/* v5: start */
+/* The pull request card on the opening slide. */
 .reveal .pr-card { background: #fff; border: 2px solid #e3e5ea; border-radius: 14px; padding: 28px 34px; font-size: 26px; line-height: 1.4; }
 .reveal .pr-card .pr-title { font-size: 40px; font-weight: 700; margin: 0 0 10px; }
 .reveal .pr-card .pr-num { color: var(--muted); font-weight: 400; }
@@ -274,24 +136,28 @@
 .reveal .pr-card .pr-timeline li { padding: 14px 0; border-bottom: 2px solid #e3e5ea; display: flex; align-items: center; gap: 16px; }
 .reveal .pr-card .pr-dot { width: 22px; height: 22px; border-radius: 50%; background: var(--green); flex: 0 0 auto; }
 .reveal .pr-card .pr-dot.merged { background: #8250df; }
-.reveal .v5-maps { display: grid; grid-template-columns: 1fr 1fr; gap: 26px 40px; }
-.reveal .v5-maps div { background: #f4f5f7; border-radius: 16px; padding: 22px 28px; }
-.reveal .v5-maps h3 { font-size: 30px; margin: 0 0 10px; color: var(--blue); }
-.reveal .v5-maps p { font-size: 27px; line-height: 1.35; margin: 0; }
-.reveal .v5-timeline { display: grid; grid-template-columns: 1fr 1fr; gap: 0 60px; }
-.reveal .v5-timeline h3 { font-size: 32px; margin: 0 0 12px; }
-.reveal .v5-timeline ol { list-style: none; margin: 0; padding: 0; }
-.reveal .v5-timeline li { display: grid; grid-template-columns: 150px 1fr; gap: 18px; font-size: 26px; line-height: 1.3; padding: 9px 0; border-top: 2px solid #e3e5ea; }
-.reveal .v5-timeline li b { color: var(--blue); }
-.reveal .v5-quotes { list-style: none; counter-reset: q; margin: 0; padding: 0; }
-.reveal .v5-quotes li { counter-increment: q; position: relative; padding-left: 70px; font-size: 30px; line-height: 1.35; margin: 0 0 16px; }
-.reveal .v5-quotes li::before { content: counter(q); position: absolute; left: 0; top: 2px; width: 46px; height: 46px; border-radius: 50%; background: var(--blue); color: #fff; font-size: 26px; font-weight: 700; text-align: center; line-height: 46px; }
-.reveal .v5-quotes b { color: var(--blue); }
-.reveal svg.boxes { display: block; width: 100%; margin: 20px 0 10px; }
-.reveal svg.mech { display: block; width: 100%; }
-.reveal svg.seq { display: block; width: 100%; margin: 0 0 14px; }
-.reveal pre.code.v5-json { font-size: 23px; line-height: 1.3; }
-.reveal .v5-realmock p { font-size: 26px; line-height: 1.35; margin: 0; }
-.reveal .statement.small { margin-bottom: 0.7em; }
-.reveal .v5-links { margin-top: 0.4em; }
-/* v5: end */
+
+/* The catalog slide: the facts beside the control's own words. */
+.reveal .facts { list-style: none; margin: 0; padding: 0; }
+.reveal .facts li { display: grid; grid-template-columns: 170px 1fr; gap: 20px; font-size: 32px; line-height: 1.3; margin: 0 0 18px; }
+.reveal .facts b { color: var(--catalog); }
+.reveal .catalog-cols .quote { font-size: 32px; border-left-color: var(--catalog); }
+/* ergo has no mark yet: its name, set as one. */
+.reveal .cards .wordmark { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 56px; font-weight: 700; color: var(--ink); }
+.reveal .cards .verb { color: var(--ink); }
+.reveal .quote-line { margin: 1.4em 0 0.2em; }
+.reveal .links { margin-top: 0.8em; font-size: 36px; gap: 18px 40px; }
+/* Slides with a short body: the body sits in the middle of the space under the title band. */
+.reveal .slides section.content.middle.present { justify-content: center; padding-top: 300px; padding-bottom: 80px; }
+.reveal section.content.middle > h2 { position: absolute; top: 170px; left: 120px; right: 120px; }
+/* CALM Hub pictures: a wider screen, and large pins over the picture that say what the small Hub labels say. */
+.reveal .screen.hub { grid-template-columns: 1160px minmax(0, 1fr); gap: 40px; }
+.reveal .shot-wrap { position: relative; }
+.reveal .shot-wrap .ring { position: absolute; border: 6px solid var(--amber); border-radius: 14px; box-sizing: border-box; }
+.reveal .shot-wrap .ring.bad { border-color: #d93025; }
+.reveal .shot-wrap .ring.good { border-color: #188038; }
+.reveal .shot-wrap .pin { position: absolute; max-width: 400px; font-size: 26px; font-weight: 700; line-height: 1.25; color: #fff; background: var(--ink); border-radius: 12px; padding: 10px 18px; box-shadow: 0 6px 18px rgba(0,0,0,.25); }
+.reveal .shot-wrap .pin.bad { background: #d93025; }
+.reveal .shot-wrap .pin.good { background: #188038; }
+/* The theme caps pictures at 95% width; a pinned picture must fill its frame so the pins land on their boxes. */
+.reveal .shot-wrap img.shot { display: block; max-width: 100%; max-height: none; margin: 0; }
