@@ -17,32 +17,34 @@ const parseTime = (v) => {
 let loaded;
 const policy = async () => (loaded ??= await loadPolicy(readFileSync(WASM), undefined, { 'time.parse_rfc3339_ns': parseTime }));
 
-export async function evaluateControls(input, { stage }) {
-  const policySha = sha256(readFileSync(WASM));
-  let result;
+export async function evaluateControls(input, { stage } = {}) {
+  let policySha = null;
+  const deny = (error) => ({ allowed: false, failing: [], pending: [], violations: [], problems: [], controls: {}, policySha, error });
   try {
-    result = (await policy()).evaluate(input, 'controls/result')[0]?.result;
+    policySha = sha256(readFileSync(WASM));
+    // Anything else ('Merge', undefined) would silently block only on change-stage requirements.
+    if (stage !== 'change' && stage !== 'merge') return deny(`unknown stage ${JSON.stringify(stage)}: expected 'change' or 'merge'`);
+    const result = (await policy()).evaluate(input, 'controls/result')[0]?.result;
+    if (!result?.report?.requirements) return deny('the policy returned no report');
+    const { report, violations, problems, controls } = result;
+    const entries = Object.entries(report.requirements);
+    const blocking = entries.filter(([, q]) => stage === 'merge' || q.meta?.stage === 'change');
+    const failing = blocking.filter(([, q]) => q.status === 'not_met').map(([name]) => name);
+    const pending = stage === 'merge' ? [] : entries
+      .filter(([, q]) => q.meta?.stage === 'merge' && q.status !== 'not_applicable')
+      .map(([requirement, q]) => ({ requirement, description: q.description }));
+    return {
+      allowed: problems.length === 0 && blocking.length > 0 && failing.length === 0,
+      failing,
+      pending,
+      report,
+      violations: violations.filter((v) => failing.includes(v.requirement)),
+      problems,
+      controls,
+      policySha,
+    };
   } catch (thrown) {
-    return { allowed: false, failing: [], pending: [], violations: [], problems: [], controls: {}, policySha, error: String(thrown) };
+    // Never throw to a caller: a gate that cannot decide denies.
+    return deny(String(thrown));
   }
-  if (!result?.report?.requirements) {
-    return { allowed: false, failing: [], pending: [], violations: [], problems: [], controls: {}, policySha, error: 'the policy returned no report' };
-  }
-  const { report, violations, problems, controls } = result;
-  const entries = Object.entries(report.requirements);
-  const blocking = entries.filter(([, q]) => stage === 'merge' || q.meta?.stage === 'change');
-  const failing = blocking.filter(([, q]) => q.status === 'not_met').map(([name]) => name);
-  const pending = stage === 'merge' ? [] : entries
-    .filter(([, q]) => q.meta?.stage === 'merge' && q.status !== 'not_applicable')
-    .map(([requirement, q]) => ({ requirement, description: q.description }));
-  return {
-    allowed: problems.length === 0 && blocking.length > 0 && failing.length === 0,
-    failing,
-    pending,
-    report,
-    violations: violations.filter((v) => failing.includes(v.requirement)),
-    problems,
-    controls,
-    policySha,
-  };
 }

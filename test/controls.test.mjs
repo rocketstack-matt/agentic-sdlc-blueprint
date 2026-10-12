@@ -157,4 +157,16 @@ test('controls maps each control to the element it sits on', async () => {
 test('the committed Wasm module was built from the committed Rego', () => {
   const src = ['gates/policy/ergo.rego', 'gates/policy/controls.rego'].map((f) => readFileSync(`${ROOT}${f}`)).reduce((h, b) => h.update(b), createHash('sha256')).digest('hex');
   assert.equal(readFileSync(`${ROOT}gates/policy/controls.sources.sha256`, 'utf8').trim(), src);
+  // CI rebuilds the module and fails on any difference; this ties the committed module to that build.
+  const wasm = createHash('sha256').update(readFileSync(`${ROOT}gates/policy/controls.wasm`)).digest('hex');
+  assert.equal(readFileSync(`${ROOT}gates/policy/controls.wasm.sha256`, 'utf8').trim(), wasm);
+});
+
+test('a stage other than change or merge is denied with an error, not treated as change', async () => {
+  for (const stage of ['Merge', undefined]) {
+    const r = await evaluateControls(input(tradeApiChange), { stage });
+    assert.equal(r.allowed, false, String(stage));
+    assert.match(r.error ?? '', /unknown stage/, String(stage));
+    assert.deepEqual([r.failing, r.pending, r.violations, r.problems], [[], [], [], []]);
+  }
 });
