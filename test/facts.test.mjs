@@ -36,7 +36,15 @@ test('base architecture comes from the base ref even when it differs from the wo
     git(['read-tree', 'HEAD'], { env });
     git(['update-index', '--cacheinfo', `100644,${blob},architecture/trade-capture.architecture.json`], { env });
     const tree = git(['write-tree'], { env });
-    const commit = git(['commit-tree', tree, '-p', 'HEAD', '-m', 'base probe'], { env });
+    const commit = git(['commit-tree', tree, '-p', 'HEAD', '-m', 'base probe'], {
+      env: {
+        ...env,
+        GIT_AUTHOR_NAME: 'facts-test',
+        GIT_AUTHOR_EMAIL: 'facts-test@example.invalid',
+        GIT_COMMITTER_NAME: 'facts-test',
+        GIT_COMMITTER_EMAIL: 'facts-test@example.invalid',
+      },
+    });
     assert.notDeepEqual(loadArchitecture(), based);
     assert.deepEqual(baseArchitecture(commit), based);
   } finally {
