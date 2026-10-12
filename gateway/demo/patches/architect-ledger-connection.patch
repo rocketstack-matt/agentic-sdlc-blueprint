@@ -1,5 +1,5 @@
 diff --git a/architecture/trade-capture.architecture.json b/architecture/trade-capture.architecture.json
-index b2b41788be5734f35830f62e28b23dc38edbb290..475dad77d83e3f263830bc9bc810704ca7c05e52 100644
+index 1201e7da05d458a70ef4d7d80ef8ec8393884557..e3d739452a5f9a118393728c75175d17c377baab 100644
 --- a/architecture/trade-capture.architecture.json
 +++ b/architecture/trade-capture.architecture.json
 @@ -323,6 +323,23 @@
