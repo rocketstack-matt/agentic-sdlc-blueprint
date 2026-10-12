@@ -50,8 +50,8 @@ jobs:
           name: evidence-${{ github.sha }}
           path: evidence/out/
           retention-days: 90 # a real retention period comes from your records policy and WORM storage
-  # The merge gateway the talk demonstrates: its own install, so the gates above stay dependency-free. The demo
-  # replays every decision the deck shows and fails if any verdict changes; the policy's own tests run first.
+  # The merge gateway the talk demonstrates: this job has its own install and replays the demo, which covers every
+  # decision the deck shows and fails if any verdict changes; the policy's own tests run first.
   gateway:
     runs-on: ubuntu-latest
     defaults: { run: { working-directory: gateway } }

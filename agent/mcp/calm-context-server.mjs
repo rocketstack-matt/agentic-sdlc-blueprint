@@ -10,10 +10,10 @@ import { runChecks } from '../../gates/check.mjs';
 const text = (obj) => ({ content: [{ type: 'text', text: JSON.stringify(obj, null, 2) }] });
 const server = new McpServer({ name: 'calm-context', version: '0.1.0' });
 
-server.tool('calm_spec_context', 'Call this FIRST. Given a spec id, returns the CALM nodes you may touch, what each may and must not connect to, and the controls that apply.',
+server.tool('calm_spec_context', 'Call this FIRST. Given a spec id, returns the CALM nodes you may touch and, for each, what it may connect to (mayConnectTo), what calls it (calledBy) and the controls that apply. Any connection not in mayConnectTo is drift that the service dependency control blocks.',
   { specId: z.string().describe('e.g. SPEC-001') }, async ({ specId }) => text(specContext(specId)));
 
-server.tool('calm_node_context', 'Architectural context for one CALM node: allowed connections, forbidden connections, controls.',
+server.tool('calm_node_context', 'Architectural context for one CALM node: mayConnectTo, calledBy, controls, and the rule that any connection not in mayConnectTo is drift the service dependency control blocks.',
   { nodeId: z.string() }, async ({ nodeId }) => text(contextForNode(nodeId)));
 
 server.tool('calm_path_context', 'Which CALM node owns a file path, and the constraints that follow.',

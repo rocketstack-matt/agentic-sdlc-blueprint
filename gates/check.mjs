@@ -7,7 +7,7 @@ import { spawnSync } from 'node:child_process';
 import { mkdirSync, mkdtempSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { ROOT, ARCHITECTURE, architectureSha, baseArchitecture, changeBase, changeInput, sha256 } from './lib/calm.mjs';
+import { ROOT, ARCHITECTURE, architectureSha, baseArchitecture, changeBase, changeInput, currentSpecId, gitInfo, sha256 } from './lib/calm.mjs';
 import { evaluateControls } from './lib/controls.mjs';
 
 const run = (cmd, args) => spawnSync(cmd, args, { cwd: ROOT, encoding: 'utf8', env: { ...process.env, NODE_NO_WARNINGS: '1' } });
@@ -55,6 +55,22 @@ export async function runChecks() {
 
 if (process.argv[1]?.endsWith('check.mjs')) {
   const { admissible, results } = await runChecks();
+  // SDLC-PREV-014: one hashed bundle per change, bound to the commit, the spec, the author and the pipeline run.
+  // Written only from the CLI, never when runChecks is imported (the MCP server imports it).
+  const git = gitInfo();
+  const { GITHUB_RUN_ID, GITHUB_SERVER_URL, GITHUB_REPOSITORY } = process.env;
+  const body = {
+    generatedAt: new Date().toISOString(),
+    commit: git.commit, tree: git.tree, dirty: git.dirty, branch: git.branch,
+    spec: currentSpecId(),
+    comparedTo: changeBase(),
+    author: { kind: process.env.CHANGE_AUTHOR_KIND ?? 'unknown', id: process.env.CHANGE_AUTHOR_ID ?? 'unknown' },
+    pipeline: GITHUB_RUN_ID ? { runId: GITHUB_RUN_ID, url: `${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}` } : null,
+    admissible,
+    results,
+  };
+  mkdirSync(join(ROOT, 'evidence/out'), { recursive: true });
+  writeFileSync(join(ROOT, 'evidence/out/gates.json'), JSON.stringify({ ...body, sha256: sha256(JSON.stringify(body)) }, null, 2));
   if (process.argv.includes('--json')) console.log(JSON.stringify({ admissible, results }, null, 2));
   else {
     for (const r of results) {
