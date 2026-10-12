@@ -57,15 +57,14 @@ jobs:
           name: evidence-${{ github.sha }}
           path: evidence/out/
           retention-days: 90 # a real retention period comes from your records policy and WORM storage
-  # The merge gateway the talk demonstrates: this job has its own install and replays the demo, which covers every
-  # decision the deck shows and fails if any verdict changes; the policy's own tests run first.
+  # The merge gateway the talk demonstrates: replays every decision the deck shows in a scratch clone of this
+  # repository and fails if any verdict changes.
   gateway:
     runs-on: ubuntu-latest
-    defaults: { run: { working-directory: gateway } }
     steps:
       - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
       - uses: actions/setup-node@v4
-        with: { node-version: 22, cache: npm, cache-dependency-path: gateway/package-lock.json }
+        with: { node-version: 22, cache: npm }
       - run: npm ci
-      - run: node policy/test.mjs
-      - run: bash run-demo.sh
+      - run: bash gateway/run-demo.sh
