@@ -134,9 +134,10 @@ Added to the CALM repository beside the deployment decorator standards in `calm/
 - `type`: `control-evaluation`
 - `target`: the architecture document, at its version
 - `applies-to`: the unique ids of the nodes or relationships in scope for the control
-- `data`: control key and catalog id, requirement URL, change (commit, diff sha256, spec), `compliant`, `status`
-  (`met`, `not_met`, `not_applicable`), `causes`, violations (description, expression, subject), evaluated-at, sha256
-  of the full ergo report and of the policy module, and the reviewer and approver identities when present
+- `data`: `control` (`unique-id`, `control-id`, fully qualified `requirement-url`, `attached-to`), `status`
+  (`met`, `not-met`, `not-applicable`), `evaluated-at`, `findings` (required when `not-met`: `subject`,
+  `description`, `check`, `expression`, `cause`), `change` (`commit`, `diff-sha256`, `spec`), `actors` (`author`,
+  `reviewer`, `approver`), `engine` (`name`, `version`, `policy-sha256`), `report-sha256`
 
 The blueprint carries a copy and validates every emitted decorator against it.
 

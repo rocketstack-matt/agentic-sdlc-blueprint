@@ -43,7 +43,8 @@ export const walk = (dir) =>
     return statSync(p).isDirectory() ? walk(p) : [p];
   });
 
-const git = (...args) => execFileSync('git', args, { cwd: ROOT, encoding: 'utf8' }).trim();
+const gitIn = (cwd, ...args) => execFileSync('git', args, { cwd, encoding: 'utf8' }).trim();
+const git = (...args) => gitIn(ROOT, ...args);
 
 /**
  * The change under evaluation.
@@ -62,9 +63,9 @@ export const changeBase = () => {
  * file out of a node still touches that node. head defaults to the working tree (plus untracked files); given a commit,
  * the two commits are compared instead.
  */
-export const changedFiles = (base = changeBase(), head) => {
-  const tracked = git('diff', '--name-only', '--no-renames', base, ...(head ? [head] : [])).split('\n');
-  const untracked = head ? [] : git('ls-files', '--others', '--exclude-standard').split('\n');
+export const changedFiles = (base = changeBase(), head, root = ROOT) => {
+  const tracked = gitIn(root, 'diff', '--name-only', '--no-renames', base, ...(head ? [head] : [])).split('\n');
+  const untracked = head ? [] : gitIn(root, 'ls-files', '--others', '--exclude-standard').split('\n');
   return [...new Set([...tracked, ...untracked])].filter(Boolean).sort();
 };
 
@@ -79,7 +80,9 @@ export const gitInfo = () => ({
   dirty: git('status', '--porcelain') !== '',
 });
 
-export const rel = (p) => relative(ROOT, p).split(sep).join('/');
+/** A path relative to root, with forward slashes. */
+const relTo = (root, p) => relative(root, p).split(sep).join('/');
+export const rel = (p) => relTo(ROOT, p);
 
 /** Minimal front matter reader: `key: value` and `key: [a, b]`. Enough for specs, no YAML dependency. */
 export const frontMatter = (text) => {
@@ -95,8 +98,8 @@ export const frontMatter = (text) => {
   return out;
 };
 
-export const loadSpecs = () =>
-  walk(join(ROOT, 'specs')).filter((p) => /SPEC-\d+.*\.md$/.test(p)).map((p) => ({ path: rel(p), ...frontMatter(readFileSync(p, 'utf8')) }));
+export const loadSpecs = (root = ROOT) =>
+  walk(join(root, 'specs')).filter((p) => /SPEC-\d+.*\.md$/.test(p)).map((p) => ({ path: relTo(root, p), ...frontMatter(readFileSync(p, 'utf8')) }));
 
 /** Print a result for humans, or JSON with --json, and exit non-zero on failure. */
 export const report = (result) => {
@@ -115,7 +118,7 @@ export const report = (result) => {
  * the node whose interface declares that env-binding, and relative imports that reach into another node's source-path.
  * An env name no interface declares is a connection with destination null. One entry per source->destination.
  */
-export const observedConnections = (arch) => {
+export const observedConnections = (arch, root = ROOT) => {
   const bindings = envBindings(arch);
   const found = new Map();
   const add = (source, destination, evidence) => {
@@ -124,17 +127,17 @@ export const observedConnections = (arch) => {
   };
   for (const node of codeNodes(arch)) {
     const id = node['unique-id'];
-    for (const file of walk(join(ROOT, node.metadata['source-path'])).filter((f) => /\.(ts|js|mjs)$/.test(f))) {
+    for (const file of walk(join(root, node.metadata['source-path'])).filter((f) => /\.(ts|js|mjs)$/.test(f))) {
       readFileSync(file, 'utf8').split('\n').forEach((text, i) => {
         for (const m of text.matchAll(/process\.env\.([A-Z0-9_]+)|process\.env\[['"]([A-Z0-9_]+)['"]\]/g)) {
           const name = m[1] ?? m[2];
           const owner = bindings.get(name);
-          if (owner !== id) add(id, owner ?? null, `${rel(file)}:${i + 1} env ${name}`);
+          if (owner !== id) add(id, owner ?? null, `${relTo(root, file)}:${i + 1} env ${name}`);
         }
         const imp = text.match(/from\s+['"](\.{1,2}\/[^'"]+)['"]/);
         if (imp) {
-          const target = nodeForPath(arch, rel(resolve(dirname(file), imp[1])));
-          if (target && target['unique-id'] !== id) add(id, target['unique-id'], `${rel(file)}:${i + 1} import ${imp[1]}`);
+          const target = nodeForPath(arch, relTo(root, resolve(dirname(file), imp[1])));
+          if (target && target['unique-id'] !== id) add(id, target['unique-id'], `${relTo(root, file)}:${i + 1} import ${imp[1]}`);
         }
       });
     }
@@ -152,36 +155,39 @@ const carriesPolicy = (arch) => /"ergo"\s*:/.test(JSON.stringify(arch.controls ?
  * if the base model cannot be read (unknown or unfetched ref, no model at that ref, invalid JSON) this throws, so
  * the caller denies rather than evaluating the change against its own model.
  */
-const baseArchitectureSource = (base) => {
+const baseArchitectureSource = (base, root = ROOT) => {
   let text, arch;
   try {
-    text = execFileSync('git', ['show', `${base}:${ARCHITECTURE}`], { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+    text = execFileSync('git', ['show', `${base}:${ARCHITECTURE}`], { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
     arch = JSON.parse(text);
   } catch (e) {
     throw new Error(`The base model at ${base}:${ARCHITECTURE} could not be read: ${e.message.trim()}`);
   }
   if (carriesPolicy(arch)) return { text, arch };
-  text = readFileSync(join(ROOT, ARCHITECTURE), 'utf8');
+  text = readFileSync(join(root, ARCHITECTURE), 'utf8');
   return { text, arch: JSON.parse(text) };
 };
-export const baseArchitecture = (base = changeBase()) => baseArchitectureSource(base).arch;
+export const baseArchitecture = (base = changeBase(), root = ROOT) => baseArchitectureSource(base, root).arch;
 /** The exact text of the model baseArchitecture returns (git's bytes at base, or the working tree's file when bootstrapping), so its hash can be reproduced. */
-export const baseArchitectureText = (base = changeBase()) => baseArchitectureSource(base).text;
+export const baseArchitectureText = (base = changeBase(), root = ROOT) => baseArchitectureSource(base, root).text;
 
-/** The facts the controls are evaluated on, for the change between base and head (default: the working tree). */
-export const changeInput = ({ arch, base = changeBase(), head }) => {
-  const files = changedFiles(base, head).map((path) => ({ path, node: nodeForPath(arch, path)?.['unique-id'] ?? null }));
-  const specId = currentSpecId();
-  const spec = loadSpecs().find((s) => s.id === specId);
+/**
+ * The facts the controls are evaluated on, for the change between base and head (default: the working tree).
+ * root is the repository the change is in; treeRoot is a checkout of head, where the code's connections and the
+ * specs are read. The gateway passes all of them; gates/check.mjs uses the defaults (this repository, its working tree).
+ */
+export const changeInput = ({ arch, base = changeBase(), head, root = ROOT, treeRoot = root, specId = currentSpecId(), author = process.env.CHANGE_AUTHOR_ID ?? 'unknown' }) => {
+  const files = changedFiles(base, head, root).map((path) => ({ path, node: nodeForPath(arch, path)?.['unique-id'] ?? null }));
+  const spec = loadSpecs(treeRoot).find((s) => s.id === specId);
   return {
     architecture: arch,
     change: {
-      commit: head ? git('rev-parse', head) : gitInfo().commit,
-      author: process.env.CHANGE_AUTHOR_ID ?? 'unknown',
+      commit: head ? gitIn(root, 'rev-parse', head) : gitInfo().commit,
+      author,
       ...(specId ? { spec: specId } : {}),
       files,
       nodes: [...new Set(files.map((f) => f.node).filter(Boolean))].sort(),
-      connections: observedConnections(arch),
+      connections: observedConnections(arch, treeRoot),
     },
     spec: spec ? { id: spec.id, approved: spec.status === 'approved', nodes: spec['calm-nodes'] ?? [] } : { id: null, approved: false, nodes: [] }, // a spec not in specs/ has no id, so spec_exists fails
   };

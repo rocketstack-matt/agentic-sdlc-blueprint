@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { ROOT, ARCHITECTURE, baseArchitecture, baseArchitectureText, changeInput, changedFiles, loadArchitecture, observedConnections, sha256 } from '../gates/lib/calm.mjs';
@@ -129,4 +129,32 @@ test('the base model text is the raw bytes git holds at the base, so its hash ca
   const text = baseArchitectureText('HEAD');
   assert.equal(sha256(text), sha256(raw));
   assert.deepEqual(JSON.parse(text), baseArchitecture('HEAD'));
+});
+
+test('changeInput can evaluate a commit in another repository, scanning a checkout of that commit', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'guarded-'));
+  const repo = join(dir, 'repo');
+  const tree = join(dir, 'tree');
+  const env = { ...process.env, GIT_AUTHOR_NAME: 't', GIT_AUTHOR_EMAIL: 't@example.invalid', GIT_COMMITTER_NAME: 't', GIT_COMMITTER_EMAIL: 't@example.invalid' };
+  const g = (cwd, ...args) => execFileSync('git', args, { cwd, env, encoding: 'utf8' }).trim();
+  try {
+    g(dir, 'clone', '--quiet', '--no-hardlinks', new URL('..', import.meta.url).pathname, repo);
+    g(repo, 'checkout', '-q', '-B', 'main');
+    g(repo, 'checkout', '-q', '-b', 'agent/x');
+    const config = join(repo, 'services/trade-api/src/config.ts');
+    writeFileSync(config, readFileSync(config, 'utf8').replace('};', "  ledgerPath: process.env.POSITION_STORE_PATH ?? 'data/positions.json',\n};"));
+    g(repo, 'commit', '-qam', 'shortcut\n\nSpec: SPEC-001');
+    const head = g(repo, 'rev-parse', 'HEAD');
+    g(repo, 'worktree', 'add', '--detach', '--quiet', tree, head);
+    const arch = baseArchitecture('main', repo);
+    const input = changeInput({ arch, base: 'main', head, root: repo, treeRoot: tree, specId: 'SPEC-001', author: 'author-agent' });
+    assert.equal(input.change.commit, head);
+    assert.deepEqual(input.change.files, [{ path: 'services/trade-api/src/config.ts', node: 'trade-api' }]);
+    assert.equal(input.change.author, 'author-agent');
+    assert.equal(input.spec.id, 'SPEC-001');
+    assert.ok(input.change.connections.some((c) => c.id === 'trade-api->client-ledger'), 'connections come from the checkout of head');
+    assert.equal(observedConnections(loadArchitecture()).some((c) => c.id === 'trade-api->client-ledger'), false, 'the blueprint itself has no such connection');
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
 });
