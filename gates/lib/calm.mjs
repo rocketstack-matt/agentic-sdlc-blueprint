@@ -57,9 +57,14 @@ export const changeBase = () => {
   try { return git('rev-parse', '--verify', '--quiet', 'HEAD~1'); } catch { return 'HEAD'; } // root commit: nothing to evaluate
 };
 
-export const changedFiles = (base = changeBase()) => {
-  const tracked = git('diff', '--name-only', base).split('\n');
-  const untracked = git('ls-files', '--others', '--exclude-standard').split('\n');
+/**
+ * Paths the change touches, base..head. --no-renames: a moved file lists its old path and its new one, so moving a
+ * file out of a node still touches that node. head defaults to the working tree (plus untracked files); given a commit,
+ * the two commits are compared instead.
+ */
+export const changedFiles = (base = changeBase(), head) => {
+  const tracked = git('diff', '--name-only', '--no-renames', base, ...(head ? [head] : [])).split('\n');
+  const untracked = head ? [] : git('ls-files', '--others', '--exclude-standard').split('\n');
   return [...new Set([...tracked, ...untracked])].filter(Boolean).sort();
 };
 
@@ -147,31 +152,37 @@ const carriesPolicy = (arch) => /"ergo"\s*:/.test(JSON.stringify(arch.controls ?
  * if the base model cannot be read (unknown or unfetched ref, no model at that ref, invalid JSON) this throws, so
  * the caller denies rather than evaluating the change against its own model.
  */
-export const baseArchitecture = (base = changeBase()) => {
-  let arch;
+const baseArchitectureSource = (base) => {
+  let text, arch;
   try {
-    arch = JSON.parse(git('show', `${base}:${ARCHITECTURE}`));
+    text = execFileSync('git', ['show', `${base}:${ARCHITECTURE}`], { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+    arch = JSON.parse(text);
   } catch (e) {
-    throw new Error(`The base model at ${base}:${ARCHITECTURE} could not be read: ${e.message}`);
+    throw new Error(`The base model at ${base}:${ARCHITECTURE} could not be read: ${e.message.trim()}`);
   }
-  return carriesPolicy(arch) ? arch : loadArchitecture();
+  if (carriesPolicy(arch)) return { text, arch };
+  text = readFileSync(join(ROOT, ARCHITECTURE), 'utf8');
+  return { text, arch: JSON.parse(text) };
 };
+export const baseArchitecture = (base = changeBase()) => baseArchitectureSource(base).arch;
+/** The exact text of the model baseArchitecture returns (git's bytes at base, or the working tree's file when bootstrapping), so its hash can be reproduced. */
+export const baseArchitectureText = (base = changeBase()) => baseArchitectureSource(base).text;
 
-/** The facts the controls are evaluated on, for the change between base and the working tree. */
-export const changeInput = ({ arch, base = changeBase() }) => {
-  const files = changedFiles(base).map((path) => ({ path, node: nodeForPath(arch, path)?.['unique-id'] ?? null }));
+/** The facts the controls are evaluated on, for the change between base and head (default: the working tree). */
+export const changeInput = ({ arch, base = changeBase(), head }) => {
+  const files = changedFiles(base, head).map((path) => ({ path, node: nodeForPath(arch, path)?.['unique-id'] ?? null }));
   const specId = currentSpecId();
   const spec = loadSpecs().find((s) => s.id === specId);
   return {
     architecture: arch,
     change: {
-      commit: gitInfo().commit,
+      commit: head ? git('rev-parse', head) : gitInfo().commit,
       author: process.env.CHANGE_AUTHOR_ID ?? 'unknown',
       ...(specId ? { spec: specId } : {}),
       files,
       nodes: [...new Set(files.map((f) => f.node).filter(Boolean))].sort(),
       connections: observedConnections(arch),
     },
-    spec: spec ? { id: spec.id, approved: spec.status === 'approved', nodes: spec['calm-nodes'] ?? [] } : { id: specId ?? null, approved: false, nodes: [] },
+    spec: spec ? { id: spec.id, approved: spec.status === 'approved', nodes: spec['calm-nodes'] ?? [] } : { id: null, approved: false, nodes: [] }, // a spec not in specs/ has no id, so spec_exists fails
   };
 };
