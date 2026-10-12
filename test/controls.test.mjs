@@ -113,6 +113,15 @@ test('unowned file needs a human at merge, and CI lists it as pending', async ()
   assert.ok(inCi.pending.some((p) => p.requirement === 'control-plane-human-approval'));
 });
 
+test('a test no node owns needs a spec and a review, not a human', async () => {
+  const change = { ...tradeApiChange, files: [{ path: 'test/x.test.ts', node: null }], nodes: [], connections: [] };
+  const atMerge = await merge(input(change));
+  assert.equal(atMerge.allowed, true, JSON.stringify(atMerge.violations, null, 2));
+  const noSpec = await ci(input({ ...change, spec: null }, model(), { id: null, approved: false, nodes: [] }));
+  assert.equal(noSpec.allowed, false);
+  assert.ok(has(noSpec, { requirement: 'change-names-approved-spec', check: 'names_a_spec' }));
+});
+
 test('a control without ergo is a problem, naming the control', async () => {
   const doc = model();
   delete doc.nodes.find((n) => n['unique-id'] === 'client-ledger').controls['client-ledger-human-approval'].requirements[0].config.ergo;

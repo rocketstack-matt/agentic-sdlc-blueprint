@@ -377,7 +377,7 @@
                   ]
                 },
                 "changed file no node owns": {
-                  "description": "A changed file outside every node that is not documentation",
+                  "description": "A changed file outside every node that is not documentation or a test",
                   "from": [
                     "change",
                     "files"
@@ -392,7 +392,7 @@
                         "node"
                       ]
                     },
-                    "not_docs": {
+                    "not_docs_or_tests": {
                       "op": "not_matches_any",
                       "path": [
                         "path"
@@ -402,7 +402,8 @@
                         "^docs/",
                         "^slides/",
                         "^LICENSE$",
-                        "^NOTICE$"
+                        "^NOTICE$",
+                        "^test/"
                       ]
                     }
                   }
@@ -486,7 +487,7 @@
                   }
                 },
                 "control-plane-human-approval": {
-                  "description": "A change to anything no node owns, such as the architecture, the gates or the pipeline, is approved by a human",
+                  "description": "A change to anything no node owns other than documentation and tests, such as the architecture, the gates or the pipeline, is approved by a human",
                   "meta": {
                     "control-id": "SDLC-PREV-001",
                     "calm-control": "sdlc-prev-001-code-review",
