@@ -1,0 +1,1 @@
+{ "id": "CHG-0423", "title": "Position total endpoint on position-service, one more line after approval", "spec": "SPEC-001", "author": "author-agent", "patch": "position-total-amended.patch" }

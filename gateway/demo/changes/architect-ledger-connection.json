@@ -1,0 +1,1 @@
+{ "id": "CHG-0425", "title": "Model: trade-api writes end-of-day snapshots to the Client Ledger", "spec": "SPEC-003", "author": "bob", "patch": "architect-ledger-connection.patch" }

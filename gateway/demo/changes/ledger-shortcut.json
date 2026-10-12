@@ -1,0 +1,1 @@
+{ "id": "CHG-0424", "title": "Read positions straight from the ledger file in trade-api", "spec": "SPEC-001", "author": "author-agent", "patch": "ledger-shortcut.patch" }

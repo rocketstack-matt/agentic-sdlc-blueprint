@@ -1,0 +1,1 @@
+{ "id": "CHG-0426", "title": "Trade count endpoint on trade-api", "spec": "SPEC-001", "author": "author-agent", "patch": "trade-count.patch" }
