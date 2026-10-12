@@ -104,3 +104,68 @@ export const report = (result) => {
   process.exitCode = result.passed ? 0 : 1;
   return result;
 };
+
+/**
+ * Every connection the code makes, found by the convention the old drift gate used: process.env reads mapped to
+ * the node whose interface declares that env-binding, and relative imports that reach into another node's source-path.
+ * An env name no interface declares is a connection with destination null. One entry per source->destination.
+ */
+export const observedConnections = (arch) => {
+  const bindings = envBindings(arch);
+  const found = new Map();
+  const add = (source, destination, evidence) => {
+    const id = `${source}->${destination ?? 'undeclared'}`;
+    if (!found.has(id)) found.set(id, { id, source, destination, evidence });
+  };
+  for (const node of codeNodes(arch)) {
+    const id = node['unique-id'];
+    for (const file of walk(join(ROOT, node.metadata['source-path'])).filter((f) => /\.(ts|js|mjs)$/.test(f))) {
+      readFileSync(file, 'utf8').split('\n').forEach((text, i) => {
+        for (const m of text.matchAll(/process\.env\.([A-Z0-9_]+)|process\.env\[['"]([A-Z0-9_]+)['"]\]/g)) {
+          const name = m[1] ?? m[2];
+          const owner = bindings.get(name);
+          if (owner !== id) add(id, owner ?? null, `${rel(file)}:${i + 1} env ${name}`);
+        }
+        const imp = text.match(/from\s+['"](\.{1,2}\/[^'"]+)['"]/);
+        if (imp) {
+          const target = nodeForPath(arch, rel(resolve(dirname(file), imp[1])));
+          if (target && target['unique-id'] !== id) add(id, target['unique-id'], `${rel(file)}:${i + 1} import ${imp[1]}`);
+        }
+      });
+    }
+  }
+  return [...found.values()].sort((a, b) => a.id.localeCompare(b.id));
+};
+
+const carriesPolicy = (arch) => /"ergo"\s*:/.test(JSON.stringify(arch.controls ?? {})) || arch.nodes.some((n) => /"ergo"\s*:/.test(JSON.stringify(n.controls ?? {})));
+
+/**
+ * The architecture on the base of the change: its controls decide, never the change's own copy of the model.
+ * One exception, for bootstrapping: a base model that carries no ergo policy at all (before SPEC-002 merged)
+ * cannot evaluate anything, so the working tree's model is used. Once the base carries a policy this never fires,
+ * so a change cannot use it to remove its own controls.
+ */
+export const baseArchitecture = (base = changeBase()) => {
+  let arch;
+  try { arch = JSON.parse(git('show', `${base}:${ARCHITECTURE}`)); } catch { return loadArchitecture(); }
+  return carriesPolicy(arch) ? arch : loadArchitecture();
+};
+
+/** The facts the controls are evaluated on, for the change between base and the working tree. */
+export const changeInput = ({ arch, base = changeBase() }) => {
+  const files = changedFiles(base).map((path) => ({ path, node: nodeForPath(arch, path)?.['unique-id'] ?? null }));
+  const specId = currentSpecId();
+  const spec = loadSpecs().find((s) => s.id === specId);
+  return {
+    architecture: arch,
+    change: {
+      commit: gitInfo().commit,
+      author: process.env.CHANGE_AUTHOR_ID ?? 'unknown',
+      ...(specId ? { spec: specId } : {}),
+      files,
+      nodes: [...new Set(files.map((f) => f.node).filter(Boolean))].sort(),
+      connections: observedConnections(arch),
+    },
+    spec: spec ? { id: spec.id, approved: spec.status === 'approved', nodes: spec['calm-nodes'] ?? [] } : { id: specId ?? null, approved: false, nodes: [] },
+  };
+};
