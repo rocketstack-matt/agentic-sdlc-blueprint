@@ -1,10 +1,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { evaluateControls } from '../gates/lib/controls.mjs';
-import { buildDecorators, validateDecorator, STANDARD_ID } from '../gateway/gateway/decorators.mjs';
+import { evaluateControls } from '../lib/controls.mjs';
+import { buildDecorators, validateDecorator, STANDARD_ID } from '../../gateway/gateway/decorators.mjs';
 
-const ROOT = new URL('..', import.meta.url).pathname;
+const ROOT = new URL('../..', import.meta.url).pathname;
 const model = () => JSON.parse(readFileSync(`${ROOT}architecture/trade-capture.architecture.json`, 'utf8'));
 const sha = (c) => c.repeat(64);
 const review = { reviewer: 'review-bot', verdict: 'approve', commit: 'c0ffee1', diff_sha256: sha('d'), verified: true };
@@ -37,6 +37,7 @@ test('the ledger rule not met: applies to the ledger connection and its source, 
   assert.equal(d.data.control['attached-to'], 'client-ledger');
   assert.equal(d.data.control['requirement-url'], 'https://hub.calm.finos.org/calm/domains/finos-sdlc-common-controls/controls/sdlc-prev-001-code-review/requirement/versions/1.0.0');
   assert.ok(d.data.findings.some((f) => f.subject === 'position-service-to-client-ledger' && f.description === 'A human approved this change' && f.cause === 'absent'));
+  assert.equal(d.data.findings[0].description, 'A human approved this change');
   assert.deepEqual(d.data.actors, { author: 'author-agent', reviewer: 'review-bot' });
 });
 

@@ -36,7 +36,12 @@ export const hubEnabled = () => Boolean(cfg().url);
 export const targetFor = (id, version) => `/api/calm/namespaces/${cfg().ns}/architectures/${id}/versions/${version.replaceAll('.', '-')}`;
 
 async function call(method, path, body) {
-  const res = await fetch(`${cfg().url}${path}`, { method, headers: body === undefined ? {} : { 'content-type': 'application/json' }, body: body === undefined ? undefined : JSON.stringify(body) });
+  const res = await fetch(`${cfg().url}${path}`, {
+    method,
+    headers: body === undefined ? {} : { 'content-type': 'application/json' },
+    body: body === undefined ? undefined : JSON.stringify(body),
+    signal: AbortSignal.timeout(Number(process.env.CALM_HUB_TIMEOUT_MS ?? 3000)), // a stalled Hub never holds up a decision
+  });
   if (!res.ok && !(method === 'DELETE' && res.status === 404)) throw new Error(`${method} ${path}: ${res.status} ${(await res.text()).slice(0, 200)}`);
   return res;
 }

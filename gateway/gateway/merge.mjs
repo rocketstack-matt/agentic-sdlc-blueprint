@@ -6,7 +6,7 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { baseArchitectureText, changeInput } from '../../gates/lib/calm.mjs';
 import { evaluateControls } from '../../gates/lib/controls.mjs';
-import { buildDecorators, validateDecorator } from './decorators.mjs';
+import { buildDecorators, checkRank, validateDecorator } from './decorators.mjs';
 import { hubEnabled, postDecorator, publishArchitecture } from './hub.mjs';
 import {
   APPROVAL, ARCHITECTURE, decodeJws, diffOf, git, loadChange, logDecision, markUsed, paint, parseArgs, paths,
@@ -30,16 +30,15 @@ function loadApproval(file, now) {
   return { approver: claims.sub, commit: grant.commit, diff_sha256: grant.diff_sha256, verified, used: Boolean(readLedger().used[claims.jti]), jti: claims.jti };
 }
 
-// The checks a reader needs first when a requirement fails; the rest follow in report order.
-const FIRST = ['human_approved', 'not_the_author', 'in_architecture', 'in_spec', 'names_a_spec', 'approval_for_this_diff'];
-const rank = (v) => (FIRST.includes(v.check) ? FIRST.indexOf(v.check) : FIRST.length);
+// The gateway's own refusals (the change is not what its file says, or cannot be merged) are printed as they are; an
+// error from the controls says so.
 const reasons = (outcome) => {
   const lines = [];
-  if (outcome.error) lines.push(`the controls could not be evaluated: ${outcome.error}`);
+  if (outcome.error) lines.push(outcome.refused ? outcome.error : `the controls could not be evaluated: ${outcome.error}`);
   for (const p of outcome.problems ?? []) lines.push(p);
   for (const name of outcome.failing ?? []) {
     lines.push(outcome.report.requirements[name].description);
-    const vs = outcome.violations.filter((v) => v.requirement === name).sort((a, b) => rank(a) - rank(b));
+    const vs = outcome.violations.filter((v) => v.requirement === name).sort((a, b) => checkRank(a) - checkRank(b));
     const subject = (id) => (/^[0-9a-f]{40}$/.test(id ?? '') ? id.slice(0, 7) : id);
     const seen = [...new Set(vs.map((v) => `${subject(v.subject?.id)}: ${v.description || v.check}`))];
     for (const s of seen.slice(0, 2)) lines.push(`  ✗ ${s}`);
@@ -47,6 +46,22 @@ const reasons = (outcome) => {
   }
   return lines;
 };
+
+// The author and the spec are the commit's: the change file is only where the gateway finds the commit.
+function identityProblem(change) {
+  const author = git('log', '-1', '--format=%an', change.commit);
+  const spec = git('log', '-1', '--format=%(trailers:key=Spec,valueonly)', change.commit).trim();
+  if (!author) return 'the commit has no author';
+  if (author !== change.author) return `the change file names author ${change.author}, but the commit's author is ${author}`;
+  if (!spec) return 'the commit has no Spec trailer';
+  if (spec !== change.spec) return `the change file names spec ${change.spec}, but the commit's Spec trailer is ${spec}`;
+  return null;
+}
+
+// Asked before anything is decided: a merge that would conflict is never started.
+const mergesCleanly = (commit) => { try { git('merge-tree', '--write-tree', 'main', commit); return true; } catch { return false; } };
+
+const refused = (error) => ({ allowed: false, refused: true, error, controls: {} });
 
 run(async () => {
   const { flags, positional } = parseArgs(process.argv.slice(2));
@@ -60,28 +75,32 @@ run(async () => {
   const arch = JSON.parse(archText);
   const diffSha = sha256(diffOf(change.commit));
 
-  const input = await withCheckout(change.commit, (tree) => changeInput({ arch, base, head: change.commit, root: paths.repo, treeRoot: tree, specId: change.spec, author: change.author }));
-  input.change.diff_sha256 = diffSha;
-  input.change.review = loadReview(flags.review);
+  const identity = identityProblem(change);
+  let input = { architecture: arch, change: { ...change, files: [] } };
   let approval;
-  if (typeof flags.approval === 'string') { approval = loadApproval(flags.approval, now); const { jti, ...claims } = approval; input.change.approval = claims; }
-
-  // A change with nothing left to merge (already in main) is not a change.
-  const empty = input.change.files.length === 0;
-  const outcome = empty ? { allowed: false, error: 'nothing to merge: the change is already in main', controls: {} } : await evaluateControls(input, { stage: 'merge' });
+  let outcome;
+  if (identity) outcome = refused(identity);
+  else {
+    input = await withCheckout(change.commit, (tree) => changeInput({ arch, base, head: change.commit, root: paths.repo, treeRoot: tree, specId: change.spec, author: change.author }));
+    input.change.diff_sha256 = diffSha;
+    input.change.review = loadReview(flags.review);
+    if (typeof flags.approval === 'string') { approval = loadApproval(flags.approval, now); const { jti, ...claims } = approval; input.change.approval = claims; }
+    // A change with nothing left to merge (already in main) is not a change; one that conflicts with main cannot merge.
+    if (input.change.files.length === 0) outcome = refused('nothing to merge: the change is already in main');
+    else if (!mergesCleanly(change.commit)) outcome = refused('the change does not merge cleanly into main');
+    else outcome = await evaluateControls(input, { stage: 'merge' });
+  }
 
   const decisionId = randomUUID();
   const evaluatedAt = new Date().toISOString();
-  const published = await publishArchitecture(archText);
-  const target = published?.target ?? `${ARCHITECTURE}@${sha256(archText).slice(0, 12)}`;
-  const decorators = buildDecorators({ outcome, input, decisionId, target, evaluatedAt });
-  mkdirSync(paths.decorators, { recursive: true });
-  const hubIds = [];
-  for (const d of decorators) {
-    const { valid, errors } = validateDecorator(d);
-    if (!valid) throw new Error(`decorator ${d['unique-id']} is not valid: ${errors.join('; ')}`);
-    writeFileSync(join(paths.decorators, `${d['unique-id']}.json`), `${JSON.stringify(d, null, 2)}\n`);
-    hubIds.push(await postDecorator(d));
+  const published = await publishArchitecture(archText); // the decorators' target is this version on the Hub
+  const target = published && !published.error ? published.target : `${ARCHITECTURE}@${sha256(archText).slice(0, 12)}`;
+  let decorators = buildDecorators({ outcome, input, decisionId, target, evaluatedAt });
+  // Every decorator is valid, or none is written or posted and the change is denied.
+  const invalid = decorators.map((d) => ({ d, ...validateDecorator(d) })).find((x) => !x.valid);
+  if (invalid) {
+    outcome = { ...refused(`the decision could not be recorded: decorator ${invalid.d['unique-id']} is not valid: ${invalid.errors.join('; ')}`), failing: outcome.failing, report: outcome.report, violations: outcome.violations };
+    decorators = [];
   }
   logDecision({
     decision_id: decisionId, timestamp: evaluatedAt, allowed: outcome.allowed,
@@ -91,11 +110,13 @@ run(async () => {
     decorators: decorators.map((d) => ({ id: d['unique-id'], control: d.data.control['unique-id'], status: d.data.status, 'applies-to': d['applies-to'] })),
     hub: published && !published.error ? { version: published.version, target } : null,
   });
+  mkdirSync(paths.decorators, { recursive: true });
+  for (const d of decorators) writeFileSync(join(paths.decorators, `${d['unique-id']}.json`), `${JSON.stringify(d, null, 2)}\n`);
 
   if (outcome.allowed) {
     console.log(paint.bold(paint.green('ALLOW')));
-    if (approval) markUsed(approval.jti, { change: change.id, commit: change.commit, decision_id: decisionId, at: evaluatedAt });
     git('merge', '--no-ff', '-q', '-m', `Merge ${change.id}: ${change.title}\n\nSpec: ${change.spec}`, change.commit);
+    if (approval) markUsed(approval.jti, { change: change.id, commit: change.commit, decision_id: decisionId, at: evaluatedAt });
     console.log(`  main -> ${git('rev-parse', '--short=7', 'main')} (merged ${change.id})`);
     const after = git('show', `main:${ARCHITECTURE}`);
     if (after !== archText.trim()) {
@@ -109,7 +130,17 @@ run(async () => {
     console.log(paint.bold(paint.red('DENY')));
     for (const line of reasons(outcome)) console.log(`  ${line}`);
   }
-  const hubNote = !hubEnabled() ? '' : published?.error ? `  hub failed: ${published.error}` : hubIds.some((x) => x?.error) ? '  hub: some decorators failed' : `  hub ${published.version}`;
+
+  // The verdict is out; only now is the Hub asked to take the decorators, and only if it has the version they target.
+  let hubNote = '';
+  if (hubEnabled()) {
+    if (published?.error) hubNote = `  hub failed: ${published.error}; decorators not posted`;
+    else {
+      const hubIds = [];
+      for (const d of decorators) hubIds.push(await postDecorator(d));
+      hubNote = hubIds.some((x) => x?.error) ? '  hub: some decorators failed' : `  hub ${published.version}`;
+    }
+  }
   console.log(paint.dim(`logged  decision ${decisionId.slice(0, 8)}  ${decorators.length} decorators${hubNote}`));
   process.exitCode = outcome.allowed ? 0 : 1;
 });

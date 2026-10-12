@@ -4,8 +4,8 @@ import { execFileSync } from 'node:child_process';
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
-import { ROOT, ARCHITECTURE, baseArchitecture, baseArchitectureText, changeInput, changedFiles, loadArchitecture, observedConnections, sha256 } from '../gates/lib/calm.mjs';
-import { evaluateControls } from '../gates/lib/controls.mjs';
+import { ROOT, ARCHITECTURE, baseArchitecture, baseArchitectureText, changeInput, changedFiles, loadArchitecture, observedConnections, sha256 } from '../lib/calm.mjs';
+import { evaluateControls } from '../lib/controls.mjs';
 
 test('the connections the code makes today are the three the model has', () => {
   const ids = observedConnections(loadArchitecture()).map((c) => c.id).sort();

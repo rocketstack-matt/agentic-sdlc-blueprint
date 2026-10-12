@@ -26,6 +26,11 @@ export function validateDecorator(decorator) {
   return { valid, errors: valid ? [] : check.errors.map((e) => `${e.instancePath || '/'} ${e.message}`) };
 }
 
+// The checks a reader needs first when a requirement fails; the rest follow in report order. The gateway's screen and
+// the decorators' findings use the same order.
+export const FIRST_CHECKS = ['human_approved', 'not_the_author', 'in_architecture', 'in_spec', 'names_a_spec', 'approval_for_this_diff'];
+export const checkRank = (v) => (FIRST_CHECKS.includes(v.check) ? FIRST_CHECKS.indexOf(v.check) : FIRST_CHECKS.length);
+
 const ENGINE = { name: 'ergo', version: 'd924f4d' };
 const sha256 = (text) => createHash('sha256').update(text).digest('hex');
 const isSha = (s) => typeof s === 'string' && /^[a-f0-9]{64}$/.test(s);
@@ -60,7 +65,7 @@ export function buildDecorators({ outcome, input, decisionId, target, evaluatedA
     if (!appliesTo.size && status !== 'not-applicable') for (const n of change.nodes ?? []) appliesTo.add(n);
     if (!appliesTo.size) appliesTo.add(attachedTo);
 
-    let findings = (outcome.violations ?? []).filter((v) => names.includes(v.requirement)).map((v) => ({
+    let findings = (outcome.violations ?? []).filter((v) => names.includes(v.requirement)).sort((a, b) => checkRank(a) - checkRank(b)).map((v) => ({
       subject: String(v.subject?.id ?? v.requirement),
       check: v.check,
       description: v.description || v.check,

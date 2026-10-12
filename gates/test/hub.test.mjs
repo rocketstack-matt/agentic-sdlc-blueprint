@@ -4,7 +4,7 @@ import { createServer } from 'node:http';
 import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { postDecorator, publishArchitecture, resetHub, targetFor, hubEnabled } from '../gateway/gateway/hub.mjs';
+import { postDecorator, publishArchitecture, resetHub, targetFor, hubEnabled } from '../../gateway/gateway/hub.mjs';
 
 const stub = async ({ failDelete = [], noArchLocation = false } = {}) => {
   const calls = [];
@@ -111,4 +111,23 @@ test('a create response without a Location id is an error and nothing is saved',
     try { state = JSON.parse(readFileSync(process.env.GATEWAY_HUB_STATE, 'utf8')); } catch { /* no state file */ }
     assert.ok(!state.architectureId, 'no architectureId saved');
   } finally { hub.close(); }
+});
+
+test('a Hub that accepts but never answers times out with an error', async () => {
+  const sockets = new Set();
+  const server = createServer(() => { /* never responds */ });
+  server.on('connection', (s) => sockets.add(s));
+  await new Promise((r) => server.listen(0, r));
+  env(`http://localhost:${server.address().port}`);
+  process.env.CALM_HUB_TIMEOUT_MS = '500';
+  const started = Date.now();
+  try {
+    const r = await publishArchitecture('{"v":1}');
+    assert.ok(r && r.error, 'publish reports the error');
+    assert.ok(Date.now() - started < 4000, `took ${Date.now() - started}ms`);
+  } finally {
+    delete process.env.CALM_HUB_TIMEOUT_MS;
+    for (const s of sockets) s.destroy();
+    server.close();
+  }
 });

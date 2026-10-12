@@ -2,9 +2,9 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
-import { evaluateControls } from '../gates/lib/controls.mjs';
+import { evaluateControls } from '../lib/controls.mjs';
 
-const ROOT = new URL('..', import.meta.url).pathname;
+const ROOT = new URL('../..', import.meta.url).pathname;
 const model = () => JSON.parse(readFileSync(`${ROOT}architecture/trade-capture.architecture.json`, 'utf8'));
 const architect = () => {
   const doc = model();
@@ -120,6 +120,13 @@ test('a test no node owns needs a spec and a review, not a human', async () => {
   const noSpec = await ci(input({ ...change, spec: null }, model(), { id: null, approved: false, nodes: [] }));
   assert.equal(noSpec.allowed, false);
   assert.ok(has(noSpec, { requirement: 'change-names-approved-spec', check: 'names_a_spec' }));
+});
+
+test('a change to the gate tests is the control plane: it needs a human at merge', async () => {
+  const change = { ...tradeApiChange, files: [{ path: 'gates/test/controls.test.mjs', node: null }], nodes: [], connections: [] };
+  const atMerge = await merge(input(change));
+  assert.equal(atMerge.allowed, false);
+  assert.ok(has(atMerge, { requirement: 'control-plane-human-approval', subject: 'gates/test/controls.test.mjs', check: 'human_approved' }), JSON.stringify(atMerge.violations, null, 2));
 });
 
 test('a control without ergo is a problem, naming the control', async () => {

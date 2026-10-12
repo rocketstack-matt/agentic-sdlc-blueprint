@@ -22,7 +22,7 @@ const runners = {
     return { gate: 'calm-validate', passed, findings: passed ? [] : [{ level: 'error', message: 'The model failed validation. Run `npm run calm:validate`.' }], summary: passed ? 'Model valid against CALM 1.2, the pattern and its Standards.' : 'Model, pattern conformance or a control config is invalid.' };
   },
   tests: async () => {
-    const files = readdirSync(join(ROOT, 'test')).filter((f) => /\.test\.(ts|mjs)$/.test(f)).map((f) => `test/${f}`);
+    const files = ['test', 'gates/test'].flatMap((dir) => readdirSync(join(ROOT, dir)).filter((f) => /\.test\.(ts|mjs)$/.test(f)).map((f) => `${dir}/${f}`));
     const r = run('npx', ['--no-install', 'tsx', '--test', '--test-reporter=tap', ...files]);
     const count = (k) => Number(r.stdout.match(new RegExp(`# ${k} (\\d+)`))?.[1] ?? 0);
     return { gate: 'tests', passed: r.status === 0, findings: r.status === 0 ? [] : [{ level: 'error', message: 'Test failures. Run `npm test`.' }], summary: `${count('pass')} passed, ${count('fail')} failed.` };

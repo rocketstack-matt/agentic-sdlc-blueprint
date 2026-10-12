@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { runChecks } from '../gates/check.mjs';
+import { runChecks } from '../check.mjs';
 
 test('a base ref that cannot be read blocks the change with an error result, it does not throw', async () => {
   const saved = process.env.BASE_REF;

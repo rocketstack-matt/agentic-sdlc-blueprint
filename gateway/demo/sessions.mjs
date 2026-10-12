@@ -21,7 +21,8 @@ rmSync(dir, { recursive: true });
 
 // Per session: the substrings each step's output must contain, and must not.
 const expected = {
-  reset: [{ has: ['(main)', 'hub'] }],
+  // A recording is made from a clean tree; with CALM Hub the architecture is published, not failed.
+  reset: [{ has: ['(main)', 'hub'], not: ['uncommitted', ...(process.env.CALM_HUB_URL ? ['failed'] : [])] }],
   routine: [
     { has: ['CHG-0421', 'trade-api'] },
     { has: ['by author-agent'] },

@@ -14,7 +14,8 @@ run(async () => {
   git('checkout', '-q', '-B', 'main');
   git('config', 'user.name', 'merge-gateway');
   git('config', 'user.email', 'merge-gateway@example.invalid');
-  const dirty = execFileSync('git', ['status', '--porcelain'], { cwd: BLUEPRINT, encoding: 'utf8' }).trim() !== '';
+  // The demo's own recording is rewritten by every run, so it does not count.
+  const dirty = execFileSync('git', ['status', '--porcelain', '--', '.', ':(exclude)gateway/sessions.json'], { cwd: BLUEPRINT, encoding: 'utf8' }).trim() !== '';
   console.log(label('repo', `${relative(process.cwd(), paths.repo) || paths.repo} at ${short(git('rev-parse', 'main'), 7)} (main)`));
   if (dirty) console.log(label('', 'note: the blueprint has uncommitted changes; the guarded repository has its last commit only'));
   if (!hubEnabled()) { console.log(label('hub', 'off (set CALM_HUB_URL to publish the architecture and every decision)')); return; }

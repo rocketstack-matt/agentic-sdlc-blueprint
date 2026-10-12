@@ -5,7 +5,7 @@ import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-const ROOT = new URL('..', import.meta.url).pathname;
+const ROOT = new URL('../..', import.meta.url).pathname;
 const model = () => JSON.parse(readFileSync(join(ROOT, 'architecture/trade-capture.architecture.json'), 'utf8'));
 const validate = (doc) => {
   const dir = mkdtempSync(join(tmpdir(), 'model-'));
