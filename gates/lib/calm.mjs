@@ -143,11 +143,17 @@ const carriesPolicy = (arch) => /"ergo"\s*:/.test(JSON.stringify(arch.controls ?
  * The architecture on the base of the change: its controls decide, never the change's own copy of the model.
  * One exception, for bootstrapping: a base model that carries no ergo policy at all (before SPEC-002 merged)
  * cannot evaluate anything, so the working tree's model is used. Once the base carries a policy this never fires,
- * so a change cannot use it to remove its own controls.
+ * so a change cannot use it to remove its own controls. The fallback needs a base model that was read and parsed:
+ * if the base model cannot be read (unknown or unfetched ref, no model at that ref, invalid JSON) this throws, so
+ * the caller denies rather than evaluating the change against its own model.
  */
 export const baseArchitecture = (base = changeBase()) => {
   let arch;
-  try { arch = JSON.parse(git('show', `${base}:${ARCHITECTURE}`)); } catch { return loadArchitecture(); }
+  try {
+    arch = JSON.parse(git('show', `${base}:${ARCHITECTURE}`));
+  } catch (e) {
+    throw new Error(`The base model at ${base}:${ARCHITECTURE} could not be read: ${e.message}`);
+  }
   return carriesPolicy(arch) ? arch : loadArchitecture();
 };
 

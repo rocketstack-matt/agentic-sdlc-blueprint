@@ -7,7 +7,7 @@ import { spawnSync } from 'node:child_process';
 import { mkdirSync, mkdtempSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { ROOT, ARCHITECTURE, architectureSha, baseArchitecture, changeBase, changeInput } from './lib/calm.mjs';
+import { ROOT, ARCHITECTURE, architectureSha, baseArchitecture, changeBase, changeInput, sha256 } from './lib/calm.mjs';
 import { evaluateControls } from './lib/controls.mjs';
 
 const run = (cmd, args) => spawnSync(cmd, args, { cwd: ROOT, encoding: 'utf8', env: { ...process.env, NODE_NO_WARNINGS: '1' } });
@@ -29,10 +29,11 @@ const runners = {
   },
   controls: async () => {
     const base = changeBase();
-    const input = changeInput({ arch: baseArchitecture(base), base });
+    const arch = baseArchitecture(base);
+    const input = changeInput({ arch, base });
     const outcome = await evaluateControls(input, { stage: 'change' });
     mkdirSync(join(ROOT, 'evidence/out'), { recursive: true });
-    writeFileSync(join(ROOT, 'evidence/out/controls-report.json'), JSON.stringify({ comparedTo: base, commit: input.change.commit, spec: input.spec.id, architectureSha256: architectureSha(), policySha256: outcome.policySha, outcome }, null, 2));
+    writeFileSync(join(ROOT, 'evidence/out/controls-report.json'), JSON.stringify({ comparedTo: base, commit: input.change.commit, spec: input.spec.id, evaluatedArchitectureSha256: sha256(JSON.stringify(arch)), workingTreeArchitectureSha256: architectureSha(), policySha256: outcome.policySha, outcome }, null, 2));
     const findings = [
       ...(outcome.error ? [{ level: 'error', message: `The policy could not be evaluated: ${outcome.error}` }] : []),
       ...outcome.problems.map((message) => ({ level: 'error', message })),
