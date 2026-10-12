@@ -138,20 +138,26 @@ test('changeInput can evaluate a commit in another repository, scanning a checko
   const env = { ...process.env, GIT_AUTHOR_NAME: 't', GIT_AUTHOR_EMAIL: 't@example.invalid', GIT_COMMITTER_NAME: 't', GIT_COMMITTER_EMAIL: 't@example.invalid' };
   const g = (cwd, ...args) => execFileSync('git', args, { cwd, env, encoding: 'utf8' }).trim();
   try {
-    g(dir, 'clone', '--quiet', '--no-hardlinks', new URL('..', import.meta.url).pathname, repo);
+    g(dir, 'clone', '--quiet', '--no-hardlinks', ROOT, repo);
     g(repo, 'checkout', '-q', '-B', 'main');
     g(repo, 'checkout', '-q', '-b', 'agent/x');
     const config = join(repo, 'services/trade-api/src/config.ts');
     writeFileSync(config, readFileSync(config, 'utf8').replace('};', "  ledgerPath: process.env.POSITION_STORE_PATH ?? 'data/positions.json',\n};"));
-    g(repo, 'commit', '-qam', 'shortcut\n\nSpec: SPEC-001');
+    writeFileSync(join(repo, 'specs/SPEC-099-probe.md'), '---\nid: SPEC-099\ntitle: Probe\nstatus: approved\ncalm-nodes: [trade-api]\n---\n\n# SPEC-099 Probe\n');
+    g(repo, 'add', '-A');
+    g(repo, 'commit', '-qm', 'shortcut\n\nSpec: SPEC-099');
     const head = g(repo, 'rev-parse', 'HEAD');
     g(repo, 'worktree', 'add', '--detach', '--quiet', tree, head);
+    g(repo, 'checkout', '-q', 'main'); // repo's working tree no longer has the change: only the checkout of head does
     const arch = baseArchitecture('main', repo);
-    const input = changeInput({ arch, base: 'main', head, root: repo, treeRoot: tree, specId: 'SPEC-001', author: 'author-agent' });
+    const input = changeInput({ arch, base: 'main', head, root: repo, treeRoot: tree, specId: 'SPEC-099', author: 'author-agent' });
     assert.equal(input.change.commit, head);
-    assert.deepEqual(input.change.files, [{ path: 'services/trade-api/src/config.ts', node: 'trade-api' }]);
+    assert.deepEqual([...input.change.files].sort((a, b) => a.path.localeCompare(b.path)), [
+      { path: 'services/trade-api/src/config.ts', node: 'trade-api' },
+      { path: 'specs/SPEC-099-probe.md', node: null },
+    ]);
     assert.equal(input.change.author, 'author-agent');
-    assert.equal(input.spec.id, 'SPEC-001');
+    assert.deepEqual(input.spec, { id: 'SPEC-099', approved: true, nodes: ['trade-api'] }, 'the spec comes from the checkout of head');
     assert.ok(input.change.connections.some((c) => c.id === 'trade-api->client-ledger'), 'connections come from the checkout of head');
     assert.equal(observedConnections(loadArchitecture()).some((c) => c.id === 'trade-api->client-ledger'), false, 'the blueprint itself has no such connection');
   } finally {
