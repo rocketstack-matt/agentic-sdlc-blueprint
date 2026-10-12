@@ -2,7 +2,7 @@
 // each decision's control-evaluation decorators against that version. Off unless CALM_HUB_URL is set. It never throws:
 // a decision is made, logged and printed whether or not the Hub is reachable.
 import { createHash } from 'node:crypto';
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync, renameSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -14,8 +14,22 @@ const cfg = () => ({
   state: process.env.GATEWAY_HUB_STATE ?? join(fileURLToPath(new URL('..', import.meta.url)), '.hub-state.json'),
 });
 const empty = () => ({ architectureId: null, versions: {}, decorators: [] });
-const load = () => (existsSync(cfg().state) ? JSON.parse(readFileSync(cfg().state, 'utf8')) : empty());
-const save = (s) => writeFileSync(cfg().state, `${JSON.stringify(s, null, 2)}\n`);
+const load = () => {
+  try {
+    const s = JSON.parse(readFileSync(cfg().state, 'utf8'));
+    return { ...empty(), ...s, versions: s?.versions ?? {}, decorators: Array.isArray(s?.decorators) ? s.decorators : [] };
+  } catch { return empty(); } // missing, unreadable or corrupt state means nothing is known to have been created
+};
+const save = (s) => {
+  const { state } = cfg();
+  writeFileSync(`${state}.tmp`, `${JSON.stringify(s, null, 2)}\n`);
+  renameSync(`${state}.tmp`, state);
+};
+const idFrom = (res, pattern) => {
+  const id = Number(res.headers.get('location')?.match(pattern)?.[1]);
+  if (!Number.isInteger(id)) throw new Error(`no id in Location header: ${res.headers.get('location')}`);
+  return id;
+};
 const sha256 = (text) => createHash('sha256').update(text).digest('hex');
 
 export const hubEnabled = () => Boolean(cfg().url);
@@ -33,14 +47,23 @@ async function ensureNamespace() {
   if (!names.includes(ns)) await call('POST', '/api/calm/namespaces', { name: ns, description: 'Agentic SDLC blueprint: the governed trade capture demo' });
 }
 
+const deleted = async (path) => {
+  try { await call('DELETE', path); return true; } catch { return false; } // call() already treats 404 as success
+};
+
+// Every delete is attempted independently; only the ids whose delete failed stay in state, to be retried next reset.
 export async function resetHub() {
   if (!hubEnabled()) return;
-  const s = load();
   try {
-    for (const id of s.decorators) await call('DELETE', `/api/calm/namespaces/${cfg().ns}/decorators/${id}`);
-    if (s.architectureId) await call('DELETE', `/api/calm/namespaces/${cfg().ns}/architectures/${s.architectureId}`);
-  } catch { /* an unreachable hub leaves nothing to reset */ }
-  save(empty());
+    const s = load();
+    const left = empty();
+    for (const id of s.decorators) if (!(await deleted(`/api/calm/namespaces/${cfg().ns}/decorators/${id}`))) left.decorators.push(id);
+    if (s.architectureId && !(await deleted(`/api/calm/namespaces/${cfg().ns}/architectures/${s.architectureId}`))) {
+      left.architectureId = s.architectureId;
+      left.versions = s.versions;
+    }
+    save(left);
+  } catch { /* reset never throws */ }
 }
 
 export async function publishArchitecture(text) {
@@ -54,7 +77,7 @@ export async function publishArchitecture(text) {
     if (!s.architectureId) {
       await ensureNamespace();
       const res = await call('POST', `/api/calm/namespaces/${cfg().ns}/architectures`, body);
-      s.architectureId = Number(res.headers.get('location')?.match(/architectures\/(\d+)\//)?.[1]);
+      s.architectureId = idFrom(res, /architectures\/(\d+)\//);
     } else {
       await call('POST', `/api/calm/namespaces/${cfg().ns}/architectures/${s.architectureId}/versions/${version}`, body);
     }
@@ -70,7 +93,7 @@ export async function postDecorator(decorator) {
   if (!hubEnabled()) return null;
   try {
     const res = await call('POST', `/api/calm/namespaces/${cfg().ns}/decorators`, decorator);
-    const id = Number(res.headers.get('location')?.match(/decorators\/(\d+)/)?.[1]);
+    const id = idFrom(res, /decorators\/(\d+)/);
     const s = load();
     s.decorators.push(id);
     save(s);
