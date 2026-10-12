@@ -4,7 +4,7 @@
     "steps": [
       {
         "cmd": "node gateway/reset.mjs",
-        "out": "repo      .demo/repo at a7fbee1 (main)\n          note: the blueprint has uncommitted changes; the guarded repository has its last commit only\nhub       off (set CALM_HUB_URL to publish the architecture and every decision)"
+        "out": "repo      .demo/repo at 4a1ad04 (main)\nhub       off (set CALM_HUB_URL to publish the architecture and every decision)"
       }
     ]
   },
@@ -13,23 +13,23 @@
     "steps": [
       {
         "cmd": "node gateway/propose.mjs demo/changes/account-summary.json",
-        "out": "change    CHG-0421  Account summary endpoint on trade-api\nspec      SPEC-001\nauthor    author-agent\ncommit    ce40554 on agent/CHG-0421\nfiles     services/trade-api/src/app.ts\n          test/account-summary.test.ts\nnodes     trade-api\ndiff      sha256 8cf8584e8c958f15…, 62 lines"
+        "out": "change    CHG-0421  Account summary endpoint on trade-api\nspec      SPEC-001\nauthor    author-agent\ncommit    6000a2d on agent/CHG-0421\nfiles     services/trade-api/src/app.ts\n          test/account-summary.test.ts\nnodes     trade-api\ndiff      sha256 8cf8584e8c958f15…, 62 lines"
       },
       {
         "cmd": "node gateway/review.mjs CHG-0421 --as author-agent",
-        "out": "review  CHG-0421 ce40554  approve by author-agent  -> .demo/reviews/CHG-0421.author-agent.json"
+        "out": "review  CHG-0421 6000a2d  approve by author-agent  -> .demo/reviews/CHG-0421.author-agent.json"
       },
       {
         "cmd": "node gateway/merge.mjs CHG-0421 --review .demo/reviews/CHG-0421.author-agent.json",
-        "out": "DENY\n  Every change is reviewed by an approved reviewer who is not its author\n    ce405546e2ed64d5b56d917b3079a7fd4a3c3093: The author may not review its own change\n    ce405546e2ed64d5b56d917b3079a7fd4a3c3093: The reviewer is an approved reviewer\nlogged  decision 858c97f8  4 decorators"
+        "out": "DENY\n  Every change is reviewed by an approved reviewer who is not its author\n    ✗ 6000a2d: The author may not review its own change\n    ✗ 6000a2d: The reviewer is an approved reviewer\nlogged  decision 2810e5c8  4 decorators"
       },
       {
         "cmd": "node gateway/review.mjs CHG-0421 --as review-bot",
-        "out": "review  CHG-0421 ce40554  approve by review-bot  -> .demo/reviews/CHG-0421.review-bot.json"
+        "out": "review  CHG-0421 6000a2d  approve by review-bot  -> .demo/reviews/CHG-0421.review-bot.json"
       },
       {
         "cmd": "node gateway/merge.mjs CHG-0421 --review .demo/reviews/CHG-0421.review-bot.json",
-        "out": "ALLOW\n  main -> 1cb82a8 (merged CHG-0421)\nlogged  decision 26401e5b  4 decorators"
+        "out": "ALLOW\n  main -> d651abf (merged CHG-0421)\nlogged  decision 850334cc  4 decorators"
       }
     ]
   },
@@ -38,15 +38,15 @@
     "steps": [
       {
         "cmd": "node gateway/propose.mjs demo/changes/position-total.json",
-        "out": "change    CHG-0422  Position total endpoint on position-service\nspec      SPEC-001\nauthor    author-agent\ncommit    334f590 on agent/CHG-0422\nfiles     services/position-service/src/app.ts\n          test/position-total.test.ts\nnodes     position-service\ndiff      sha256 602b93816750cfc4…, 40 lines"
+        "out": "change    CHG-0422  Position total endpoint on position-service\nspec      SPEC-001\nauthor    author-agent\ncommit    7d49428 on agent/CHG-0422\nfiles     services/position-service/src/app.ts\n          test/position-total.test.ts\nnodes     position-service\ndiff      sha256 602b93816750cfc4…, 40 lines"
       },
       {
         "cmd": "node gateway/review.mjs CHG-0422 --as review-bot",
-        "out": "review  CHG-0422 334f590  approve by review-bot  -> .demo/reviews/CHG-0422.review-bot.json"
+        "out": "review  CHG-0422 7d49428  approve by review-bot  -> .demo/reviews/CHG-0422.review-bot.json"
       },
       {
         "cmd": "node gateway/merge.mjs CHG-0422 --review .demo/reviews/CHG-0422.review-bot.json",
-        "out": "DENY\n  Any change to a service that connects to the Client Ledger is approved by a human\n    position-service-to-client-ledger: A human approved this change\n    position-service-to-client-ledger: The approval is for this exact diff\n    … and 6 more\nlogged  decision 45b1e929  4 decorators"
+        "out": "DENY\n  Any change to a service that connects to the Client Ledger is approved by a human\n    ✗ position-service-to-client-ledger: A human approved this change\n    ✗ position-service-to-client-ledger: The approval is for this exact diff\n    … and 6 more\nlogged  decision 796cd6ff  4 decorators"
       }
     ]
   },
@@ -54,8 +54,8 @@
     "key": "approve",
     "steps": [
       {
-        "cmd": "APPROVE_CODE=XMMKFN node gateway/approve.mjs CHG-0422 --as alice --lines 12",
-        "out": "approval request  CHG-0422  commit 334f590  SPEC-001  by author-agent\ndiff sha256 602b93816750cfc476fdcecf583b72397e04010ed306045101bdb070cd0156d0\n  diff --git a/services/position-service/src/app.ts b/services/position-service/src/app.ts\n  index 257dd08cbfe65d39249d7c405e807f8bf89454c0..fe5ba7104b0ead3dbc8d56dbc61f469611ef441f 100644\n  --- a/services/position-service/src/app.ts\n  +++ b/services/position-service/src/app.ts\n  @@ -37,6 +37,12 @@ export function createApp(store: PositionStore): Server {\n           const account = decodeURIComponent(match[1]!);\n           return send(res, 200, { account, positions: store.read()[account] ?? {} });\n         }\n  +      const total = url.pathname.match(/^\\/positions\\/([^/]+)\\/total$/);\n  +      if (req.method === 'GET' && total) {\n  +        const account = decodeURIComponent(total[1]!);\n  +        const holdings = Object.values(store.read()[account] ?? {});\n  ... 27 more lines\nbinding code  XMMKFN\ntype the binding code to approve: XMMKFN  [stdin is not a tty: read from APPROVE_CODE]\napproved by alice (amr webauthn, mocked)\ntoken  jti bf9d5299  expires 15:31:36Z  bound to commit 334f590, diff 602b9381, SPEC-001  -> .demo/token.json"
+        "cmd": "APPROVE_CODE=PR9L2F node gateway/approve.mjs CHG-0422 --as alice --lines 12",
+        "out": "approval request  CHG-0422  commit 7d49428  SPEC-001  by author-agent\ndiff sha256 602b93816750cfc476fdcecf583b72397e04010ed306045101bdb070cd0156d0\n  diff --git a/services/position-service/src/app.ts b/services/position-service/src/app.ts\n  index 257dd08cbfe65d39249d7c405e807f8bf89454c0..fe5ba7104b0ead3dbc8d56dbc61f469611ef441f 100644\n  --- a/services/position-service/src/app.ts\n  +++ b/services/position-service/src/app.ts\n  @@ -37,6 +37,12 @@ export function createApp(store: PositionStore): Server {\n           const account = decodeURIComponent(match[1]!);\n           return send(res, 200, { account, positions: store.read()[account] ?? {} });\n         }\n  +      const total = url.pathname.match(/^\\/positions\\/([^/]+)\\/total$/);\n  +      if (req.method === 'GET' && total) {\n  +        const account = decodeURIComponent(total[1]!);\n  +        const holdings = Object.values(store.read()[account] ?? {});\n  ... 27 more lines\nbinding code  PR9L2F\ntype the binding code to approve: PR9L2F  [stdin is not a tty: read from APPROVE_CODE]\napproved by alice (amr webauthn, mocked)\ntoken  jti 7385455c  expires 15:35:59Z  bound to commit 7d49428, diff 602b9381, SPEC-001  -> .demo/token.json"
       }
     ]
   },
@@ -64,15 +64,15 @@
     "steps": [
       {
         "cmd": "node gateway/propose.mjs demo/changes/position-total-amended.json",
-        "out": "change    CHG-0423  Position total endpoint on position-service, one more line after approval\nspec      SPEC-001\nauthor    author-agent\ncommit    185fa15 on agent/CHG-0423\nfiles     services/position-service/src/app.ts\nnodes     position-service\ndiff      sha256 1ee00dd115d8c86c…, 19 lines"
+        "out": "change    CHG-0423  Position total endpoint on position-service, one more line after approval\nspec      SPEC-001\nauthor    author-agent\ncommit    daca40e on agent/CHG-0423\nfiles     services/position-service/src/app.ts\nnodes     position-service\ndiff      sha256 1ee00dd115d8c86c…, 19 lines"
       },
       {
         "cmd": "node gateway/review.mjs CHG-0423 --as review-bot",
-        "out": "review  CHG-0423 185fa15  approve by review-bot  -> .demo/reviews/CHG-0423.review-bot.json"
+        "out": "review  CHG-0423 daca40e  approve by review-bot  -> .demo/reviews/CHG-0423.review-bot.json"
       },
       {
         "cmd": "node gateway/merge.mjs CHG-0423 --review .demo/reviews/CHG-0423.review-bot.json --approval .demo/token.json",
-        "out": "DENY\n  Any change to a service that connects to the Client Ledger is approved by a human\n    position-service-to-client-ledger: The approval is for this exact diff\n    position-service-to-client-ledger: The approval is for this commit\nlogged  decision a924b22d  4 decorators"
+        "out": "DENY\n  Any change to a service that connects to the Client Ledger is approved by a human\n    ✗ position-service-to-client-ledger: The approval is for this exact diff\n    ✗ position-service-to-client-ledger: The approval is for this commit\nlogged  decision 6073d40f  4 decorators"
       }
     ]
   },
@@ -81,7 +81,7 @@
     "steps": [
       {
         "cmd": "node gateway/merge.mjs CHG-0422 --review .demo/reviews/CHG-0422.review-bot.json --approval .demo/token.json",
-        "out": "ALLOW\n  main -> e8dfca1 (merged CHG-0422)\nlogged  decision fcd27b83  4 decorators"
+        "out": "ALLOW\n  main -> 2fc37f0 (merged CHG-0422)\nlogged  decision 717ce501  4 decorators"
       }
     ]
   },
@@ -90,15 +90,15 @@
     "steps": [
       {
         "cmd": "node gateway/propose.mjs demo/changes/ledger-shortcut.json",
-        "out": "change    CHG-0424  Read positions straight from the ledger file in trade-api\nspec      SPEC-001\nauthor    author-agent\ncommit    615400f on agent/CHG-0424\nfiles     services/trade-api/src/config.ts\nnodes     trade-api\ndiff      sha256 2075c70f982f05b8…, 12 lines"
+        "out": "change    CHG-0424  Read positions straight from the ledger file in trade-api\nspec      SPEC-001\nauthor    author-agent\ncommit    78ec28e on agent/CHG-0424\nfiles     services/trade-api/src/config.ts\nnodes     trade-api\ndiff      sha256 2075c70f982f05b8…, 12 lines"
       },
       {
         "cmd": "node gateway/review.mjs CHG-0424 --as review-bot",
-        "out": "review  CHG-0424 615400f  approve by review-bot  -> .demo/reviews/CHG-0424.review-bot.json"
+        "out": "review  CHG-0424 78ec28e  approve by review-bot  -> .demo/reviews/CHG-0424.review-bot.json"
       },
       {
         "cmd": "node gateway/merge.mjs CHG-0424 --review .demo/reviews/CHG-0424.review-bot.json",
-        "out": "DENY\n  Every connection the code makes exists in the architecture\n    trade-api->client-ledger: The architecture has this connection\nlogged  decision 80a60f1a  4 decorators"
+        "out": "DENY\n  Every connection the code makes exists in the architecture\n    ✗ trade-api->client-ledger: The architecture has this connection\nlogged  decision 06ac9923  4 decorators"
       }
     ]
   },
@@ -107,23 +107,23 @@
     "steps": [
       {
         "cmd": "node gateway/propose.mjs demo/changes/architect-ledger-connection.json",
-        "out": "change    CHG-0425  Model: trade-api writes end-of-day snapshots to the Client Ledger\nspec      SPEC-003\nauthor    bob\ncommit    b577202 on agent/CHG-0425\nfiles     architecture/trade-capture.architecture.json\nnodes     none: no node owns these files\ndiff      sha256 6ed3c60d2db0a48c…, 29 lines"
+        "out": "change    CHG-0425  Model: trade-api writes end-of-day snapshots to the Client Ledger\nspec      SPEC-003\nauthor    bob\ncommit    b892324 on agent/CHG-0425\nfiles     architecture/trade-capture.architecture.json\nnodes     none: no node owns these files\ndiff      sha256 6ed3c60d2db0a48c…, 29 lines"
       },
       {
         "cmd": "node gateway/review.mjs CHG-0425 --as review-bot",
-        "out": "review  CHG-0425 b577202  approve by review-bot  -> .demo/reviews/CHG-0425.review-bot.json"
+        "out": "review  CHG-0425 b892324  approve by review-bot  -> .demo/reviews/CHG-0425.review-bot.json"
       },
       {
         "cmd": "node gateway/merge.mjs CHG-0425 --review .demo/reviews/CHG-0425.review-bot.json",
-        "out": "DENY\n  A change to anything no node owns other than documentation and tests, such as the architecture, the gates or the pipeline, is approved by a human\n    architecture/trade-capture.architecture.json: A human approved this change\n    architecture/trade-capture.architecture.json: The approval is for this exact diff\n    … and 6 more\nlogged  decision 53794028  4 decorators"
+        "out": "DENY\n  A change to anything no node owns other than documentation and tests, such as the architecture, the gates or the pipeline, is approved by a human\n    ✗ architecture/trade-capture.architecture.json: A human approved this change\n    ✗ architecture/trade-capture.architecture.json: The approval is for this exact diff\n    … and 6 more\nlogged  decision f347beb5  4 decorators"
       },
       {
-        "cmd": "APPROVE_CODE=5FX5QJ node gateway/approve.mjs CHG-0425 --as alice --lines 12",
-        "out": "approval request  CHG-0425  commit b577202  SPEC-003  by bob\ndiff sha256 6ed3c60d2db0a48c56c16f28977718f8393a40f66c8619852942054e31c3b837\n  diff --git a/architecture/trade-capture.architecture.json b/architecture/trade-capture.architectu...\n  index b2b41788be5734f35830f62e28b23dc38edbb290..475dad77d83e3f263830bc9bc810704ca7c05e52 100644\n  --- a/architecture/trade-capture.architecture.json\n  +++ b/architecture/trade-capture.architecture.json\n  @@ -323,6 +323,23 @@\n           }\n         }\n       },\n  +    {\n  +      \"unique-id\": \"trade-api-to-client-ledger\",\n  +      \"description\": \"Trade API writes end-of-day trade snapshots straight to the Client Ledger ...\n  +      \"relationship-type\": {\n  ... 16 more lines\nbinding code  5FX5QJ\ntype the binding code to approve: 5FX5QJ  [stdin is not a tty: read from APPROVE_CODE]\napproved by alice (amr webauthn, mocked)\ntoken  jti 9bcd2d0e  expires 15:31:38Z  bound to commit b577202, diff 6ed3c60d, SPEC-003  -> .demo/token.json"
+        "cmd": "APPROVE_CODE=ZG5PH8 node gateway/approve.mjs CHG-0425 --as alice --lines 12",
+        "out": "approval request  CHG-0425  commit b892324  SPEC-003  by bob\ndiff sha256 6ed3c60d2db0a48c56c16f28977718f8393a40f66c8619852942054e31c3b837\n  diff --git a/architecture/trade-capture.architecture.json b/architecture/trade-capture.architectu...\n  index b2b41788be5734f35830f62e28b23dc38edbb290..475dad77d83e3f263830bc9bc810704ca7c05e52 100644\n  --- a/architecture/trade-capture.architecture.json\n  +++ b/architecture/trade-capture.architecture.json\n  @@ -323,6 +323,23 @@\n           }\n         }\n       },\n  +    {\n  +      \"unique-id\": \"trade-api-to-client-ledger\",\n  +      \"description\": \"Trade API writes end-of-day trade snapshots straight to the Client Ledger ...\n  +      \"relationship-type\": {\n  ... 16 more lines\nbinding code  ZG5PH8\ntype the binding code to approve: ZG5PH8  [stdin is not a tty: read from APPROVE_CODE]\napproved by alice (amr webauthn, mocked)\ntoken  jti e1ec0b69  expires 15:36:02Z  bound to commit b892324, diff 6ed3c60d, SPEC-003  -> .demo/token.json"
       },
       {
         "cmd": "node gateway/merge.mjs CHG-0425 --review .demo/reviews/CHG-0425.review-bot.json --approval .demo/token.json",
-        "out": "ALLOW\n  main -> d57e5aa (merged CHG-0425)\n  architecture changed on main\nlogged  decision 1d868ca5  4 decorators"
+        "out": "ALLOW\n  main -> 7fca979 (merged CHG-0425)\n  architecture changed on main\nlogged  decision 4e4046ca  4 decorators"
       }
     ]
   },
@@ -132,15 +132,15 @@
     "steps": [
       {
         "cmd": "node gateway/propose.mjs demo/changes/trade-count.json",
-        "out": "change    CHG-0426  Trade count endpoint on trade-api\nspec      SPEC-001\nauthor    author-agent\ncommit    0eb286d on agent/CHG-0426\nfiles     services/trade-api/src/app.ts\nnodes     trade-api\ndiff      sha256 41204b0e5a9a655f…, 15 lines"
+        "out": "change    CHG-0426  Trade count endpoint on trade-api\nspec      SPEC-001\nauthor    author-agent\ncommit    8edf6a6 on agent/CHG-0426\nfiles     services/trade-api/src/app.ts\nnodes     trade-api\ndiff      sha256 41204b0e5a9a655f…, 15 lines"
       },
       {
         "cmd": "node gateway/review.mjs CHG-0426 --as review-bot",
-        "out": "review  CHG-0426 0eb286d  approve by review-bot  -> .demo/reviews/CHG-0426.review-bot.json"
+        "out": "review  CHG-0426 8edf6a6  approve by review-bot  -> .demo/reviews/CHG-0426.review-bot.json"
       },
       {
         "cmd": "node gateway/merge.mjs CHG-0426 --review .demo/reviews/CHG-0426.review-bot.json",
-        "out": "DENY\n  Any change to a service that connects to the Client Ledger is approved by a human\n    trade-api-to-client-ledger: A human approved this change\n    trade-api-to-client-ledger: The approval is for this exact diff\n    … and 6 more\nlogged  decision 77e3e374  4 decorators"
+        "out": "DENY\n  Any change to a service that connects to the Client Ledger is approved by a human\n    ✗ trade-api-to-client-ledger: A human approved this change\n    ✗ trade-api-to-client-ledger: The approval is for this exact diff\n    … and 6 more\nlogged  decision 87e96fe5  4 decorators"
       }
     ]
   },
@@ -149,7 +149,7 @@
     "steps": [
       {
         "cmd": "node gateway/evidence.mjs --last 3",
-        "out": "decisions.ndjson  9 decisions, last 3, each recorded as control-evaluation decorators\n2026-10-12T15:21:38.749Z  DENY  CHG-0425 b577202  decision 53794028\n    architecture sha256:6430a0a23827074c…  policy sha256:76c558b1f8914a47…\n    met            sdlc-prev-017-service-dependency  on trade-capture\n    met            sdlc-prev-004-requirements-repository  on trade-capture\n    not-applicable client-ledger-human-approval  on client-ledger\n    not-met        sdlc-prev-001-code-review  on trade-capture\n2026-10-12T15:21:39.186Z  ALLOW  CHG-0425 b577202  decision 1d868ca5\n    architecture sha256:6430a0a23827074c…  policy sha256:76c558b1f8914a47…\n    met            sdlc-prev-017-service-dependency  on trade-capture\n    met            sdlc-prev-004-requirements-repository  on trade-capture\n    not-applicable client-ledger-human-approval  on client-ledger\n    met            sdlc-prev-001-code-review  on trade-capture\n2026-10-12T15:21:39.848Z  DENY  CHG-0426 0eb286d  decision 77e3e374\n    architecture sha256:27e14f3d95b6c38d…  policy sha256:76c558b1f8914a47…\n    met            sdlc-prev-017-service-dependency  on trade-api\n    met            sdlc-prev-004-requirements-repository  on trade-api\n    not-met        client-ledger-human-approval  on trade-api, trade-api-to-client-ledger\n    met            sdlc-prev-001-code-review  on trade-api"
+        "out": "decisions.ndjson  9 decisions, last 3, each recorded as control-evaluation decorators\n2026-10-12T15:26:01.948Z  DENY  CHG-0425 b892324  decision f347beb5\n    architecture sha256:6430a0a23827074c…  policy sha256:76c558b1f8914a47…\n    met            sdlc-prev-017-service-dependency  on trade-capture\n    met            sdlc-prev-004-requirements-repository  on trade-capture\n    not-applicable client-ledger-human-approval  on client-ledger\n    not-met        sdlc-prev-001-code-review  on trade-capture\n2026-10-12T15:26:02.391Z  ALLOW  CHG-0425 b892324  decision 4e4046ca\n    architecture sha256:6430a0a23827074c…  policy sha256:76c558b1f8914a47…\n    met            sdlc-prev-017-service-dependency  on trade-capture\n    met            sdlc-prev-004-requirements-repository  on trade-capture\n    not-applicable client-ledger-human-approval  on client-ledger\n    met            sdlc-prev-001-code-review  on trade-capture\n2026-10-12T15:26:03.047Z  DENY  CHG-0426 8edf6a6  decision 87e96fe5\n    architecture sha256:27e14f3d95b6c38d…  policy sha256:76c558b1f8914a47…\n    met            sdlc-prev-017-service-dependency  on trade-api\n    met            sdlc-prev-004-requirements-repository  on trade-api\n    not-met        client-ledger-human-approval  on trade-api, trade-api-to-client-ledger\n    met            sdlc-prev-001-code-review  on trade-api"
       }
     ]
   }
