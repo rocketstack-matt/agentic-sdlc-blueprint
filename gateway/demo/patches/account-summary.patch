@@ -1,5 +1,5 @@
 diff --git a/services/trade-api/src/app.ts b/services/trade-api/src/app.ts
-index 35dacb3..7467261 100644
+index 35dacb33afe86228a3d04f04a234aa3a1c88bd5a..55c8824691412a21687a4a99b8e864ea0a7d69f7 100644
 --- a/services/trade-api/src/app.ts
 +++ b/services/trade-api/src/app.ts
 @@ -44,6 +44,16 @@ export function createApp({ store, positionServiceUrl }: Deps): Server {
@@ -9,8 +9,8 @@ index 35dacb3..7467261 100644
 +      const summary = url.pathname.match(/^\/accounts\/([^/]+)\/summary$/);
 +      if (req.method === 'GET' && summary) {
 +        const account = decodeURIComponent(summary[1]!);
-+        // SPEC-001 + CALM: positions are owned by position-service. We reach them only over
-+        // relationship trade-api-to-position-service, never by reading the position store.
++        // SPEC-001: positions are owned by position-service. We reach them only over the modelled connection
++        // trade-api-to-position-service, never by reading the Client Ledger.
 +        const upstream = await fetch(`${positionServiceUrl}/positions/${encodeURIComponent(account)}`).catch(() => undefined);
 +        if (!upstream?.ok) return send(res, 502, { error: 'position-service unavailable' });
 +        const { positions } = (await upstream.json()) as { positions: Record<string, number> };
@@ -21,7 +21,7 @@ index 35dacb3..7467261 100644
      } catch (err) {
 diff --git a/test/account-summary.test.ts b/test/account-summary.test.ts
 new file mode 100644
-index 0000000..cce7cc3
+index 0000000000000000000000000000000000000000..cce7cc39c0c767e1afe7a85ed6133b743394ca4c
 --- /dev/null
 +++ b/test/account-summary.test.ts
 @@ -0,0 +1,34 @@

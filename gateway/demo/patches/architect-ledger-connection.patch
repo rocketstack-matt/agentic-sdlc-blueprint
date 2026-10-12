@@ -1,0 +1,28 @@
+diff --git a/architecture/trade-capture.architecture.json b/architecture/trade-capture.architecture.json
+index 324a89d7a88c22d558e0e59b7de7f4f31e7cef51..d32e34e4692fa23fdd119faa66b419cd1416f3ca 100644
+--- a/architecture/trade-capture.architecture.json
++++ b/architecture/trade-capture.architecture.json
+@@ -323,6 +323,23 @@
+         }
+       }
+     },
++    {
++      "unique-id": "trade-api-to-client-ledger",
++      "description": "Trade API writes end-of-day trade snapshots straight to the Client Ledger (SPEC-003).",
++      "relationship-type": {
++        "connects": {
++          "source": {
++            "node": "trade-api"
++          },
++          "destination": {
++            "node": "client-ledger",
++            "interfaces": [
++              "client-ledger-file"
++            ]
++          }
++        }
++      }
++    },
+     {
+       "unique-id": "position-service-to-client-ledger",
+       "description": "Persist positions",

@@ -1,0 +1,14 @@
+diff --git a/services/trade-api/src/app.ts b/services/trade-api/src/app.ts
+index 55c8824691412a21687a4a99b8e864ea0a7d69f7..710aa2f0624bd4e1c20cb2dbd562b575727248e4 100644
+--- a/services/trade-api/src/app.ts
++++ b/services/trade-api/src/app.ts
+@@ -54,6 +54,9 @@ export function createApp({ store, positionServiceUrl }: Deps): Server {
+         const { positions } = (await upstream.json()) as { positions: Record<string, number> };
+         return send(res, 200, { account, trades: store.all().filter((t) => t.account === account), positions });
+       }
++      if (req.method === 'GET' && url.pathname === '/trades/count') {
++        return send(res, 200, { count: store.all().length });
++      }
+       if (url.pathname === '/health') return send(res, 200, { status: 'ok' });
+       return send(res, 404, { error: 'not found' });
+     } catch (err) {

@@ -1,0 +1,18 @@
+diff --git a/services/position-service/src/app.ts b/services/position-service/src/app.ts
+index 257dd08cbfe65d39249d7c405e807f8bf89454c0..dbcd26685a21912493b2eda75a705df72d23b5a5 100644
+--- a/services/position-service/src/app.ts
++++ b/services/position-service/src/app.ts
+@@ -37,6 +37,13 @@ export function createApp(store: PositionStore): Server {
+         const account = decodeURIComponent(match[1]!);
+         return send(res, 200, { account, positions: store.read()[account] ?? {} });
+       }
++      const total = url.pathname.match(/^\/positions\/([^/]+)\/total$/);
++      if (req.method === 'GET' && total) {
++        const account = decodeURIComponent(total[1]!);
++        const holdings = Object.values(store.read()[account] ?? {});
++        res.setHeader('x-total-source', 'client-ledger');
++        return send(res, 200, { account, total: holdings.reduce((sum, q) => sum + q, 0) });
++      }
+       if (url.pathname === '/health') return send(res, 200, { status: 'ok' });
+       return send(res, 404, { error: 'not found' });
+     } catch (err) {

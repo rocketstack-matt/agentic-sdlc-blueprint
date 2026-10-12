@@ -1,0 +1,39 @@
+diff --git a/services/position-service/src/app.ts b/services/position-service/src/app.ts
+index 257dd08cbfe65d39249d7c405e807f8bf89454c0..fe5ba7104b0ead3dbc8d56dbc61f469611ef441f 100644
+--- a/services/position-service/src/app.ts
++++ b/services/position-service/src/app.ts
+@@ -37,6 +37,12 @@ export function createApp(store: PositionStore): Server {
+         const account = decodeURIComponent(match[1]!);
+         return send(res, 200, { account, positions: store.read()[account] ?? {} });
+       }
++      const total = url.pathname.match(/^\/positions\/([^/]+)\/total$/);
++      if (req.method === 'GET' && total) {
++        const account = decodeURIComponent(total[1]!);
++        const holdings = Object.values(store.read()[account] ?? {});
++        return send(res, 200, { account, total: holdings.reduce((sum, q) => sum + q, 0) });
++      }
+       if (url.pathname === '/health') return send(res, 200, { status: 'ok' });
+       return send(res, 404, { error: 'not found' });
+     } catch (err) {
+diff --git a/test/position-total.test.ts b/test/position-total.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..a26a92757d822e66d6cd8ea2e78a8193cf97ed76
+--- /dev/null
++++ b/test/position-total.test.ts
+@@ -0,0 +1,16 @@
++import { test, after } from 'node:test';
++import assert from 'node:assert/strict';
++import { createApp } from '../services/position-service/src/app.ts';
++import { PositionStore } from '../services/position-service/src/store.ts';
++import { listen, tempFile } from './helpers.ts';
++
++const store = new PositionStore(tempFile('positions.json'));
++const app = createApp(store);
++const url = await listen(app);
++after(() => app.close());
++
++test('SPEC-001: position total sums an account\'s holdings', async () => {
++  store.write({ 'ACC-3': { 'VOD.L': 60, 'BARC.L': 15 } });
++  const body = await (await fetch(`${url}/positions/ACC-3/total`)).json();
++  assert.deepEqual(body, { account: 'ACC-3', total: 75 });
++});

@@ -1,0 +1,11 @@
+diff --git a/services/trade-api/src/config.ts b/services/trade-api/src/config.ts
+index e072ff37347e960eb567e00ab63d11aaf005656e..ca7f21f0024dcb62b505f67663a403f849cecdb3 100644
+--- a/services/trade-api/src/config.ts
++++ b/services/trade-api/src/config.ts
+@@ -5,4 +5,6 @@ export const config = {
+   port: Number(process.env.TRADE_API_PORT ?? 4001),
+   storePath: process.env.TRADE_STORE_PATH ?? 'data/trades.json',
+   positionServiceUrl: process.env.POSITION_SERVICE_URL ?? 'http://localhost:4002',
++  // Quicker than asking position-service: read the ledger file directly.
++  ledgerPath: process.env.POSITION_STORE_PATH ?? 'data/positions.json',
+ };
