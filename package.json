@@ -24,6 +24,7 @@
   "devDependencies": {
     "@finos/calm-cli": "^1.60.1",
     "@modelcontextprotocol/sdk": "^1.0.0",
+    "@open-policy-agent/opa-wasm": "^1.10.0",
     "@types/node": "^22.0.0",
     "ajv": "^8.20.0",
     "js-yaml": "^4.3.2",
