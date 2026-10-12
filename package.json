@@ -15,11 +15,7 @@
     "typecheck": "tsc --noEmit",
     "calm:validate": "calm validate -p architecture/governed-service.pattern.json -a architecture/trade-capture.architecture.json -u architecture/url-mapping.json -f pretty",
     "calm:context": "node agent/calm-context.mjs",
-    "gate:spec": "node gates/spec-check.mjs",
-    "gate:drift": "node gates/drift-check.mjs",
-    "gate:review": "node gates/review-router.mjs",
-    "gates": "node gates/run-all.mjs",
-    "evidence": "node gates/evidence.mjs"
+    "gates": "node gates/check.mjs"
   },
   "devDependencies": {
     "@finos/calm-cli": "^1.60.1",

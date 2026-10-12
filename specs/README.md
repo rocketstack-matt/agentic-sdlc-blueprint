@@ -7,7 +7,6 @@ Each spec is a version-controlled Markdown file whose front matter pins it to th
 | `id`, `status` | only `approved` specs may be implemented |
 | `calm-nodes` | the only nodes a change under this spec may touch |
 | `calm-relationships` | the connections the change is expected to use |
-| `model-change` | the nodes or relationships this spec adds or alters in the model, if any. `gates/model-diff.mjs` blocks any other model change |
+| `model-change` | the nodes or relationships this spec adds or alters in the model, if any |
 
-`npm run gate:spec` fails if a spec names a node that does not exist, if a code change names no spec,
-or if the diff strays outside the nodes its spec declares.
+The requirements control in the model (SDLC-PREV-004, evaluated by `npm run gates`) blocks a change other than documentation that names no approved spec, or that touches a node its spec does not declare. A model change is a change to a file no node owns, so it needs a human approver at merge.

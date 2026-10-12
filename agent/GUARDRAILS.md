@@ -6,7 +6,7 @@ blueprint applies and where. It is intentionally short: two mitigations, fully w
 
 | AIGF mitigation | How this repo applies it | Where |
 | --- | --- | --- |
-| [AIR-PREV-018 Agent Authority Least Privilege Framework](https://air-governance-framework.finos.org/mitigations/mi-18_agent-authority-least-privilege-framework.html) | The MCP server is read-only: it can describe the architecture and run gates, it cannot change the model, the gates or the pipeline. Scope is narrowed per task: a spec names the CALM nodes the agent may touch and `spec-check` enforces it. | `agent/mcp/`, `gates/spec-check.mjs` |
+| [AIR-PREV-018 Agent Authority Least Privilege Framework](https://air-governance-framework.finos.org/mitigations/mi-18_agent-authority-least-privilege-framework.html) | The MCP server is read-only: it can describe the architecture and run gates, it cannot change the model, the gates or the pipeline. Scope is narrowed per task: a spec names the CALM nodes the agent may touch and the requirements control (SDLC-PREV-004) enforces it. | `agent/mcp/`, `gates/check.mjs` |
 | [AIR-PREV-019 Tool Chain Validation and Sanitization](https://air-governance-framework.finos.org/mitigations/mi-19_tool-chain-validation-and-sanitization.html) | The agent reaches the model and the gates only through fixed tools whose parameters select from the model (a spec id, a node id, a repo path) and are never executed. The tools run fixed commands; the agent supplies no command text. | `agent/mcp/`, `agent/context.mjs` |
 
 The gates are not an AIGF mitigation. AIR-PREV-019 as written covers validating tool selection and tool parameters;

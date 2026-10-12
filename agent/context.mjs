@@ -11,20 +11,13 @@ export function contextForNode(nodeId) {
   const node = nodeById(arch, nodeId);
   if (!node) return { error: `No CALM node "${nodeId}". Known nodes: ${arch.nodes.map((n) => n['unique-id']).join(', ')}` };
   const edges = modelledEdges(arch);
-  const forbidden = arch.nodes
-    .filter((n) => n.controls?.['sdlc-prev-017-service-dependency'])
-    .map((n) => ({ node: n['unique-id'], allowed: n.controls['sdlc-prev-017-service-dependency'].requirements[0].config['allowed-sources'] }))
-    .filter((r) => !r.allowed.includes(nodeId))
-    .map((r) => `${r.node} (only ${r.allowed.join(', ')} may connect)`);
   return {
-    node: { id: nodeId, name: node.name, description: node.description, sourcePath: node.metadata?.['source-path'] ?? null,
-            criticalityTier: node.metadata?.['criticality-tier'] ?? null, dataClassification: node.metadata?.['data-classification'] ?? null },
+    node: { id: nodeId, name: node.name, description: node.description, sourcePath: node.metadata?.['source-path'] ?? null },
     mayConnectTo: edges.filter((e) => e.source === nodeId).map((e) => ({ node: e.destination, relationship: e.id })),
     calledBy: edges.filter((e) => e.destination === nodeId).map((e) => ({ node: e.source, relationship: e.id })),
-    mustNotConnectTo: forbidden,
     nodeControls: controlsOf(node),
     systemControls: controlsOf(arch),
-    rule: 'Any connection not listed in mayConnectTo is architectural drift and will be blocked by gates/drift-check.mjs. If the spec cannot be met within these connections, stop and propose a model change for human review. Do not edit architecture/ to make a gate pass.',
+    rule: 'Any connection not listed in mayConnectTo is architectural drift: service dependency control (SDLC-PREV-017) blocks it. If the spec cannot be met within these connections, stop and propose a model change for human review. Do not edit architecture/ to make a gate pass.',
   };
 }
 
@@ -36,5 +29,5 @@ export function contextForPath(path) {
 export function specContext(specId) {
   const spec = loadSpecs().find((s) => s.id === specId);
   if (!spec) return { error: `No spec ${specId}` };
-  return { spec, scope: (spec['calm-nodes'] ?? []).map(contextForNode), rule: `Only touch code owned by: ${(spec['calm-nodes'] ?? []).join(', ')}. gates/spec-check.mjs blocks anything else.` };
+  return { spec, scope: (spec['calm-nodes'] ?? []).map(contextForNode), rule: `Only touch code owned by: ${(spec['calm-nodes'] ?? []).join(', ')}. The requirements control (SDLC-PREV-004) blocks anything else.` };
 }
