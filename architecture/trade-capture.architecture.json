@@ -21,7 +21,7 @@
       "unique-id": "trade-api",
       "node-type": "service",
       "name": "Trade API",
-      "description": "Accepts and lists trades. Must obtain positions from position-service, never from the position store.",
+      "description": "Accepts and lists trades. Must obtain positions from position-service, never from the Client Ledger.",
       "interfaces": [
         {
           "unique-id": "trade-api-http",
@@ -38,7 +38,7 @@
       "unique-id": "position-service",
       "node-type": "service",
       "name": "Position Service",
-      "description": "Sole owner of position calculation and of the position store.",
+      "description": "Sole owner of position calculation and of the Client Ledger.",
       "interfaces": [
         {
           "unique-id": "position-service-http",
@@ -357,7 +357,7 @@
   ],
   "controls": {
     "sdlc-prev-001-code-review": {
-      "description": "Every change is reviewed by an approved reviewer who is not its author. A change to anything no node owns, such as the model, the gates or the pipeline, also needs a human approver.",
+      "description": "Every change is reviewed by an approved reviewer who is not its author. A change to anything no node owns, other than documentation and tests, such as the model, the gates or the pipeline, also needs a human approver.",
       "requirements": [
         {
           "requirement-url": "https://hub.calm.finos.org/calm/domains/finos-sdlc-common-controls/controls/sdlc-prev-001-code-review/requirement/versions/1.0.0",

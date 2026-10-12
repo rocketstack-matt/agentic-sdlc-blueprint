@@ -30,9 +30,9 @@ else:
 | | What it is | Where |
 | --- | --- | --- |
 | **The model** | The system in CALM, with the catalog's controls attached to the parts they govern, as data | [`architecture/`](architecture/) |
-| **The policy** | Deny by default. Its data is the model, so the code review control's config is what it reads | [`gateway/policy/`](gateway/policy/) |
-| **The gate** | A merge gateway: nothing reaches `main` without a yes | [`gateway/`](gateway/) |
-| **The evidence** | Every decision logged with the hashes of the change, the model and the policy it was decided with | `gateway/decisions.ndjson`, [`gates/evidence.mjs`](gates/evidence.mjs) |
+| **The policy** | The controls carry their policy as ergo requirements in the model; one generic module evaluates them | [`gates/policy/`](gates/policy/) |
+| **The gate** | The merge gateway and `gates/check.mjs` | [`gateway/`](gateway/), [`gates/`](gates/) |
+| **The evidence** | Every decision as CALM control-evaluation decorators, on CALM Hub; the CI evidence bundle | [`gateway/`](gateway/), `evidence/out/` |
 
 The agent is deliberately not one of the four. The best agent and the worst agent meet the same gate.
 
@@ -46,41 +46,42 @@ there, on your changes, and writes your evidence.
 
 ```sh
 git clone https://github.com/<you>/agentic-sdlc-blueprint && cd agentic-sdlc-blueprint
-npm install && npm test && npm run gates        # the six checks on a clean tree: ADMISSIBLE
+npm install && npm test && npm run gates        # the gates on a clean tree: ADMISSIBLE
 
-cd gateway && npm install
-bash run-demo.sh                                # the talk's second half, every verdict checked
+bash gateway/run-demo.sh                        # the demo the talk shows, every verdict checked
+CALM_HUB_URL=http://localhost:8080 bash gateway/run-demo.sh   # the same, published to a local CALM Hub
 ```
 
-What the demo shows, one idea per step; the gateway's [README](gateway/README.md) has each command:
+What the demo shows, one idea per moment; the gateway's [README](gateway/README.md) has each command:
 
-1. The author agent reviews its own change. **DENY**: "author may not review its own change", the catalog's own
-   requirement, read from the model, not written into the gate.
-2. The approved review engine reviews a tier 2 change. **ALLOW**: tier by risk, no human needed.
-3. A change to a tier 1 service. **DENY**: human approval required. The agent can ask for one. It cannot mint one.
-4. The approval service renders the real diff from the repository, never the agent's summary of it, and mints a
-   token bound to the commit and the hash of the diff: single use, ten minutes.
-5. The agent amends one line and presents the same token. **DENY**: bound to a different diff. The same token
-   twice: **DENY**, already used.
-6. The approved change. **ALLOW**, and the decision log line is the evidence: who reviewed, who approved, and the
-   hashes of the change, the model and the policy.
+1. **A routine change.** The author agent reviews its own change: **DENY**, in the catalog's words. The approved
+   review bot reviews it: **ALLOW**, and `main` moves.
+2. **The Client Ledger.** A change to `position-service`, which connects to the ledger: **DENY** until a human
+   approves. The approval renders the real diff from the repository. Changing one line after approval kills the
+   approval.
+3. **The shortcut.** The agent makes trade-api read the ledger's file directly: **DENY**, that connection is not in
+   the architecture.
+4. **The architect's change.** The architect adds `trade-api -> client-ledger` to the model: a change no node owns,
+   so it needs a human too. On merge the new architecture is published as the next version. The same kind of
+   trade-api change that merged in moment 1 is now denied: the diagram changed, so the control followed.
 
 To see the pipeline run on your own changes, enable Actions on your fork (GitHub disables workflows on forks until
 you do) and open a pull request there.
 
 ## What enforces what
 
-The six gates in [`gates/`](gates/) run on every change in CI (`npm run gates`) and are the checks a pipeline
-feeds a gateway. Today the gateway and the gates run side by side.
+`gates/check.mjs` runs on every change in CI (`npm run gates`): it validates the model, runs the tests and evaluates
+every control's ergo requirements that apply in the pipeline. The merge gateway evaluates the same requirements, with
+the same evaluator, at stage `merge`, where the review and any approval are known.
 
 | Catalog id | Control | Attached in CALM to | Enforced by |
 | --- | --- | --- | --- |
-| SDLC-PREV-001 | Code Review | system | the gateway's policy (the author may not review, approved review engines, a human approval bound to the change for tier 1 and control plane changes); `gates/review-router.mjs` picks the review mode from the same control |
-| SDLC-PREV-004 | Requirements Repository | system | the policy's spec scope check; `gates/spec-check.mjs`; `specs/` |
-| SDLC-PREV-012 | Deployment Gating | system | `gates/run-all.mjs` (the blocking gate list lives in the model) |
-| SDLC-PREV-014 | Test Evidence Retention | system | `gates/evidence.mjs`; the gateway's decision log |
-| SDLC-PREV-016 | Test Execution and Sign-Off | n/a | the `tests` gate |
-| SDLC-PREV-017 | Service Dependency Control | `position-store` node | `gates/drift-check.mjs`, `gates/model-diff.mjs` (a model change must be declared by its spec) |
+| SDLC-PREV-001 | Code Review | system | `code-review` (an approved reviewer who is not the author) and `control-plane-human-approval` (a change to a file no node owns, other than documentation and tests, needs a human approval bound to the commit and the diff); the merge gateway |
+| SDLC-PREV-001 | Client Ledger human approval | `client-ledger` node | `client-ledger-human-approval` (a change to any service that connects to the Client Ledger needs a human approval bound to the commit and the diff); the merge gateway |
+| SDLC-PREV-004 | Requirements Repository | system | `change-names-approved-spec` and `requirements-scope` (a change names an approved spec in `specs/` and touches only the nodes it declares); CI and the merge gateway |
+| SDLC-PREV-017 | Service Dependency Control | system | `service-dependency` (every connection the code makes is a connection in the architecture); CI and the merge gateway |
+| SDLC-PREV-012 | Deployment Gating | system | `gates/check.mjs` runs the gates the model names; any failure blocks |
+| SDLC-PREV-014 | Test Evidence Retention | system | `evidence/out/gates.json`; the merge gateway's control-evaluation decorators |
 | SDLC-PREV-007, -009, -010 | Dependency scanning, SBOM, secret detection | n/a | `.github/workflows/governed-sdlc.yml` |
 
 Risks in view: SDLC-OP-007 Configuration Drift, SDLC-SEC-008 Unauthorised Change, SDLC-RC-005 Audit and Compliance
@@ -90,8 +91,8 @@ Evidence Failure.
 
 ```
 architecture/   the CALM 1.2 model, the pattern that enforces the controls, the node and interface Standards, copies of the catalog's control requirement documents and their Standard from CALM Hub, URL mapping for offline validation
-gateway/        the merge gateway: the policy (Rego, compiled to WebAssembly), the approval service, the decision log, the demo
-gates/          dependency-free Node scripts: spec-check, drift-check, model-diff, review-router, run-all, evidence
+gateway/        the merge gateway, its demo, the decorator Standard copy
+gates/          gates/check.mjs, gates/lib (facts and the evaluator), gates/policy (ergo, the generic entrypoint, the built module)
 specs/          version-controlled requirements, pinned to CALM nodes
 services/       two tiny Node/TypeScript services (no framework, no database server)
 agent/          CALM context for agents: shared logic, a CLI, a read-only MCP server, the agent guardrails
@@ -106,18 +107,20 @@ AGENTS.md       the instructions any coding agent gets
 - The approval ceremony is mocked. A terminal prompt where the approver types a binding code stands in for a
   passkey on a device the agent runtime cannot reach. In a bank the standards are there: CIBA for the out-of-band
   request, WebAuthn for the person, RFC 9396 for binding the token to the exact action.
-- Two keys the policy needs on the code review control, the approved review engines and the shape of a human
-  approval, are added in memory by the gateway until they are added to the model and required by the pattern.
-- The gateway and the six gates run side by side; the gates' results are not yet an input to the policy.
+- CI reads the policy module and the evaluator from the change itself; the gateway reads them from its own checkout.
+  In a bank both come from a protected source, not the change.
 - Agent identity is a string in a signed record. In a bank it is a platform-issued workload identity, and the
-  review engine is recorded as the control's approved tool identity.
-- `drift-check` is a convention-based scanner (env bindings and cross-node imports), not a general solution.
-  Real estates need richer signals: IaC, service mesh config, OpenAPI clients, runtime traces.
-- Evidence is written to disk and a CI artefact. Immutability and retention are yours to provide. The CALM evidence
-  documents are not validated against the meta schema: the CLI validates architectures and patterns, not evidence.
+  approved reviewer is recorded as the control's approved tool identity.
+- The service dependency control finds connections with a convention-based scanner (env bindings and cross-node
+  imports), not a general solution. Real estates need richer signals: IaC, service mesh config, OpenAPI clients,
+  runtime traces.
+- Evidence is written to disk, a CI artefact and, when `CALM_HUB_URL` is set, CALM Hub. Immutability and retention
+  are yours to provide. The decorators are validated against the control-evaluation decorator Standard; the CI
+  evidence bundle is hashed JSON, not a CALM document.
 - The pattern requires the system-level controls, pins each to its catalog document, fixes the parameters the gates
-  read, and checks the config of any node that carries SDLC-PREV-017. It cannot know which node should carry that
-  control; `position-store` does. That stays a modelling decision.
+  read, and requires an ergo policy on any control attached to a node. It cannot know which node should carry a
+  control; the human approval control sits on `client-ledger` because that is where the risk is. That stays a
+  modelling decision.
 
 ## Contributing
 

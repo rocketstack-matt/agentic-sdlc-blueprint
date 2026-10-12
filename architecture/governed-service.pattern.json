@@ -30,7 +30,7 @@
     },
     "relationships": {
       "type": "array",
-      "description": "Unconstrained here. What a service may connect to is stated by the relationships themselves and by node-level controls, and checked against the code by gates/drift-check.mjs."
+      "description": "Every relationship is CALM 1.2; service dependency control compares the connections the code makes with the connects relationships here."
     },
     "controls": {
       "type": "object",

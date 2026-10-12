@@ -26,7 +26,7 @@ change will be checked against both. Read this before writing anything.
 - All environment bindings are read in the owning service's `src/config.ts`, by the exact name in the CALM
   interface's `env-binding`. Do not read `process.env` anywhere else.
 - Do not claim the work is done while any gate fails. Report the failing gate output verbatim.
-- You do not review your own change. The review router decides who does.
+- You do not review your own change. The code review control in the model decides who may, and the merge gateway enforces it.
 
 ## Commands
 

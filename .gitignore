@@ -3,3 +3,4 @@ data/
 evidence/out/
 *.log
 .DS_Store
+*.log.[0-9]*

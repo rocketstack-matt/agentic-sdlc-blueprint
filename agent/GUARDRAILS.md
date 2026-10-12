@@ -17,6 +17,6 @@ comes from the SDLC catalog: SDLC-PREV-012 gating, with changes to `gates/` rout
 
 - **Agent identity.** `gates/check.mjs` records `CHANGE_AUTHOR_KIND` and `CHANGE_AUTHOR_ID` in `evidence/out/gates.json`.
   In a bank these come from the platform (a signed commit by a registered agent identity), not from an environment variable.
-- **Cognitive review engine.** When the router says `cognitive`, the reviewing engine must be approved and must not be
-  the authoring agent. This repo emits the decision. It does not ship a reviewer.
+- **Cognitive review engine.** The code review control in the model requires an approved reviewer who is not the
+  author of the change; the merge gateway enforces it. This repo emits the decision. It does not ship a reviewer.
 - **Sandboxing and network egress** for the agent runtime.
