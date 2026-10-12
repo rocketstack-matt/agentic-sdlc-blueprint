@@ -23,9 +23,10 @@ Traders want one call that returns an account's trades together with its current
 - Lives in node `trade-api`.
 - Positions are owned by node `position-service`. trade-api reaches them only over relationship
   `trade-api-to-position-service`.
-- Node `position-store` carries control `sdlc-prev-017-service-dependency`: only `position-service`
-  may connect to it. **Reading the position store from trade-api is not an available option**, even though
-  it would be fewer lines of code.
+- Node `client-ledger` (the book of record) carries a control: any change to a service that connects to it needs a
+  human approver. trade-api has no connection to it. **Reading the ledger from trade-api is not an available
+  option**, even though it would be fewer lines of code: the connection is not in the model, so service dependency
+  control blocks it.
 
 ## Acceptance
 - Returns trades and positions for a known account, and empty collections for an unknown one.

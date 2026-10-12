@@ -2,60 +2,10 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/standards/governed-node/versions/1.0.0",
   "title": "Governed node",
-  "description": "What every node in this estate must carry for the gates to work. Services and databases declare the SDLC-PREV-013 inventory attributes the review policy reads; services also declare where their code lives, so gates/drift-check.mjs can find it; every interface declares its environment binding.",
+  "description": "What every node in this estate must carry for the gates to work. Services declare where their code lives, so the gates can tell which node a changed file belongs to and which connections its code makes; every interface declares its environment binding.",
   "allOf": [
     {
       "$ref": "https://calm.finos.org/release/1.2/meta/core.json#/defs/node"
-    },
-    {
-      "if": {
-        "properties": {
-          "node-type": {
-            "enum": [
-              "service",
-              "database"
-            ]
-          }
-        },
-        "required": [
-          "node-type"
-        ]
-      },
-      "then": {
-        "properties": {
-          "metadata": {
-            "type": "object",
-            "properties": {
-              "criticality-tier": {
-                "type": "integer",
-                "minimum": 1,
-                "maximum": 4,
-                "description": "SDLC-PREV-013 system criticality tier, 1 is highest"
-              },
-              "data-classification": {
-                "enum": [
-                  "public",
-                  "internal",
-                  "confidential",
-                  "restricted"
-                ],
-                "description": "SDLC-PREV-013 data classification"
-              },
-              "system-manager": {
-                "type": "string",
-                "description": "SDLC-PREV-013 system manager"
-              }
-            },
-            "required": [
-              "criticality-tier",
-              "data-classification"
-            ]
-          }
-        },
-        "required": [
-          "metadata"
-        ]
-      }
     },
     {
       "if": {

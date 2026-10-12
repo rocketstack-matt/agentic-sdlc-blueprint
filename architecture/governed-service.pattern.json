@@ -2,7 +2,7 @@
   "$schema": "https://calm.finos.org/release/1.2/meta/calm.json",
   "$id": "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/patterns/governed-service/versions/1.0.0",
   "title": "Governed service pattern",
-  "description": "How this estate enforces the SDLC Common Controls on every architecture. The pattern requires the four system-level controls, pins each to its control requirement document in the finos-sdlc-common-controls domain on CALM Hub, and defines the parameters the gates read. Every node satisfies the governed-node Standard, which carries the metadata the gates read and the environment binding on every interface; a node that carries Service Dependency Control declares its allowed sources.",
+  "description": "How this estate enforces the SDLC Common Controls on every architecture. The pattern requires five system-level controls and pins each to its control requirement document in the finos-sdlc-common-controls domain on CALM Hub. Three carry their policy as ergo requirements, evaluated by gates/check.mjs and the merge gateway; two are enforced by the pipeline. Any control on a node carries an ergo policy. Every node satisfies the governed-node Standard.",
   "type": "object",
   "properties": {
     "nodes": {
@@ -17,9 +17,9 @@
             "properties": {
               "controls": {
                 "type": "object",
-                "properties": {
-                  "sdlc-prev-017-service-dependency": {
-                    "$ref": "#/$defs/service-dependency-control"
+                "patternProperties": {
+                  "^.*$": {
+                    "$ref": "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/standards/ergo-control/versions/1.0.0"
                   }
                 }
               }
@@ -46,13 +46,17 @@
         },
         "sdlc-prev-014-test-evidence-retention": {
           "$ref": "#/$defs/test-evidence-retention"
+        },
+        "sdlc-prev-017-service-dependency": {
+          "$ref": "#/$defs/service-dependency-control"
         }
       },
       "required": [
         "sdlc-prev-001-code-review",
         "sdlc-prev-004-requirements-repository",
         "sdlc-prev-012-deployment-gating",
-        "sdlc-prev-014-test-evidence-retention"
+        "sdlc-prev-014-test-evidence-retention",
+        "sdlc-prev-017-service-dependency"
       ]
     }
   },
@@ -63,144 +67,76 @@
   ],
   "$defs": {
     "code-review": {
-      "description": "SDLC-PREV-001 Code Review, as enforced here: a deterministic review routing policy that gates/review-router.mjs applies.",
-      "type": "object",
-      "properties": {
-        "requirements": {
-          "type": "array",
-          "minItems": 1,
-          "prefixItems": [
-            {
-              "type": "object",
-              "properties": {
-                "requirement-url": {
-                  "const": "https://hub.calm.finos.org/calm/domains/finos-sdlc-common-controls/controls/sdlc-prev-001-code-review/requirement/versions/1.0.0",
-                  "description": "The catalog's control requirement document on CALM Hub; the CLI validates the config against it"
-                },
-                "config": {
-                  "type": "object",
+      "description": "SDLC-PREV-001 Code Review: its ergo policy is evaluated by the merge gateway.",
+      "allOf": [
+        {
+          "$ref": "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/standards/ergo-control/versions/1.0.0"
+        },
+        {
+          "properties": {
+            "requirements": {
+              "prefixItems": [
+                {
                   "properties": {
-                    "author-may-not-review": {
-                      "const": true,
-                      "description": "The author of a change never satisfies its review requirement"
-                    },
-                    "default-mode": {
-                      "enum": [
-                        "human",
-                        "cognitive",
-                        "automated"
-                      ],
-                      "description": "Review mode when no rule matches: fail safe"
-                    },
-                    "rules": {
-                      "type": "array",
-                      "minItems": 1,
-                      "description": "Evaluated in order by gates/review-router.mjs; the first match decides the mode",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "mode": {
-                            "enum": [
-                              "human",
-                              "cognitive",
-                              "automated"
-                            ]
-                          },
-                          "reason": {
-                            "type": "string"
-                          },
-                          "paths": {
-                            "type": "array",
-                            "items": {
-                              "type": "string"
-                            }
-                          },
-                          "max-criticality-tier": {
-                            "type": "integer"
-                          },
-                          "data-classifications": {
-                            "type": "array",
-                            "items": {
-                              "type": "string"
-                            }
-                          }
-                        },
-                        "required": [
-                          "mode",
-                          "reason"
-                        ]
-                      }
+                    "requirement-url": {
+                      "const": "https://hub.calm.finos.org/calm/domains/finos-sdlc-common-controls/controls/sdlc-prev-001-code-review/requirement/versions/1.0.0"
                     }
-                  },
-                  "required": [
-                    "author-may-not-review",
-                    "default-mode",
-                    "rules"
-                  ]
+                  }
                 }
-              },
-              "required": [
-                "requirement-url",
-                "config"
               ]
             }
-          ]
+          }
         }
-      },
-      "required": [
-        "requirements"
       ]
     },
     "requirements-repository": {
-      "description": "SDLC-PREV-004 Requirements Repository, as enforced here: version-controlled specs that gates/spec-check.mjs reads.",
-      "type": "object",
-      "properties": {
-        "requirements": {
-          "type": "array",
-          "minItems": 1,
-          "prefixItems": [
-            {
-              "type": "object",
-              "properties": {
-                "requirement-url": {
-                  "const": "https://hub.calm.finos.org/calm/domains/finos-sdlc-common-controls/controls/sdlc-prev-004-requirements/requirement/versions/1.0.0",
-                  "description": "The catalog's control requirement document on CALM Hub; the CLI validates the config against it"
-                },
-                "config": {
-                  "type": "object",
+      "description": "SDLC-PREV-004 Requirements Repository: its ergo policy is evaluated on every change.",
+      "allOf": [
+        {
+          "$ref": "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/standards/ergo-control/versions/1.0.0"
+        },
+        {
+          "properties": {
+            "requirements": {
+              "prefixItems": [
+                {
                   "properties": {
-                    "repository": {
-                      "type": "string",
-                      "description": "Repo path of the approved requirements repository"
-                    },
-                    "audit-trail": {
-                      "enum": [
-                        "version-control",
-                        "ticket-history",
-                        "immutable"
-                      ]
+                    "requirement-url": {
+                      "const": "https://hub.calm.finos.org/calm/domains/finos-sdlc-common-controls/controls/sdlc-prev-004-requirements/requirement/versions/1.0.0"
                     }
-                  },
-                  "required": [
-                    "repository",
-                    "audit-trail"
-                  ]
+                  }
                 }
-              },
-              "required": [
-                "requirement-url",
-                "config"
               ]
             }
-          ]
+          }
         }
-      },
-      "required": [
-        "requirements"
+      ]
+    },
+    "service-dependency-control": {
+      "description": "SDLC-PREV-017 Service Dependency Control: every connection the code makes must be in the model.",
+      "allOf": [
+        {
+          "$ref": "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/standards/ergo-control/versions/1.0.0"
+        },
+        {
+          "properties": {
+            "requirements": {
+              "prefixItems": [
+                {
+                  "properties": {
+                    "requirement-url": {
+                      "const": "https://hub.calm.finos.org/calm/domains/finos-sdlc-common-controls/controls/sdlc-prev-017-service-dependency-control/requirement/versions/1.0.0"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
       ]
     },
     "deployment-gating": {
-      "description": "SDLC-PREV-012 Deployment Gating, as enforced here: the gates gates/run-all.mjs must see pass before a change is admissible.",
+      "description": "SDLC-PREV-012 Deployment Gating: the gates gates/check.mjs must see pass.",
       "type": "object",
       "properties": {
         "requirements": {
@@ -211,23 +147,25 @@
               "type": "object",
               "properties": {
                 "requirement-url": {
-                  "const": "https://hub.calm.finos.org/calm/domains/finos-sdlc-common-controls/controls/sdlc-prev-012-deployment-gating/requirement/versions/1.0.0",
-                  "description": "The catalog's control requirement document on CALM Hub; the CLI validates the config against it"
+                  "const": "https://hub.calm.finos.org/calm/domains/finos-sdlc-common-controls/controls/sdlc-prev-012-deployment-gating/requirement/versions/1.0.0"
                 },
                 "config": {
                   "type": "object",
                   "properties": {
+                    "evaluated-by": {
+                      "const": "pipeline"
+                    },
                     "blocking-gates": {
                       "type": "array",
                       "items": {
                         "type": "string"
                       },
                       "minItems": 1,
-                      "uniqueItems": true,
-                      "description": "Every named gate must pass before a change is admissible; gates/run-all.mjs runs them"
+                      "uniqueItems": true
                     }
                   },
                   "required": [
+                    "evaluated-by",
                     "blocking-gates"
                   ]
                 }
@@ -245,7 +183,7 @@
       ]
     },
     "test-evidence-retention": {
-      "description": "SDLC-PREV-014 Test Evidence Retention, as enforced here: what gates/evidence.mjs binds each evidence bundle to.",
+      "description": "SDLC-PREV-014 Test Evidence Retention: every evaluation is kept as evidence.",
       "type": "object",
       "properties": {
         "requirements": {
@@ -256,71 +194,17 @@
               "type": "object",
               "properties": {
                 "requirement-url": {
-                  "const": "https://hub.calm.finos.org/calm/domains/finos-sdlc-common-controls/controls/sdlc-prev-014-test-evidence/requirement/versions/1.0.0",
-                  "description": "The catalog's control requirement document on CALM Hub; the CLI validates the config against it"
+                  "const": "https://hub.calm.finos.org/calm/domains/finos-sdlc-common-controls/controls/sdlc-prev-014-test-evidence/requirement/versions/1.0.0"
                 },
                 "config": {
                   "type": "object",
                   "properties": {
-                    "bound-to": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      },
-                      "minItems": 1,
-                      "description": "What each evidence bundle is bound to"
-                    },
-                    "format": {
-                      "type": "string"
+                    "evaluated-by": {
+                      "const": "pipeline"
                     }
                   },
                   "required": [
-                    "bound-to"
-                  ]
-                }
-              },
-              "required": [
-                "requirement-url",
-                "config"
-              ]
-            }
-          ]
-        }
-      },
-      "required": [
-        "requirements"
-      ]
-    },
-    "service-dependency-control": {
-      "description": "SDLC-PREV-017 Service Dependency Control, as enforced here: the only nodes that may connect to the node carrying the control, which gates/drift-check.mjs compares with the code.",
-      "type": "object",
-      "properties": {
-        "requirements": {
-          "type": "array",
-          "minItems": 1,
-          "prefixItems": [
-            {
-              "type": "object",
-              "properties": {
-                "requirement-url": {
-                  "const": "https://hub.calm.finos.org/calm/domains/finos-sdlc-common-controls/controls/sdlc-prev-017-service-dependency-control/requirement/versions/1.0.0",
-                  "description": "The catalog's control requirement document on CALM Hub; the CLI validates the config against it"
-                },
-                "config": {
-                  "type": "object",
-                  "properties": {
-                    "allowed-sources": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      },
-                      "minItems": 1,
-                      "uniqueItems": true,
-                      "description": "CALM node ids permitted to connect to the node that carries this control"
-                    }
-                  },
-                  "required": [
-                    "allowed-sources"
+                    "evaluated-by"
                   ]
                 }
               },

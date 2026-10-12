@@ -11,7 +11,7 @@
   "scripts": {
     "start:positions": "tsx services/position-service/src/server.ts",
     "start:trades": "tsx services/trade-api/src/server.ts",
-    "test": "tsx --test test/*.test.ts",
+    "test": "tsx --test test/*.test.ts test/*.test.mjs",
     "typecheck": "tsc --noEmit",
     "calm:validate": "calm validate -p architecture/governed-service.pattern.json -a architecture/trade-capture.architecture.json -u architecture/url-mapping.json -f pretty",
     "calm:context": "node agent/calm-context.mjs",
