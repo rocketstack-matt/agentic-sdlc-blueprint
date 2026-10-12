@@ -121,6 +121,24 @@ test('a control without ergo is a problem, naming the control', async () => {
   assert.ok(r.problems.some((p) => p.includes('client-ledger-human-approval')), JSON.stringify(r.problems));
 });
 
+test('a control given only by requirement-url and config-url is a problem, naming the control', async () => {
+  const doc = model();
+  doc.controls['url-only-control'] = { description: 'Config lives elsewhere', requirements: [{ 'requirement-url': 'https://example.com/req.json', 'config-url': 'https://example.com/config.json' }] };
+  const r = await merge(input(tradeApiChange, doc));
+  assert.equal(r.allowed, false);
+  assert.ok(r.problems.some((p) => p.includes('url-only-control')), JSON.stringify(r.problems));
+});
+
+test('a control without ergo on a relationship is a problem, naming the control', async () => {
+  const doc = model();
+  doc.relationships.find((x) => x['unique-id'] === 'trade-api-to-position-service').controls = {
+    'relationship-control': { description: 'No ergo here', requirements: [{ 'requirement-url': 'https://example.com/req.json', config: { note: 'no ergo' } }] },
+  };
+  const r = await merge(input(tradeApiChange, doc));
+  assert.equal(r.allowed, false);
+  assert.ok(r.problems.some((p) => p.includes('relationship-control')), JSON.stringify(r.problems));
+});
+
 test('two controls defining the same subject differently: denied, not thrown', async () => {
   const doc = model();
   doc.controls['duplicate'] = structuredClone(doc.controls['sdlc-prev-001-code-review']);

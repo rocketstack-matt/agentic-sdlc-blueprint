@@ -3,15 +3,29 @@ package controls
 import data.ergo
 
 entries := array.concat(
-	[{"key": key, "on": "system", "config": r.config} |
-		some key, c in object.get(input.architecture, "controls", {})
-		some r in c.requirements
-	],
-	[{"key": key, "on": n["unique-id"], "config": r.config} |
-		some n in input.architecture.nodes
-		some key, c in object.get(n, "controls", {})
-		some r in c.requirements
-	],
+	array.concat(
+		[{"key": key, "on": "system", "config": object.get(r, "config", {})} |
+			some key, c in object.get(input.architecture, "controls", {})
+			some r in c.requirements
+		],
+		[{"key": key, "on": n["unique-id"], "config": object.get(r, "config", {})} |
+			some n in input.architecture.nodes
+			some key, c in object.get(n, "controls", {})
+			some r in c.requirements
+		],
+	),
+	array.concat(
+		[{"key": key, "on": rel["unique-id"], "config": object.get(r, "config", {})} |
+			some rel in object.get(input.architecture, "relationships", [])
+			some key, c in object.get(rel, "controls", {})
+			some r in c.requirements
+		],
+		[{"key": key, "on": f["unique-id"], "config": object.get(r, "config", {})} |
+			some f in object.get(input.architecture, "flows", [])
+			some key, c in object.get(f, "controls", {})
+			some r in c.requirements
+		],
+	),
 )
 
 with_ergo := [e | some e in entries; e.config.ergo]
