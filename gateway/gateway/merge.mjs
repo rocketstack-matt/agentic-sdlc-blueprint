@@ -40,8 +40,9 @@ const reasons = (outcome) => {
   for (const name of outcome.failing ?? []) {
     lines.push(outcome.report.requirements[name].description);
     const vs = outcome.violations.filter((v) => v.requirement === name).sort((a, b) => rank(a) - rank(b));
-    const seen = [...new Set(vs.map((v) => `${v.subject?.id}: ${v.description || v.check}`))];
-    for (const s of seen.slice(0, 2)) lines.push(`  ${s}`);
+    const subject = (id) => (/^[0-9a-f]{40}$/.test(id ?? '') ? id.slice(0, 7) : id);
+    const seen = [...new Set(vs.map((v) => `${subject(v.subject?.id)}: ${v.description || v.check}`))];
+    for (const s of seen.slice(0, 2)) lines.push(`  ✗ ${s}`);
     if (seen.length > 2) lines.push(`  … and ${seen.length - 2} more`);
   }
   return lines;

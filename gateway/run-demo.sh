@@ -4,7 +4,7 @@
 # Set CALM_HUB_URL (for example http://localhost:8080) to publish the architecture and every decision to CALM Hub.
 set -u
 cd "$(dirname "$0")"
-rm -rf .sessions sessions.json && mkdir -p .sessions
+rm -rf .sessions && mkdir -p .sessions
 
 n=0
 key=""

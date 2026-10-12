@@ -58,7 +58,8 @@ const expected = {
     { has: ['by review-bot'] },
     { first: 'DENY', has: ['connects to the Client Ledger', 'trade-api-to-client-ledger: A human approved this change'] },
   ],
-  evidence: [{ has: ['control-evaluation', 'not-met', 'client-ledger-human-approval'] }],
+  // The climax decision itself: not-met on the line for trade-api and its new connection to the ledger.
+  evidence: [{ has: ['control-evaluation'], line: ['not-met', 'client-ledger-human-approval  on trade-api, trade-api-to-client-ledger'] }],
 };
 
 const failures = [];
@@ -73,6 +74,7 @@ for (const session of sessions) {
     if (lines.length >= 22) failures.push(`${session.key} step ${i + 1}: ${lines.length} lines`);
     if (check.first && lines[0] !== check.first) failures.push(`${session.key} step ${i + 1}: first line is "${lines[0]}", expected ${check.first}`);
     for (const s of check.has ?? []) if (!step.out.includes(s)) failures.push(`${session.key} step ${i + 1}: missing "${s}"`);
+    if (check.line && !lines.some((l) => check.line.every((s) => l.includes(s)))) failures.push(`${session.key} step ${i + 1}: no line with all of ${check.line.map((s) => `"${s}"`).join(', ')}`);
     for (const s of check.not ?? []) if (step.out.includes(s)) failures.push(`${session.key} step ${i + 1}: must not contain "${s}"`);
     if (/error:|at .*\.mjs:\d+/.test(step.out)) failures.push(`${session.key} step ${i + 1}: error output`);
   });
