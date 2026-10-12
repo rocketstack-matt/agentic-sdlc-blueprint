@@ -21,15 +21,44 @@ rmSync(dir, { recursive: true });
 
 // Per session: the substrings each step's output must contain, and must not.
 const expected = {
-  propose: [{ has: ['CHG-0421', 'trade-api (tier 2'] }],
-  'self-review': [{ has: ['-> reviews/'] }, { first: 'DENY', has: ['author may not review its own change'] }],
-  reviewed: [{ has: ['-> reviews/'] }, { first: 'ALLOW', not: ['DENY', 'token'] }],
-  'tier1-no-token': [{ has: ['position-service (tier 1'] }, { has: ['-> reviews/'] }, { first: 'DENY', has: ['human approval required', 'no token presented'] }],
-  approve: [{ has: ['diff --git', 'more lines', 'binding code', 'approved by approver@bank', '-> token.json'] }],
-  amended: [{ has: ['-> reviews/'] }, { first: 'DENY', has: ['approval token is bound to a different diff'], not: ['bound to commit'] }],
-  allowed: [{ first: 'ALLOW', has: ['spent: single use'] }],
-  replay: [{ first: 'DENY', has: ['has already been used'] }],
-  evidence: [{ has: ['ALLOW', 'DENY', 'has already been used', 'policy        sha256:'] }],
+  reset: [{ has: ['(main)', 'hub'] }],
+  routine: [
+    { has: ['CHG-0421', 'trade-api'] },
+    { has: ['by author-agent'] },
+    { first: 'DENY', has: ['The author may not review its own change'] },
+    { has: ['by review-bot'] },
+    { first: 'ALLOW', has: ['main ->'], not: ['DENY'] },
+  ],
+  ledger: [
+    { has: ['CHG-0422', 'position-service'] },
+    { has: ['by review-bot'] },
+    { first: 'DENY', has: ['connects to the Client Ledger', 'position-service-to-client-ledger: A human approved this change'] },
+  ],
+  approve: [{ has: ['diff --git', 'binding code', 'approved by alice', '-> .demo/token.json'] }],
+  amended: [
+    { has: ['CHG-0423'] },
+    { has: ['by review-bot'] },
+    { first: 'DENY', has: ['The approval is for this exact diff'] },
+  ],
+  allowed: [{ first: 'ALLOW', has: ['main ->'] }],
+  shortcut: [
+    { has: ['CHG-0424', 'trade-api'] },
+    { has: ['by review-bot'] },
+    { first: 'DENY', has: ['Every connection the code makes exists in the architecture', 'trade-api->client-ledger: The architecture has this connection'] },
+  ],
+  architect: [
+    { has: ['CHG-0425', 'architecture/trade-capture.architecture.json', 'none: no node owns these files'] },
+    { has: ['by review-bot'] },
+    { first: 'DENY', has: ['no node owns', 'A human approved this change'] },
+    { has: ['diff --git', 'trade-api-to-client-ledger', 'approved by alice'] },
+    { first: 'ALLOW', has: ['main ->', 'architecture changed on main'] },
+  ],
+  climax: [
+    { has: ['CHG-0426', 'trade-api'] },
+    { has: ['by review-bot'] },
+    { first: 'DENY', has: ['connects to the Client Ledger', 'trade-api-to-client-ledger: A human approved this change'] },
+  ],
+  evidence: [{ has: ['control-evaluation', 'not-met', 'client-ledger-human-approval'] }],
 };
 
 const failures = [];
