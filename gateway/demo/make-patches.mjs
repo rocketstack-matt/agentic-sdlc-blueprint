@@ -46,8 +46,10 @@ const steps = [
     edit('services/trade-api/src/app.ts', insertBefore(HEALTH, summaryHandler));
     writeFileSync(join(dir, 'test/account-summary.test.ts'), readFileSync(join(here, 'fixtures/account-summary.test.ts'), 'utf8'));
   } },
+  // The position-total change from the same base with one more line: the approval for CHG-0422 does not cover it.
   { patch: 'position-total-amended.patch', merge: false, apply: () => {
     edit('services/position-service/src/app.ts', insertBefore(HEALTH, totalHandler("        res.setHeader('x-total-source', 'client-ledger');\n")));
+    writeFileSync(join(dir, 'test/position-total.test.ts'), readFileSync(join(here, 'fixtures/position-total.test.ts'), 'utf8'));
   } },
   { patch: 'position-total.patch', merge: true, apply: () => {
     edit('services/position-service/src/app.ts', insertBefore(HEALTH, totalHandler()));
