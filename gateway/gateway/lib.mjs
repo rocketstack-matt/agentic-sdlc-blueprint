@@ -1,136 +1,35 @@
-// Shared pieces of the merge gateway prototype: paths, the architecture and spec loaders,
-// hashing, ES256 keys and compact JWS, the token ledger, the decision log and terminal output.
+// Shared pieces of the merge gateway: the repository it guards, hashing, ES256 keys and compact JWS, the approval token ledger, the decision log and terminal output.
+import { execFileSync } from 'node:child_process';
 import {
-  createHash, createPrivateKey, createPublicKey, generateKeyPairSync, randomUUID, sign, verify,
+  createHash, createPrivateKey, createPublicKey, generateKeyPairSync, sign, verify,
 } from 'node:crypto';
-import { appendFileSync, existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
-import { basename, dirname, join, relative, resolve } from 'node:path';
+import { appendFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { loadPolicy } from '@open-policy-agent/opa-wasm';
 
-export const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-
-// The governed repository is read, never written.
-export const REPO = process.env.BLUEPRINT_REPO ?? resolve(ROOT, '..');
-
+export const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..'); // gateway/
+export const BLUEPRINT = resolve(ROOT, '..');
+export const DEMO = process.env.GATEWAY_DEMO ?? join(ROOT, '.demo');
 export const paths = {
-  arch: join(REPO, 'architecture/trade-capture.architecture.json'),
-  specs: join(REPO, 'specs'),
-  wasm: join(ROOT, 'policy/merge.wasm'),
+  repo: join(DEMO, 'repo'),
+  changes: join(DEMO, 'changes'),
+  reviews: join(DEMO, 'reviews'),
+  decorators: join(DEMO, 'decorators'),
+  token: join(DEMO, 'token.json'),
+  ledger: join(DEMO, 'ledger.json'),
+  decisions: join(DEMO, 'decisions.ndjson'),
   keys: join(ROOT, 'keys'),
-  reviews: join(ROOT, 'reviews'),
-  decisions: join(ROOT, 'decisions.ndjson'),
-  ledger: join(ROOT, 'ledger.json'),
-  token: join(ROOT, 'token.json'),
 };
-
-export const APPROVAL_SERVICE = 'approval-service';
+export const ARCHITECTURE = 'architecture/trade-capture.architecture.json';
+export const APPROVAL = { issuer: 'approval-service', audience: 'merge-gateway', maxAgeSeconds: 600 };
+export const APPROVAL_SERVICE = APPROVAL.issuer;
 
 // --- hashing and encoding ---------------------------------------------------------------------
 
-export const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex');
 export const short = (hex, n = 8) => String(hex ?? '').slice(0, n);
 export const b64url = (bytes) => Buffer.from(bytes).toString('base64url');
 export const fromB64url = (text) => Buffer.from(text, 'base64url');
-
-// --- the architecture: DATA for the policy -------------------------------------------------------
-
-export function loadArchitecture() {
-  const raw = readFileSync(paths.arch);
-  const arch = JSON.parse(raw.toString('utf8'));
-  const config = arch.controls['sdlc-prev-001-code-review'].requirements[0].config;
-  // In the real repository these two keys live in the model, next to author-may-not-review and
-  // rules. The prototype adds them in memory so the model file stays untouched; the hash recorded
-  // in every decision is the hash of that file on disk.
-  config['approved-cognitive-engines'] = ['spiffe://bank/agents/reviewer'];
-  config['human-approval'] = {
-    issuer: APPROVAL_SERVICE,
-    audience: 'merge-gateway',
-    'max-age-seconds': 600,
-    'single-use': true,
-    'bound-to': ['commit-sha', 'diff-sha256', 'spec-id'],
-  };
-  return { arch, sha: sha256(raw) };
-}
-
-// The nodes whose source-path owns a file in the change, with tier and classification.
-export function nodesTouched(arch, files) {
-  return arch.nodes
-    .filter((node) => node.metadata?.['source-path'])
-    .filter((node) => files.some((file) => file.startsWith(`${node.metadata['source-path']}/`)))
-    .map((node) => ({
-      id: node['unique-id'],
-      tier: node.metadata['criticality-tier'],
-      classification: node.metadata['data-classification'],
-    }));
-}
-
-// --- the spec ---------------------------------------------------------------------------------
-
-function frontMatter(text) {
-  const match = text.match(/^---\n([\s\S]*?)\n---/);
-  const out = {};
-  if (!match) return out;
-  for (const line of match[1].split('\n')) {
-    const colon = line.indexOf(':');
-    if (colon < 0) continue;
-    const key = line.slice(0, colon).trim();
-    let value = line.slice(colon + 1).trim();
-    if (value.startsWith('[') && value.endsWith(']')) {
-      value = value.slice(1, -1).split(',').map((s) => s.trim()).filter(Boolean);
-    }
-    out[key] = value;
-  }
-  return out;
-}
-
-export function loadSpec(id) {
-  for (const name of readdirSync(paths.specs).filter((f) => f.endsWith('.md')).sort()) {
-    const fm = frontMatter(readFileSync(join(paths.specs, name), 'utf8'));
-    if (fm.id === id) {
-      return { id, approved: fm.status === 'approved', status: fm.status, nodes: fm['calm-nodes'] ?? [], title: fm.title };
-    }
-  }
-  return { id, approved: false, status: 'missing', nodes: [] };
-}
-
-// --- the change ------------------------------------------------------------------------------
-
-export function loadChange(file) {
-  const path = resolve(file);
-  if (!existsSync(path)) throw new Error(`no change file at ${file}`);
-  const change = JSON.parse(readFileSync(path, 'utf8'));
-  const diffPath = resolve(dirname(path), change.diff ?? '');
-  if (!change.diff || !existsSync(diffPath)) throw new Error(`${basename(path)} points at no readable diff file`);
-  const diffBytes = readFileSync(diffPath);
-  const diffText = diffBytes.toString('utf8');
-  const inDiff = [...diffText.matchAll(/^diff --git a\/(\S+) b\//gm)].map((m) => m[1]);
-  const files = change.files ?? inDiff;
-  const missing = inDiff.filter((f) => !files.includes(f));
-  if (missing.length) throw new Error(`${basename(path)} does not list every file in its diff: ${missing.join(', ')}`);
-  for (const key of ['id', 'spec', 'author', 'commit']) {
-    if (!change[key]) throw new Error(`${basename(path)} has no ${key}`);
-  }
-  return {
-    ...change,
-    files,
-    path,
-    name: basename(path, '.json'),
-    diffPath: relative(process.cwd(), diffPath),
-    diffText,
-    diff_sha256: sha256(diffBytes),
-  };
-}
-
-// What the policy sees of the change.
-export const changeInput = (change) => ({
-  id: change.id,
-  spec: change.spec,
-  author: change.author,
-  commit: change.commit,
-  files: change.files,
-  diff_sha256: change.diff_sha256,
-});
 
 // --- keys and compact JWS (ES256) --------------------------------------------------------------
 
@@ -199,44 +98,34 @@ export function markUsed(jti, record) {
   writeFileSync(paths.ledger, `${JSON.stringify(ledger, null, 2)}\n`);
 }
 
-// --- the policy and the decision log ----------------------------------------------------------
+// --- the guarded repository and the decision log ---------------------------------------------
 
-export async function evaluate(input) {
-  const wasm = readFileSync(paths.wasm);
-  const policy = await loadPolicy(wasm);
-  const { arch, sha: archSha } = loadArchitecture();
-  policy.setData({ arch });
-  const started = process.hrtime.bigint();
-  const allow = policy.evaluate(input, 'merge/allow')[0]?.result === true;
-  const deny = (policy.evaluate(input, 'merge/deny')[0]?.result ?? []).sort();
-  const evalNs = Number(process.hrtime.bigint() - started);
-  return { allow, deny, policySha: sha256(wasm), archSha, evalNs };
+export const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex');
+export const git = (...args) => execFileSync('git', args, { cwd: paths.repo, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
+const gitBytes = (...args) => execFileSync('git', args, { cwd: paths.repo, stdio: ['ignore', 'pipe', 'pipe'], maxBuffer: 64 * 1024 * 1024 });
+
+// The exact diff a change carries: its commit against the point where it left main. The gateway recomputes it on
+// every decision and never takes a hash from the change file.
+export const diffOf = (commit) => gitBytes('diff', '--no-color', '--no-ext-diff', '--full-index', '--no-renames', `main...${commit}`);
+
+export const loadChange = (id) => {
+  const file = join(paths.changes, `${id}.json`);
+  if (!existsSync(file)) throw new Error(`no proposed change ${id}: run propose first`);
+  return JSON.parse(readFileSync(file, 'utf8'));
+};
+
+// A clean checkout of a commit, for scanning its code, removed afterwards.
+export async function withCheckout(commit, fn) {
+  const dir = mkdtempSync(join(tmpdir(), 'gateway-'));
+  git('worktree', 'add', '--detach', '--quiet', dir, commit);
+  try { return await fn(dir); } finally { git('worktree', 'remove', '--force', dir); }
 }
 
-// One line per decision, in the shape of an OPA decision log event.
-export function logDecision({ input, allow, deny, policySha, archSha, evalNs }) {
-  const entry = {
-    decision_id: randomUUID(),
-    labels: { app: 'merge-gateway', id: 'gateway-proto', version: '0.1.0' },
-    bundles: {
-      'merge-policy': { revision: `sha256:${policySha}` },
-      architecture: { revision: `sha256:${archSha}` },
-    },
-    path: 'merge',
-    input,
-    result: { allow, deny },
-    requested_by: 'gateway/merge.mjs',
-    timestamp: new Date().toISOString(),
-    metrics: { timer_rego_query_eval_ns: evalNs },
-  };
+export function logDecision(entry) {
   appendFileSync(paths.decisions, `${JSON.stringify(entry)}\n`);
   return entry;
 }
-
-export function readDecisions() {
-  if (!existsSync(paths.decisions)) return [];
-  return readFileSync(paths.decisions, 'utf8').split('\n').filter(Boolean).map((line) => JSON.parse(line));
-}
+export const readDecisions = () => (existsSync(paths.decisions) ? readFileSync(paths.decisions, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)) : []);
 
 // --- terminal ---------------------------------------------------------------------------------
 

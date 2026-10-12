@@ -1,7 +1,4 @@
-node_modules/
-keys/
-reviews/
+.demo/
 .sessions/
-decisions.ndjson
-ledger.json
-token.json
+.hub-state.json
+keys/
