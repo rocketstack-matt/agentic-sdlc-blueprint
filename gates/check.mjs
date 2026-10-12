@@ -7,7 +7,7 @@ import { spawnSync } from 'node:child_process';
 import { mkdirSync, mkdtempSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { ROOT, ARCHITECTURE, architectureSha, baseArchitecture, changeBase, changeInput, currentSpecId, gitInfo, sha256 } from './lib/calm.mjs';
+import { ROOT, ARCHITECTURE, architectureSha, baseArchitecture, baseArchitectureText, changeBase, changeInput, currentSpecId, gitInfo, sha256 } from './lib/calm.mjs';
 import { evaluateControls } from './lib/controls.mjs';
 
 const run = (cmd, args) => spawnSync(cmd, args, { cwd: ROOT, encoding: 'utf8', env: { ...process.env, NODE_NO_WARNINGS: '1' } });
@@ -27,13 +27,20 @@ const runners = {
     const count = (k) => Number(r.stdout.match(new RegExp(`# ${k} (\\d+)`))?.[1] ?? 0);
     return { gate: 'tests', passed: r.status === 0, findings: r.status === 0 ? [] : [{ level: 'error', message: 'Test failures. Run `npm test`.' }], summary: `${count('pass')} passed, ${count('fail')} failed.` };
   },
-  controls: async () => {
+  controls: async (evidence) => {
     const base = changeBase();
-    const arch = baseArchitecture(base);
+    // The hash is of the model's bytes as git holds them at base (the working tree's file when bootstrapping), so
+    // `git show <base>:architecture/trade-capture.architecture.json | sha256sum` reproduces it.
+    const text = baseArchitectureText(base);
+    const arch = JSON.parse(text);
     const input = changeInput({ arch, base });
     const outcome = await evaluateControls(input, { stage: 'change' });
+    evidence.architecture.evaluatedSha256 = sha256(text);
+    evidence.policySha256 = outcome.policySha;
+    const report = JSON.stringify({ comparedTo: base, commit: input.change.commit, spec: input.spec.id, evaluatedArchitectureSha256: evidence.architecture.evaluatedSha256, workingTreeArchitectureSha256: evidence.architecture.workingTreeSha256, policySha256: outcome.policySha, outcome }, null, 2);
     mkdirSync(join(ROOT, 'evidence/out'), { recursive: true });
-    writeFileSync(join(ROOT, 'evidence/out/controls-report.json'), JSON.stringify({ comparedTo: base, commit: input.change.commit, spec: input.spec.id, evaluatedArchitectureSha256: sha256(JSON.stringify(arch)), workingTreeArchitectureSha256: architectureSha(), policySha256: outcome.policySha, outcome }, null, 2));
+    writeFileSync(join(ROOT, 'evidence/out/controls-report.json'), report);
+    evidence.controlsReportSha256 = sha256(report);
     const findings = [
       ...(outcome.error ? [{ level: 'error', message: `The policy could not be evaluated: ${outcome.error}` }] : []),
       ...outcome.problems.map((message) => ({ level: 'error', message })),
@@ -44,17 +51,35 @@ const runners = {
   },
 };
 
+const failed = (gate, message) => ({ gate, passed: false, findings: [{ level: 'error', message }] });
+
+/** Never throws: a gate that cannot run, or a blocking-gates list that cannot be read, is a failed result. */
 export async function runChecks() {
-  const blocking = baseArchitecture().controls['sdlc-prev-012-deployment-gating'].requirements[0].config['blocking-gates'];
+  let workingTreeSha256 = null;
+  try { workingTreeSha256 = architectureSha(); } catch { /* no model in the working tree: recorded as null */ }
+  // Filled in by the controls runner; null where it did not get that far.
+  const evidence = { architecture: { evaluatedSha256: null, workingTreeSha256 }, policySha256: null, controlsReportSha256: null };
+  let blocking;
+  try {
+    blocking = baseArchitecture().controls['sdlc-prev-012-deployment-gating'].requirements[0].config['blocking-gates'];
+    if (!Array.isArray(blocking) || blocking.length === 0) throw new Error('the base model names no blocking gates');
+  } catch (e) {
+    return { admissible: false, results: [failed('blocking-gates', `The blocking gates could not be read from the base model: ${e.message}`)], evidence };
+  }
   const results = [];
   for (const name of blocking) {
-    results.push(runners[name] ? await runners[name]() : { gate: name, passed: false, findings: [{ level: 'error', message: `The model requires gate "${name}" but no runner exists for it` }] });
+    if (!runners[name]) { results.push(failed(name, `The model requires gate "${name}" but no runner exists for it`)); continue; }
+    try {
+      results.push(await runners[name](evidence));
+    } catch (e) {
+      results.push(failed(name, `The gate could not run: ${e?.message ?? String(e)}`));
+    }
   }
-  return { admissible: results.every((r) => r.passed), results };
+  return { admissible: results.every((r) => r.passed), results, evidence };
 }
 
 if (process.argv[1]?.endsWith('check.mjs')) {
-  const { admissible, results } = await runChecks();
+  const { admissible, results, evidence } = await runChecks();
   // SDLC-PREV-014: one hashed bundle per change, bound to the commit, the spec, the author and the pipeline run.
   // Written only from the CLI, never when runChecks is imported (the MCP server imports it).
   const git = gitInfo();
@@ -62,10 +87,13 @@ if (process.argv[1]?.endsWith('check.mjs')) {
   const body = {
     generatedAt: new Date().toISOString(),
     commit: git.commit, tree: git.tree, dirty: git.dirty, branch: git.branch,
-    spec: currentSpecId(),
+    spec: currentSpecId() ?? null,
     comparedTo: changeBase(),
     author: { kind: process.env.CHANGE_AUTHOR_KIND ?? 'unknown', id: process.env.CHANGE_AUTHOR_ID ?? 'unknown' },
     pipeline: GITHUB_RUN_ID ? { runId: GITHUB_RUN_ID, url: `${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}` } : null,
+    architecture: evidence.architecture, // sha256 of the model bytes the controls came from, and of the working tree's
+    policySha256: evidence.policySha256, // gates/policy/controls.wasm
+    controlsReportSha256: evidence.controlsReportSha256, // evidence/out/controls-report.json, as written
     admissible,
     results,
   };
