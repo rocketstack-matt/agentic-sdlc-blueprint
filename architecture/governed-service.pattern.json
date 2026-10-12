@@ -30,7 +30,7 @@
     },
     "relationships": {
       "type": "array",
-      "description": "Every relationship is CALM 1.2; service dependency control compares the connections the code makes with the connects relationships here."
+      "description": "Every relationship is CALM 1.2; the service dependency control compares the connections the code makes with the connects relationships here."
     },
     "controls": {
       "type": "object",

@@ -16,18 +16,18 @@ mints a single-use token bound to that commit and diff), `node gateway/merge.mjs
 
 What the demo shows:
 
-1. **A routine change.** The author agent reviews its own change: DENY, in the catalog's words. The approved review
-   bot reviews it: ALLOW, and `main` moves.
+1. **A routine change.** The author agent reviews its own change: DENY, with the reason from the code review
+   control. The approved review bot reviews it: ALLOW, and `main` moves.
 2. **The Client Ledger.** A change to `position-service`, which connects to the ledger: DENY until a human approves.
    The approval renders the real diff from the repository. Changing one line after approval kills the approval.
 3. **The shortcut.** The agent makes trade-api read the ledger's file directly: DENY, that connection is not in the
    architecture.
 4. **The architect's change.** The architect adds `trade-api -> client-ledger` to the model: a change no node owns,
-   so it needs a human too. On merge the new architecture is published as the next version. The same kind of
-   trade-api change that merged in moment 1 is now denied: the diagram changed, so the control followed.
+   so it needs a human too. With CALM Hub, the new architecture is published as the next version. The same kind
+   of trade-api change that merged in moment 1 is now denied: the diagram changed, so the control followed.
 
-Every decision is a line in `.demo/decisions.ndjson` and one decorator per control in `.demo/decorators/`, validated
-against `standards/control-evaluation.decorator.standard.json`. With `CALM_HUB_URL` set, the architecture is published
+Every decision is a line in `.demo/decisions.ndjson` and one decorator per control with an ergo policy in
+`.demo/decorators/`, validated against `standards/control-evaluation.decorator.standard.json`. With `CALM_HUB_URL` set, the architecture is published
 to the namespace `CALM_HUB_NAMESPACE` (default `finos.agentic-sdlc`) as `Trade Capture (governed)`, one version per
 model, and every decorator is posted against the version it was decided on. The gateway deletes only what it created
 (`.hub-state.json`). To run CALM Hub locally: `../mvnw quarkus:dev -Pstandalone,server-only` in a checkout of

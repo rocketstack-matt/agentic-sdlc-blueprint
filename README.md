@@ -54,16 +54,16 @@ CALM_HUB_URL=http://localhost:8080 bash gateway/run-demo.sh   # the same, publis
 
 What the demo shows, one idea per moment; the gateway's [README](gateway/README.md) has each command:
 
-1. **A routine change.** The author agent reviews its own change: **DENY**, in the catalog's words. The approved
-   review bot reviews it: **ALLOW**, and `main` moves.
+1. **A routine change.** The author agent reviews its own change: **DENY**, with the reason from the code review
+   control. The approved review bot reviews it: **ALLOW**, and `main` moves.
 2. **The Client Ledger.** A change to `position-service`, which connects to the ledger: **DENY** until a human
    approves. The approval renders the real diff from the repository. Changing one line after approval kills the
    approval.
 3. **The shortcut.** The agent makes trade-api read the ledger's file directly: **DENY**, that connection is not in
    the architecture.
 4. **The architect's change.** The architect adds `trade-api -> client-ledger` to the model: a change no node owns,
-   so it needs a human too. On merge the new architecture is published as the next version. The same kind of
-   trade-api change that merged in moment 1 is now denied: the diagram changed, so the control followed.
+   so it needs a human too. With CALM Hub, the new architecture is published as the next version. The same kind
+   of trade-api change that merged in moment 1 is now denied: the diagram changed, so the control followed.
 
 To see the pipeline run on your own changes, enable Actions on your fork (GitHub disables workflows on forks until
 you do) and open a pull request there.
@@ -81,6 +81,7 @@ the same evaluator, at stage `merge`, where the review and any approval are know
 | SDLC-PREV-004 | Requirements Repository | system | `change-names-approved-spec` and `requirements-scope` (a change names an approved spec in `specs/` and touches only the nodes it declares); CI and the merge gateway |
 | SDLC-PREV-017 | Service Dependency Control | system | `service-dependency` (every connection the code makes is a connection in the architecture); CI and the merge gateway |
 | SDLC-PREV-012 | Deployment Gating | system | `gates/check.mjs` runs the gates the model names; any failure blocks |
+| SDLC-PREV-016 | Test Execution and Sign-Off | n/a | the tests gate, one of the blocking gates SDLC-PREV-012 names |
 | SDLC-PREV-014 | Test Evidence Retention | system | `evidence/out/gates.json`; the merge gateway's control-evaluation decorators |
 | SDLC-PREV-007, -009, -010 | Dependency scanning, SBOM, secret detection | n/a | `.github/workflows/governed-sdlc.yml` |
 
