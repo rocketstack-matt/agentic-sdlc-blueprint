@@ -152,6 +152,9 @@ async function decide(gw, pr, state, { force = false, dry = false } = {}) {
   const published = dry ? null : await publishArchitecture(archText);
   const target = published && !published.error ? published.target : `${ARCHITECTURE}@${sha256(archText).slice(0, 12)}`;
   let decorators = buildDecorators({ outcome, input, decisionId, target, evaluatedAt });
+  // The record names who acted by their GitHub login; the policy judged them by the identities the model names.
+  const logins = { author: pr.user.login, reviewer: bot?.user.login, approver: input.change.approval ? person.user.login : undefined };
+  for (const d of decorators) for (const k of Object.keys(d.data.actors ?? {})) if (logins[k]) d.data.actors[k] = logins[k];
   const invalid = decorators.map((d) => ({ d, ...validateDecorator(d) })).find((x) => !x.valid);
   if (invalid) { outcome = { ...outcome, allowed: false, error: `The decision could not be recorded: ${invalid.errors.join('; ')}` }; decorators = []; }
 

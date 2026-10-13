@@ -100,4 +100,19 @@ run(async () => {
   if (!hubEnabled()) { console.log(label('hub', 'off (set CALM_HUB_URL to publish the architecture and every decision)')); return; }
   const published = await publishArchitecture(`${inClone('show', `origin/main:${ARCHITECTURE}`)}\n`);
   console.log(label('hub', published?.error ? `failed: ${published.error}` : `Trade Capture (governed) ${published.version} -> ${published.target}`));
+  if (!published?.error) await saveLayout(published.id);
 });
+
+// The default layout in CALM Hub keeps every line clear of the boxes, including the one the architect adds in 1.1.0.
+// Boxes inside the system are placed relative to it.
+// Under Trade API and Position Service there is room for CALM Hub's decision callouts.
+const LAYOUT = { nodes: {
+  trader: { x: 180, y: 120 }, 'trade-capture': { x: 100, y: 250 },
+  'trade-api': { x: 80, y: 130 }, 'position-service': { x: 560, y: 200 },
+  'client-ledger': { x: 1040, y: 30 }, 'trade-store': { x: 80, y: 540 },
+} };
+async function saveLayout(id) {
+  const ns = process.env.CALM_HUB_NAMESPACE ?? 'finos.agentic-sdlc';
+  const res = await fetch(`${process.env.CALM_HUB_URL.replace(/\/$/, '')}/api/calm/namespaces/${ns}/architectures/${id}/layout`, { method: 'PUT', headers: { 'content-type': 'application/json' }, body: JSON.stringify(LAYOUT) });
+  console.log(label('', res.ok ? 'default layout saved' : `layout not saved: ${res.status}`));
+}
