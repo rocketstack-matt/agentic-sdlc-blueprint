@@ -35,3 +35,40 @@ finos/architecture-as-code's `calm-hub`.
 
 `demo/make-patches.mjs` regenerates the demo patches when the services or the model change. The slides' terminal
 panes come from `sessions.json`.
+
+## The GitHub demo
+
+The talk plays the same moments on GitHub pull requests, in
+[rocketstack-matt/osffny-sdlc-calm](https://github.com/rocketstack-matt/osffny-sdlc-calm) (SPEC-005). The repository
+holds the trade capture system, its architecture and the specs it needs; its `main` takes a pull request only when
+the **Architecture controls** check has passed. Who is who:
+
+| On GitHub | In the model | Does |
+| --- | --- | --- |
+| `calm-trade-agent[bot]` (a GitHub App) | `author-agent` | writes the code and opens the pull requests |
+| `github-actions[bot]` (the review-bot workflow) | `review-bot` | reviews every commit |
+| `calm-merge-gateway[bot]` (a GitHub App) | the merge gateway | posts the check and a comment on every decision |
+| `@aaronsearle` | `alice` | approves, with GitHub's own review, when a person is needed |
+| `@rocketstack-matt` | `bob` | the architect: changes the architecture |
+
+The gateway runs on the presenter's laptop, so it publishes to a local CALM Hub. A person's approval counts for the
+commit they approved and no other, so a push after it fails the check again.
+
+    node gateway/gh-apps.mjs        # once: create the two GitHub Apps (opens a page; then install both on the repo)
+    CALM_HUB_URL=http://localhost:8080 node gateway/gh-reset.mjs            # the repo, its protection and the Hub, from the start
+    CALM_HUB_URL=http://localhost:8080 node gateway/gh-gateway.mjs --watch  # the gateway: leave it running
+
+The moments, in order (each pull request waits a few seconds for the review bot):
+
+    node gateway/gh-propose.mjs demo/changes/account-summary.json      # 1. harmless: green, press Merge
+    node gateway/gh-propose.mjs demo/changes/position-total.json       # 2. near the ledger: red, needs @aaronsearle
+                                                                       # 3. Aaron approves on GitHub: green
+    node gateway/gh-propose.mjs demo/changes/position-total-amended.json --onto <pr> --message "Add a source header to the position total"
+                                                                       # 4. one more line: red again; Aaron approves again, press Merge
+    node gateway/gh-propose.mjs demo/changes/ledger-shortcut.json      # 5. the shortcut: red, not in the architecture; close it
+    node gateway/gh-propose.mjs demo/changes/architect-ledger-connection.json --as owner
+                                                                       # 6. the architect: red until Aaron approves; press Merge
+    node gateway/gh-propose.mjs demo/changes/trade-count.json          # 7. the same harmless change: now red
+
+The gateway's decisions, decorators and Hub state are in `.gh/`, apart from the local demo's; the apps' ids are in
+`.github-demo.json` and their keys in `keys/`, all kept out of git.

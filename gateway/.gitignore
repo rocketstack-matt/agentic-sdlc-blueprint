@@ -2,3 +2,6 @@
 .sessions/
 .hub-state.json
 keys/
+.github-demo.json
+.github-demo.json.tmp
+.gh/
