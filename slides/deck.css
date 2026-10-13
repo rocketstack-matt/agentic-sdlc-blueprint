@@ -1,163 +1,144 @@
-/* Styling derived from the OSFF New York 2026 template: Arial, its theme palette, its blue network background.
-   Layout follows a small set of templates (statement, picture, code plus commentary, terminal, step, cards, call to
-   action) so similar slides look the same. Type scale: title 60, lead 40, body 36, commentary 32, caption 28,
-   code 26 full width and 24 in a half pane, nothing smaller. */
+/* One idea per slide, big words, two pictures that come back again and again: the map of the system, and the pull
+   request on GitHub. Colours are GitHub's, so the map and the screenshots speak the same language:
+   green = goes through, red = needs a person, blue = the architecture, gold = the Client Ledger. */
 :root {
-  --ink: #212121; --muted: #595959; --blue: #4285F4; --amber: #FFAB40; --teal: #0097A7; --green: #5BB974; --paper: #ffffff; --term: #212121;
-  /* One colour key for the whole deck: CALM is blue, the catalog teal, the AI Governance Framework amber, and grey means "yours". */
-  --calm: var(--blue); --catalog: var(--teal); --aigf: var(--amber); --yours: var(--muted);
+  --ink: #1f2328; --muted: #59636e; --line: #d1d9e0; --paper: #ffffff; --wash: #f6f8fa; --night: #0d1b2a;
+  --green: #1a7f37; --green-bg: #dafbe1; --red: #cf222e; --red-bg: #ffebe9; --blue: #0969da; --blue-bg: #ddf4ff;
+  --gold: #9a6700; --gold-bg: #fff8c5;
 }
-.reveal { font-family: Arial, Helvetica, sans-serif; color: var(--ink); font-size: 36px; }
-.reveal .slides section { text-align: left; padding: 0 120px; box-sizing: border-box; height: 100%; }
-.reveal h1, .reveal h2, .reveal h3 { font-family: Arial, Helvetica, sans-serif; text-transform: none; letter-spacing: 0; margin: 0 0 0.4em; }
-.reveal h1 { font-size: 104px; font-weight: 700; line-height: 1.1; }
-.reveal h2 { font-size: 60px; font-weight: 700; line-height: 1.15; }
-.reveal h3 { font-size: 44px; font-weight: 700; line-height: 1.2; }
-.reveal p, .reveal li { font-size: 36px; line-height: 1.4; }
-.reveal ul, .reveal ol { margin: 0 0 0 1em; }
-.reveal li { margin: 0.25em 0; }
-.reveal a { color: var(--blue); text-decoration: none; }
-.reveal section.title a { color: #fff; text-decoration: underline; }
-.reveal .muted { color: var(--muted); }
-.reveal small, .reveal .small { font-size: 28px; line-height: 1.4; }
-.reveal .lead { font-size: 40px; line-height: 1.35; margin: 0 0 0.6em; }
-.reveal .caption { font-size: 32px; line-height: 1.35; margin: 0.4em 0 0; max-width: 1680px; }
-.reveal code { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 0.9em; }
+html, body, .reveal-viewport { background: #fff; }
+.reveal { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; color: var(--ink); font-size: 40px; }
+.reveal .slides section { text-align: left; box-sizing: border-box; height: 100%; padding: 110px 120px 90px; }
+.reveal .slides section.present { display: flex !important; flex-direction: column; }
+.reveal h1, .reveal h2, .reveal h3, .reveal p { font-family: inherit; text-transform: none; letter-spacing: 0; margin: 0; color: inherit; }
+.reveal h2 { font-size: 76px; font-weight: 700; line-height: 1.08; margin-bottom: 18px; }
+.reveal .sub { font-size: 40px; line-height: 1.3; color: var(--muted); margin-bottom: 30px; max-width: 1560px; }
+.reveal .sub b { color: var(--ink); }
+.reveal a { color: var(--blue); }
+.reveal code, .reveal pre { font-family: "SF Mono", Menlo, Consolas, monospace; }
 
-/* Title and section slides: the template's blue network background, white text, white logo. */
-.reveal section.title { color: #fff; }
-.reveal section.title h1, .reveal section.title p { color: #fff; }
-.reveal section.title .logo { position: absolute; left: 130px; top: 220px; width: 740px; }
-.reveal section.title .block { position: absolute; left: 960px; top: 200px; width: 880px; }
-.reveal section.title .block p { font-size: 44px; margin-top: 1em; }
-.reveal section.title .block .small { font-size: 32px; }
-/* The three projects' marks as one white monochrome family under the title, scaled to a shared cap height. */
-.reveal .logos { display: flex; align-items: center; gap: 48px; margin-top: 48px; }
-.reveal .logos img { height: 56px; width: auto; }
-.reveal section.title .logos img { filter: brightness(0) invert(1); }
-.reveal .logos .built { font-size: 26px; color: #fff; margin-right: 8px; }
+/* Where we are in the story: a small strip across the top of every content slide. */
+.reveal .chapters { position: absolute; top: 40px; left: 120px; right: 120px; display: flex; gap: 34px; font-size: 22px; letter-spacing: 0.06em; text-transform: uppercase; color: #8c959f; }
+.reveal .chapters .on { color: var(--ink); font-weight: 700; }
+.reveal .chapters .speaker { margin-left: auto; text-transform: none; letter-spacing: 0; }
 
-/* Content slides: white, the template's top bar, a fixed title band so titles land in the same place on every slide. */
-.reveal section.content { background: var(--paper); padding-top: 170px; padding-bottom: 80px; }
-/* Reveal puts an inline display on each section (none/block), so the flex layout must win with !important;
-   scoping to .present leaves hidden slides' inline display:none in charge. */
-.reveal .slides section.content.present { display: flex !important; flex-direction: column; justify-content: flex-start; }
-.reveal section.content > h2 { min-height: 90px; margin: 0 0 36px; flex: 0 0 auto; }
-/* The template's content layout: a full-width band of the network artwork across the top, logo left. */
-.reveal section.content .topbar { position: absolute; left: 0; top: 0; right: 0; height: 140px; background: #12b1d6 url("img/background.png") center top / cover no-repeat; display: flex; align-items: center; }
-.reveal section.content .topbar img { height: 104px; margin-left: 44px; }
+/* Title and closing: the conference's artwork. */
+.reveal section.cover { color: #fff; padding: 0; }
+.reveal section.cover .logo { position: absolute; left: 130px; top: 230px; width: 700px; }
+.reveal section.cover .block { position: absolute; left: 930px; top: 230px; width: 900px; }
+.reveal section.cover h1 { font-size: 100px; line-height: 1.05; font-weight: 700; }
+.reveal section.cover .tag { font-size: 52px; line-height: 1.2; margin-top: 36px; font-weight: 700; }
+.reveal section.cover .who { font-size: 32px; margin-top: 36px; line-height: 1.4; }
+.reveal section.cover a { color: #fff; }
 
-/* Template: statement. A small kicker, one large statement of at most three lines, an optional follow-up. */
-.reveal .kicker { font-size: 32px; color: var(--muted); margin: 0 0 0.5em; }
-.reveal .statement { font-size: 72px; font-weight: 700; line-height: 1.2; margin: 0 0 0.5em; max-width: 1680px; }
-.reveal .follow { font-size: 40px; line-height: 1.35; max-width: 1560px; }
-/* A closing line under a two-column body: bold, but sized to sit under the columns. */
-.reveal .statement.small { font-size: 40px; margin-top: 0.4em; }
+/* Statements: dark, one sentence. */
+.reveal section.dark { background: var(--night); color: #fff; justify-content: center; }
+.reveal section.dark .chapters { color: #5b6b7f; }
+.reveal section.dark .chapters .on { color: #fff; }
+.reveal .big { font-size: 96px; font-weight: 700; line-height: 1.1; max-width: 1640px; }
+.reveal .big em { font-style: normal; color: #7ee2a8; }
+.reveal .after { font-size: 44px; line-height: 1.35; margin-top: 40px; color: #b6c2d1; max-width: 1500px; }
 
-/* Template: code plus commentary. 55/45, code hand-wrapped to 48 characters, three commentary bullets at 32px. */
-.reveal .cols { display: flex; gap: 60px; align-items: flex-start; }
-.reveal .cols > * { flex: 1 1 0; min-width: 0; }
-.reveal .cols > .wide { flex: 1.2 1 0; }
-.reveal .cols.cc > .code-col { flex: 1.22 1 0; }
-.reveal .cols.cc > .commentary { flex: 1 1 0; }
-.reveal .commentary li { font-size: 32px; line-height: 1.4; margin: 0.35em 0; }
-.reveal .commentary p { font-size: 32px; line-height: 1.4; }
-.reveal pre.code { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 26px; line-height: 1.35; background: #f4f5f7; color: var(--ink); padding: 28px 32px; border-radius: 12px; width: 100%; box-sizing: border-box; box-shadow: none; white-space: pre; overflow: hidden; margin: 0; }
-.reveal .cols pre.code { font-size: 24px; }
-.reveal .quote { font-size: 36px; line-height: 1.4; font-style: italic; border-left: 8px solid var(--amber); padding-left: 28px; margin: 0 0 0.6em; }
+/* The map: drawn by the script from data attributes, so every slide shows the same system the same way. */
+.reveal .map { position: relative; width: min(100%, 1300px); margin: 0; }
+.reveal .split .map { width: 100%; }
+.reveal .map svg { display: block; width: 100%; height: auto; }
+.reveal .map .pin { position: absolute; transform: translate(-50%, -100%); white-space: nowrap; font-size: 30px; font-weight: 700; padding: 10px 22px; border-radius: 999px; color: #fff; background: var(--ink); box-shadow: 0 6px 16px rgba(0,0,0,.18); }
+.reveal .map .pin.ok { background: var(--green); }
+.reveal .map .pin.bad { background: var(--red); }
+.reveal .map .pin.new { background: var(--blue); }
+.reveal .map .note { position: absolute; width: 400px; transform: translate(-50%, -100%) rotate(-2deg); background: var(--gold-bg); border: 3px solid #d4a72c; border-radius: 6px; padding: 18px 24px; font-size: 30px; line-height: 1.3; box-shadow: 0 8px 18px rgba(0,0,0,.15); }
+.reveal .map .note b { display: block; font-size: 20px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold); margin-bottom: 4px; }
+.reveal .map .version { position: absolute; left: 0; top: -50px; font-size: 24px; font-weight: 700; color: var(--blue); background: var(--blue-bg); border-radius: 999px; padding: 6px 18px; }
 
-/* Template: terminal. Real output, dark, coloured by the fill script, one pane at 30px full width. */
-.reveal pre.term { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 30px; line-height: 1.35; background: var(--term); color: #e6e6e6; padding: 28px 36px; border-radius: 12px; width: 100%; box-sizing: border-box; box-shadow: none; margin: 0; white-space: pre-wrap; overflow: hidden; }
-.reveal pre.term + .caption { margin-top: 0.5em; }
-.reveal pre.term .bad { color: var(--amber); font-weight: 700; }
-.reveal pre.term .dim { color: #9a9a9a; }
-.reveal pre.term.missing { border: 4px solid var(--amber); }
-/* Two short runs stacked, or a run beside commentary: a little smaller, still legible. */
-/* Two runs stacked, or a long JSON beside a short pane: the smallest type the deck uses. */
-/* Each output line is its own block (see the fill script) so wrapped continuations hang-indent
-   under the message text instead of snapping back to column 0 and breaking the PASS/FAIL scan. */
-.reveal pre.term .ln { display: block; padding-left: 4ch; text-indent: -4ch; }
-.reveal .live { display: inline-block; font-size: 24px; font-weight: 700; color: var(--ink); background: #e3e5ea; border-radius: 999px; padding: 7px 21px; margin-left: 16px; vertical-align: middle; }
+/* A slide with the map on the left and a screen on the right. */
+.reveal .split { display: grid; grid-template-columns: 720px 1fr; gap: 56px; align-items: center; flex: 1; min-height: 0; }
+.reveal .split.wide-left { grid-template-columns: 1fr 720px; }
+.reveal .screen { display: flex; flex-direction: column; gap: 22px; align-items: flex-start; min-height: 0; }
+.reveal .shot { display: block; max-width: 100%; max-height: 640px; border: 2px solid var(--line); border-radius: 12px; box-shadow: 0 10px 30px rgba(31,35,40,.12); background: #fff; }
+.reveal .shot.short { max-height: 300px; }
+.reveal .caption { font-size: 30px; line-height: 1.35; color: var(--muted); }
+.reveal .caption b { color: var(--ink); }
+.reveal .live { display: none; font-size: 24px; font-weight: 700; color: #fff; background: var(--red); border-radius: 999px; padding: 8px 20px; margin-left: 18px; vertical-align: middle; text-decoration: none; }
+.reveal.live-mode .live { display: inline-block; }
 
-/* Template: table. Full width, flush left, a fixed first column where one is given. */
+/* Words in the middle of the slide. */
+.reveal .middle { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+.reveal .quote { font-size: 64px; line-height: 1.2; font-weight: 700; max-width: 1600px; }
+.reveal .quote .who { display: block; font-size: 30px; font-weight: 400; color: var(--muted); margin-top: 26px; }
+.reveal .sticky { display: inline-block; background: var(--gold-bg); border: 4px solid #d4a72c; border-radius: 8px; padding: 50px 60px; transform: rotate(-1.5deg); box-shadow: 0 14px 30px rgba(0,0,0,.12); max-width: 1440px; }
 
-/* Template: picture. One full-width visual, one caption. */
-.reveal svg.flow, .reveal svg.system, .reveal svg.loop { display: block; width: 100%; margin: 0 0 16px; }
-.reveal .shot { display: block; width: 100%; border: 1px solid #e3e5ea; border-radius: 12px; box-sizing: border-box; }
+/* Numbers, cards, people. */
+.reveal .numbers { display: flex; gap: 80px; margin-top: 30px; }
+.reveal .numbers div { flex: 1; }
+.reveal .numbers b { display: block; font-size: 150px; line-height: 1; font-weight: 700; color: var(--ink); }
+.reveal .numbers span { display: block; font-size: 38px; line-height: 1.25; margin-top: 16px; color: var(--muted); }
+.reveal .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 20px; }
+.reveal .cards.four { grid-template-columns: repeat(4, 1fr); gap: 30px; }
+.reveal .cards.five { grid-template-columns: repeat(5, 1fr); gap: 24px; }
+.reveal .card { background: var(--wash); border-radius: 18px; padding: 34px 36px; border-top: 10px solid var(--line); }
+.reveal .card.ok { border-top-color: var(--green); }
+.reveal .card.bad { border-top-color: var(--red); }
+.reveal .card.blue { border-top-color: var(--blue); }
+.reveal .card.gold { border-top-color: #d4a72c; }
+.reveal .card h3 { font-size: 40px; font-weight: 700; margin-bottom: 14px; line-height: 1.15; }
+.reveal .card p { font-size: 30px; line-height: 1.35; color: var(--muted); }
+.reveal .card .who { font-family: "SF Mono", Menlo, monospace; font-size: 22px; color: var(--ink); background: #fff; border: 2px solid var(--line); border-radius: 999px; padding: 4px 14px; display: inline-block; margin-bottom: 18px; }
+.reveal .card .icon { font-size: 64px; line-height: 1; margin-bottom: 14px; display: block; }
+.reveal .card img { height: 64px; margin-bottom: 18px; filter: brightness(0); }
+.reveal .card img.keep { filter: none; }
+.reveal .card .wordmark { font-family: "SF Mono", Menlo, monospace; font-size: 54px; font-weight: 700; line-height: 64px; display: block; margin-bottom: 18px; }
 
-/* Template: three-up cards with a logo row. */
-.reveal .cards { display: flex; gap: 60px; align-items: flex-start; }
-.reveal .cards > div { flex: 1 1 0; min-width: 0; }
-.reveal .cards + .caption { margin-top: 0.9em; }
-.reveal .cards .logo-row { height: 120px; display: flex; align-items: center; }
-.reveal .cards .logo-row img { height: 56px; width: auto; filter: brightness(0); }
-.reveal .cards h3 { margin-bottom: 0.4em; }
-.reveal .cards p { font-size: 34px; line-height: 1.4; }
-.reveal .cards .verb { font-size: 40px; font-weight: 700; margin: 0 0 0.2em; }
-.reveal .cards .calm .verb { color: var(--calm); }
-.reveal .cards .catalog .verb { color: var(--catalog); }
+/* Code, kept short. */
+.reveal pre.json { font-size: 25px; line-height: 1.4; background: var(--wash); border: 2px solid var(--line); border-radius: 14px; padding: 28px 34px; margin: 0; white-space: pre; box-shadow: none; width: auto; color: var(--ink); }
+.reveal pre.json .k { color: #0550ae; }
+.reveal pre.json .s { color: #0a3069; }
+.reveal pre.json .hl { background: var(--gold-bg); border-radius: 4px; }
 
-/* Template: call to action. */
-.reveal .kv { display: grid; grid-template-columns: max-content 1fr; gap: 12px 36px; font-size: 32px; }
-.reveal .kv dt { color: var(--muted); }
-.reveal .kv dd { margin: 0; }
+/* The flow on "every pull request asks the map". */
+.reveal svg.flow { width: 100%; height: auto; display: block; margin-top: 10px; }
 
+/* The opening pull request, drawn like GitHub's. */
+.reveal .pr { background: #fff; border: 2px solid var(--line); border-radius: 14px; padding: 36px 44px; font-size: 32px; line-height: 1.4; max-width: 1500px; box-shadow: 0 10px 30px rgba(31,35,40,.10); }
+.reveal .pr .title { font-size: 52px; font-weight: 400; margin-bottom: 14px; }
+.reveal .pr .title span { color: var(--muted); }
+.reveal .pr .meta { color: var(--muted); margin-bottom: 24px; }
+.reveal .pr .meta b { color: var(--ink); }
+.reveal .pr .state { display: inline-block; background: #8250df; color: #fff; font-weight: 700; border-radius: 999px; padding: 4px 22px; margin-right: 14px; font-size: 30px; }
+.reveal .pr ul { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--line); }
+.reveal .pr li { display: flex; align-items: center; gap: 20px; padding: 18px 0; border-bottom: 2px solid var(--line); }
+.reveal .pr .dot { width: 26px; height: 26px; border-radius: 50%; background: var(--green); flex: 0 0 auto; }
+.reveal .pr .dot.merged { background: #8250df; }
+.reveal .pr code { font-size: 0.85em; background: var(--wash); border-radius: 6px; padding: 2px 10px; }
+.reveal .pr .muted { color: var(--muted); }
 
-/* Template: workshop step. The screen the participant sees on the left, a Learning Lab picture or a repository
-   terminal session replayed from captures.js, and beside it the callout that says what the screen shows and what to
-   take from it. Every step slide carries both; slides/check.mjs insists. */
-.reveal section.step > h2 { min-height: 0; margin-bottom: 22px; }
-.reveal .screen { display: grid; grid-template-columns: 1100px minmax(0, 1fr); gap: 44px; align-items: start; }
-.reveal .screen .pane-head { font-size: 22px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0 0 10px; }
-.reveal .screen .pane-head strong { color: var(--ink); }
-.reveal .screen img.shot { width: 100%; }
-.reveal .screen pre.term { width: 100%; font-size: 20px; line-height: 1.3; padding: 22px 26px; margin: 0; }
-.reveal pre.term .cmd { color: #fff; font-weight: 700; }
-.reveal pre.term .cmd .prompt { color: var(--green); }
-.reveal .callout-panel { background: #f4f5f7; border-left: 8px solid var(--amber); border-radius: 0 12px 12px 0; padding: 22px 26px; font-size: 25px; line-height: 1.35; }
-.reveal .callout-panel h3 { font-size: 19px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin: 0 0 8px; font-weight: 700; }
-.reveal .callout-panel p { margin: 0 0 18px; }
-.reveal .callout-panel p:last-child { margin-bottom: 0; }
-.reveal .callout-panel .takeaway { font-weight: 700; color: var(--ink); }
-.reveal .callout-panel code { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 0.9em; }
-.reveal pre.term .hl { color: #fff; font-weight: 700; }
+/* Links at the end. */
+.reveal .links { display: grid; grid-template-columns: max-content 1fr; gap: 20px 50px; font-size: 40px; margin-top: 50px; }
+.reveal .links dt { color: var(--muted); }
+.reveal .links dd { margin: 0; }
 
+/* CALM Hub picture with large pins over its small labels (positions recorded by hub-screenshots.mjs). */
+.reveal .shot-wrap { position: relative; display: inline-block; }
+.reveal .shot-wrap img.shot { max-height: 700px; }
+.reveal .shot-wrap .ring { position: absolute; border: 7px solid var(--red); border-radius: 14px; box-sizing: border-box; }
+.reveal .shot-wrap .tag { position: absolute; font-size: 30px; font-weight: 700; color: #fff; background: var(--red); border-radius: 12px; padding: 10px 20px; white-space: nowrap; box-shadow: 0 6px 18px rgba(0,0,0,.25); }
+.reveal .shot-wrap .tag.blue { background: var(--blue); }
 
+.reveal .slide-number { font-size: 16px; background: transparent; color: #8c959f; }
+/* A map on its own sits in the middle of the space under the title, with room above for its version and notes. */
+.reveal .slides section > .map { margin: auto 0; }
 
-/* The pull request card on the opening slide. */
-.reveal .pr-card { background: #fff; border: 2px solid #e3e5ea; border-radius: 14px; padding: 28px 34px; font-size: 26px; line-height: 1.4; }
-.reveal .pr-card .pr-title { font-size: 40px; font-weight: 700; margin: 0 0 10px; }
-.reveal .pr-card .pr-num { color: var(--muted); font-weight: 400; }
-.reveal .pr-card .pr-meta { margin: 0 0 18px; color: var(--muted); }
-.reveal .pr-card .pr-meta b { color: var(--ink); }
-.reveal .pr-card .pr-state { display: inline-block; background: #8250df; color: #fff; font-weight: 700; border-radius: 999px; padding: 4px 18px; margin-right: 10px; }
-.reveal .pr-card code { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 0.9em; background: #f4f5f7; border-radius: 6px; padding: 2px 8px; }
-.reveal .pr-card .pr-timeline { list-style: none; margin: 0; padding: 0; border-top: 2px solid #e3e5ea; }
-.reveal .pr-card .pr-timeline li { padding: 14px 0; border-bottom: 2px solid #e3e5ea; display: flex; align-items: center; gap: 16px; }
-.reveal .pr-card .pr-dot { width: 22px; height: 22px; border-radius: 50%; background: var(--green); flex: 0 0 auto; }
-.reveal .pr-card .pr-dot.merged { background: #8250df; }
-
-/* The catalog slide: the facts beside the control's own words. */
-.reveal .facts { list-style: none; margin: 0; padding: 0; }
-.reveal .facts li { display: grid; grid-template-columns: 170px 1fr; gap: 20px; font-size: 32px; line-height: 1.3; margin: 0 0 18px; }
-.reveal .facts b { color: var(--catalog); }
-.reveal .catalog-cols .quote { font-size: 32px; border-left-color: var(--catalog); }
-/* ergo has no mark yet: its name, set as one. */
-.reveal .cards .wordmark { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 56px; font-weight: 700; color: var(--ink); }
-.reveal .cards .verb { color: var(--ink); }
-.reveal .quote-line { margin: 1.4em 0 0.2em; }
-.reveal .links { margin-top: 0.8em; font-size: 36px; gap: 18px 40px; }
-/* Slides with a short body: the body sits in the middle of the space under the title band. */
-.reveal .slides section.content.middle.present { justify-content: center; padding-top: 300px; padding-bottom: 80px; }
-.reveal section.content.middle > h2 { position: absolute; top: 170px; left: 120px; right: 120px; }
-/* CALM Hub pictures: a wider screen, and large pins over the picture that say what the small Hub labels say. */
-.reveal .screen.hub { grid-template-columns: 1160px minmax(0, 1fr); gap: 40px; }
-.reveal .shot-wrap { position: relative; }
-.reveal .shot-wrap .ring { position: absolute; border: 6px solid var(--amber); border-radius: 14px; box-sizing: border-box; }
-.reveal .shot-wrap .ring.bad { border-color: #d93025; }
-.reveal .shot-wrap .ring.good { border-color: #188038; }
-.reveal .shot-wrap .pin { position: absolute; max-width: 400px; font-size: 26px; font-weight: 700; line-height: 1.25; color: #fff; background: var(--ink); border-radius: 12px; padding: 10px 18px; box-shadow: 0 6px 18px rgba(0,0,0,.25); }
-.reveal .shot-wrap .pin.bad { background: #d93025; }
-.reveal .shot-wrap .pin.good { background: #188038; }
-/* The theme caps pictures at 95% width; a pinned picture must fill its frame so the pins land on their boxes. */
-.reveal .shot-wrap img.shot { display: block; max-width: 100%; max-height: none; margin: 0; }
+/* The ergo slide, in ergo's own colours: near-black, off-white, lime. */
+.reveal section.ergo { background: #080f1a; color: #f7f7ef; }
+.reveal section.ergo .chapters { color: #5b6b7f; }
+.reveal section.ergo .chapters .on { color: #f7f7ef; }
+.reveal section.ergo .ergo-mark { height: 96px; width: auto; align-self: flex-start; margin: 0 0 30px; }
+.reveal section.ergo .sub { color: #b9c0c9; }
+.reveal section.ergo .card { background: #121c2b; border-top-color: #d5ff4d; }
+.reveal section.ergo .card h3 { color: #f7f7ef; }
+.reveal section.ergo .card p { color: #b9c0c9; }
+.reveal section.ergo .card .n { display: inline-block; font-family: "SF Mono", Menlo, monospace; font-size: 30px; font-weight: 700; color: #080f1a; background: #d5ff4d; border-radius: 8px; padding: 2px 14px; margin-bottom: 16px; }
+.reveal section.ergo .card .ours { margin-top: 18px; font-family: "SF Mono", Menlo, monospace; font-size: 24px; color: #d5ff4d; }
+.reveal section.ergo .card .ours::before { content: "Here: "; color: #8c959f; }
+.reveal section.ergo .caption { color: #b9c0c9; margin-top: 40px; }
+.reveal section.ergo .caption a { color: #d5ff4d; }

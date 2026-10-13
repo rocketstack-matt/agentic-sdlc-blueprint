@@ -5,385 +5,338 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Governing the Agentic SDLC</title>
   <link rel="stylesheet" href="vendor/reveal/dist/reveal.css">
-  <link rel="stylesheet" href="vendor/reveal/dist/theme/white.css">
   <link rel="stylesheet" href="deck.css">
 </head>
 <body>
 <div class="reveal">
   <div class="slides">
 
-    <section class="title" data-background-image="img/background.png" data-background-size="cover">
-      <img class="logo" src="img/logo.svg" alt="Open Source in Finance Forum">
+    <!-- ============================================================ 1. The problem (Aaron) -->
+
+    <section class="cover" data-background-image="img/background.png" data-background-size="cover">
+      <img class="logo" src="img/logo.svg" alt="Open Source in Finance Forum, New York 2026">
       <div class="block">
         <h1>Governing the Agentic SDLC</h1>
-        <p>When the architecture changes,<br>the controls follow.<br><span class="small">Matthew Bain and Aaron Searle<br>OSFF New York, 4 November 2026</span></p>
-        <div class="logos"><span class="built">Built on</span><img src="img/logos/calm.svg" alt="FINOS CALM"><img src="img/logos/sdlc-common-controls.svg" alt="SDLC Common Controls Catalog"></div>
+        <p class="tag">When the architecture changes, the controls follow.</p>
+        <p class="who">Matthew Bain and Aaron Searle<br>OSFF New York, 4 November 2026</p>
       </div>
-      <aside class="notes">Speaker: Aaron. Thirty five minutes, one story, two voices. I start with the problem and the controls the banks wrote down. Matthew shows what happens when the architecture itself decides which changes are risky. The line to remember is on the slide: when the architecture changes, the controls follow. By the end you will see that happen.</aside>
+      <aside class="notes">Aaron. Thirty five minutes, one story. I'll start with a problem every bank here has, and it's about to get much bigger. Matthew will show you a way out, live, on GitHub. The line to remember is on the slide: when the architecture changes, the controls follow.</aside>
     </section>
 
-    <section data-station="none" class="step">
+    <section data-chapter="1" data-speaker="Aaron">
       <h2>Author: a bot. Reviewer: a bot. Merged.</h2>
-      <div class="screen">
-        <div>
-          <p class="pane-head"><strong>A pull request on a protected branch</strong> &middot; any bank, any Tuesday</p>
-          <div class="pr-card">
-            <p class="pr-title">Add position total endpoint <span class="pr-num">#42</span></p>
-            <p class="pr-meta"><span class="pr-state">Merged</span> <b>author-agent[bot]</b> merged 1 commit into <code>main</code> from <code>agent/position-total</code></p>
-            <ul class="pr-timeline">
-              <li><span class="pr-dot ok"></span><b>review-agent[bot]</b> approved these changes</li>
-              <li><span class="pr-dot ok"></span>All checks have passed <span class="muted">6 successful checks</span></li>
-              <li><span class="pr-dot ok"></span>This branch has no conflicts with the base branch</li>
-              <li><span class="pr-dot merged"></span><b>author-agent[bot]</b> merged commit <code>b4b5522</code> into <code>main</code></li>
-            </ul>
-          </div>
-        </div>
-        <aside class="callout-panel">
-          <h3>What this shows</h3>
-          <p>A change opened by a coding agent, approved by a review agent, every check green, merged. It touched the service that writes the client ledger. Nobody noticed, because nothing knew.</p>
-          <h3>Take away</h3>
-          <p class="takeaway">Was this change risky? Who would have known, and how?</p>
-        </aside>
-      </div>
-      <aside class="notes">Speaker: Aaron. Start on this and say nothing about FINOS. A pull request like this merged somewhere this week. Opened by an agent, approved by an agent, checks green. It changed the position service, and the position service writes to the client ledger, the bank's book of record. Was it risky? Somebody would have said yes, if they had looked, and if they had remembered what that service talks to. Nobody looked, because the agents ship faster than anyone can look. That question, who knows which changes are risky, is the whole talk.</aside>
-    </section>
-
-    <section data-station="none" class="middle">
-      <h2>Three things that drift apart</h2>
-      <svg class="flow drift" viewBox="0 0 1680 470" aria-label="Controls, architecture and pipeline, kept in step by people">
-        <g font-family="Arial" text-anchor="middle">
-          <rect x="0" y="10" width="470" height="290" rx="18" fill="#0097A7"/>
-          <text x="235" y="95" fill="#fff" font-size="46" font-weight="700">The controls</text>
-          <text x="235" y="160" fill="#fff" font-size="32">what must be true</text>
-          <text x="235" y="250" fill="#fff" font-size="28" font-style="italic">a policy document</text>
-          <rect x="605" y="10" width="470" height="290" rx="18" fill="#4285F4"/>
-          <text x="840" y="95" fill="#fff" font-size="46" font-weight="700">The architecture</text>
-          <text x="840" y="160" fill="#fff" font-size="32">what connects to what</text>
-          <text x="840" y="250" fill="#fff" font-size="28" font-style="italic">a diagram on a wiki</text>
-          <rect x="1210" y="10" width="470" height="290" rx="18" fill="#595959"/>
-          <text x="1445" y="95" fill="#fff" font-size="46" font-weight="700">The pipeline</text>
-          <text x="1445" y="160" fill="#fff" font-size="32">what actually gets checked</text>
-          <text x="1445" y="250" fill="#fff" font-size="28" font-style="italic">YAML, one team at a time</text>
-          <g stroke="#FFAB40" stroke-width="6" fill="none" stroke-dasharray="14 10">
-            <path d="M478 155 L597 155"/><path d="M1083 155 L1202 155"/>
-          </g>
-          <g font-size="30" font-weight="700" fill="#c77800"><text x="537" y="135">drift</text><text x="1142" y="135">drift</text></g>
-          <text x="840" y="410" fill="#212121" font-size="40" font-weight="700">Kept in step by people, from memory, in review.</text>
-        </g>
-      </svg>
-      <p class="caption">That worked when people wrote the code. An agent opens forty pull requests a day, and has never read the wiki.</p>
-      <aside class="notes">Speaker: Aaron. Every bank has these three. The controls: what must be true, in a policy document. The architecture: what connects to what, in a diagram somebody drew for a design review. The pipeline: what actually gets checked, in YAML, team by team. They drift apart, and people keep them in step: a reviewer who remembers that this service writes to the ledger. That worked when people wrote the code at the speed people write code. It does not survive an agent that opens forty pull requests a day and has never read the wiki.</aside>
-    </section>
-
-    <section data-station="none" class="middle">
-      <h2>The banks wrote the controls once, in the open</h2>
-      <div class="cols catalog-cols">
-        <div>
-          <p class="lead">The FINOS SDLC Common Controls Catalog: a working group of banks and vendors writing the controls every institution was writing alone.</p>
-          <ul class="facts">
-            <li><b>22</b> controls, from code review to deployment gating</li>
-            <li><b>11</b> risks they exist to reduce</li>
-            <li><b>Mapped</b> to NIST SP 800-53, and where it fits to DORA, SSDF and SLSA</li>
-          </ul>
-        </div>
-        <div>
-          <p class="kicker">SDLC-PREV-001 Code Review, in its own words</p>
-          <p class="quote">"The policy MUST define deterministic, machine-evaluable criteria for selecting the required review mode"</p>
-          <p class="quote">"the author of the change set MUST NOT satisfy the human-review requirement for their own change"</p>
-        </div>
-      </div>
-      <p class="caption">The catalog says what. It does not say which of your changes are risky. That depends on your system.</p>
-      <aside class="notes">Speaker: Aaron. In July 2025 I proposed that we stop writing the same controls at every bank. Fifteen months later the catalog has twenty-two controls and eleven risks, each mapped to NIST and where it fits to DORA, SSDF and SLSA. Code review is the one we follow today. Two sentences matter. The policy must use deterministic, machine-evaluable criteria to decide what kind of review a change needs. And the author may not approve their own change. Machine-evaluable criteria about what, though? The catalog cannot say which of your changes are risky. That depends on your system.</aside>
-    </section>
-
-    <section data-station="none" class="middle">
-      <p class="kicker">"Deterministic, machine-evaluable criteria." Criteria about what?</p>
-      <p class="statement">Who decides which changes are risky? Today: a person, from memory.</p>
-      <p class="follow">A CODEOWNERS file, a wiki page, a reviewer who remembers what talks to the ledger. None of it notices when the architecture changes.</p>
-      <aside class="notes">Speaker: Aaron, then hand over. Ask the room: in your bank, who decides which changes need a human? It is a CODEOWNERS file somebody wrote two years ago, a wiki page, or a reviewer who happens to remember that this service talks to the ledger. None of it notices when the architecture changes. Matthew, what would machine-evaluable criteria actually look like? Hand over here, about six minutes in.</aside>
-    </section>
-
-    <section data-station="none" class="step">
-      <h2>What is risky is a fact about the architecture</h2>
-      <div class="screen hub">
-        <div>
-          <p class="pane-head"><strong>CALM Hub</strong> &middot; Trade Capture, version 1.0.0</p>
-          <div class="shot-wrap"><img class="shot" src="img/hub/clean.png" alt="The Trade Capture architecture in CALM Hub: Trader, Trade API, Position Service, Trade Store and Client Ledger"><span class="ring key" data-node="client-ledger"></span><span class="pin key" data-node="client-ledger" data-place="below">The book of record</span></div>
-        </div>
-        <aside class="callout-panel">
-          <h3>What this shows</h3>
-          <p>A trade capture system in FINOS CALM: the boxes, the connections, and data about each. Position Service writes to the Client Ledger.</p>
-          <h3>Take away</h3>
-          <p class="takeaway">The rule a risk officer would write: any change to a service that connects to the Client Ledger needs a human approver.</p>
-        </aside>
-      </div>
-      <aside class="notes">Speaker: Matthew. This is the answer: what is risky is already a fact about your architecture, if your architecture is data rather than a picture. This is FINOS CALM, the architecture as code, in CALM Hub. Five boxes. Position Service writes to the Client Ledger. Here is the rule, in the words a risk officer would use: any change to a service that connects to the Client Ledger needs a human approver. Notice the rule does not name a service. It names a relationship. Keep this picture in mind; it is going to change colour.</aside>
-    </section>
-
-    <section data-station="none">
-      <h2>Put the control on the box</h2>
-      <div class="cols cc">
-        <div class="code-col">
-<pre class="code">"unique-id": "client-ledger",
-"controls": {
- "client-ledger-human-approval": {
-  "requirements": [{ "config": { "ergo": {
-   "subjects": {
-    "connection to the client ledger,
-     changed": {
-     "applies_to": {
-      "into_the_ledger": {
-       "value": "client-ledger" ... },
-      "from_a_changed_node": {
-       "ref": ["$$input","change","nodes"] }
-   }}},
-   "requirements": { "...": {
-    "description": "Any change to a service
-     that connects to the Client Ledger is
-     approved by a human",
-    "checks": { "human_approved": ... }
-}}}}]}}</pre>
-        </div>
-        <div class="commentary">
+      <div class="middle">
+        <div class="pr">
+          <p class="title">Add position total endpoint <span>#42</span></p>
+          <p class="meta"><span class="state">Merged</span><b>coding-agent[bot]</b> merged 1 commit into <code>main</code></p>
           <ul>
-            <li>In CALM any box can carry controls. This one sits on the Client Ledger.</li>
-            <li>The rule inside is written for ergo, an open source project: which things it applies to, what must be true of them, in words.</li>
-            <li>It applies to connections into the ledger from whatever the change touches. No service is named, so no list goes stale.</li>
+            <li><span class="dot"></span><b>review-agent[bot]</b>&nbsp;approved these changes</li>
+            <li><span class="dot"></span>All checks have passed <span class="muted">&nbsp;6 successful checks</span></li>
+            <li><span class="dot merged"></span><b>coding-agent[bot]</b>&nbsp;merged into <code>main</code></li>
           </ul>
         </div>
       </div>
-      <aside class="notes">Speaker: Matthew. This is the control, on the Client Ledger box, in the architecture file. CALM lets any node carry controls. The rule inside is written for ergo, an open source project that checks rules written as data and explains every answer in words. Read it in English: take every connection into the client ledger whose source is a box this change touches; for each one, a human must have approved. That is the risk officer's sentence. Nowhere does it say position service. If the architecture changes, the set of things this rule applies to changes with it.</aside>
+      <aside class="notes">Aaron. A pull request like this merged somewhere this week. Written by an agent, reviewed by an agent, every check green. Nobody looked at it. Was that OK? You can't tell from this screen, and that's the problem. To know whether this change was risky, you'd need to know what that code talks to. Let me show you.</aside>
     </section>
 
-    <section data-station="none" class="middle">
-      <h2>The loop</h2>
-      <svg class="flow loop" viewBox="0 0 1680 470" aria-label="Architecture, change, rule, verdict, and back to the architecture">
-        <defs><marker id="loop-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#595959"/></marker></defs>
-        <g font-family="Arial" text-anchor="middle">
-          <rect x="0" y="20" width="360" height="230" rx="18" fill="#4285F4"/>
-          <text x="180" y="80" fill="#fff" font-size="36" font-weight="700">The architecture</text>
-          <text x="180" y="130" fill="#fff" font-size="24">boxes, connections,</text>
-          <text x="180" y="162" fill="#fff" font-size="24">and the controls on them</text>
-          <text x="180" y="222" fill="#fff" font-size="22" font-style="italic">FINOS CALM</text>
-          <rect x="440" y="20" width="360" height="230" rx="18" fill="#595959"/>
-          <text x="620" y="80" fill="#fff" font-size="36" font-weight="700">A change</text>
-          <text x="620" y="130" fill="#fff" font-size="24">an agent's pull request:</text>
-          <text x="620" y="162" fill="#fff" font-size="24">which boxes does it touch?</text>
-          <text x="620" y="222" fill="#fff" font-size="22" font-style="italic">the merge gateway</text>
-          <rect x="880" y="20" width="360" height="230" rx="18" fill="#0097A7"/>
-          <text x="1060" y="80" fill="#fff" font-size="36" font-weight="700">The rule</text>
-          <text x="1060" y="130" fill="#fff" font-size="24">ALLOW or DENY,</text>
-          <text x="1060" y="162" fill="#fff" font-size="24">and why, in words</text>
-          <text x="1060" y="222" fill="#fff" font-size="22" font-style="italic">ergo</text>
-          <rect x="1320" y="20" width="360" height="230" rx="18" fill="#4285F4"/>
-          <text x="1500" y="80" fill="#fff" font-size="36" font-weight="700">The verdict</text>
-          <text x="1500" y="130" fill="#fff" font-size="24">pinned back on the box</text>
-          <text x="1500" y="162" fill="#fff" font-size="24">it was about</text>
-          <text x="1500" y="222" fill="#fff" font-size="22" font-style="italic">a CALM decorator</text>
-          <g stroke="#595959" stroke-width="5" fill="none" marker-end="url(#loop-a)">
-            <line x1="365" y1="135" x2="432" y2="135"/><line x1="805" y1="135" x2="872" y2="135"/><line x1="1245" y1="135" x2="1312" y2="135"/>
-            <path d="M1500 255 L1500 330 Q1500 360 1470 360 L210 360 Q180 360 180 330 L180 262"/>
-          </g>
-          <text x="840" y="410" fill="#212121" font-size="30">Nothing in the pipeline names a service.</text>
-          <text x="840" y="450" fill="#212121" font-size="30" font-weight="700">Change the diagram, and the next decision changes with it.</text>
-        </g>
-      </svg>
-      <aside class="notes">Speaker: Matthew. Four steps, and that is all the machinery in this talk. The architecture, in CALM, carries the controls. A change arrives, an agent's pull request, and a merge gateway works out which boxes it touches. The rule, evaluated by ergo, says allow or deny, and says why in words. And the verdict goes back onto the diagram, onto the box it was about, as a CALM decorator: a standard way to attach extra information to an architecture without editing it. Then round again. Nothing in the pipeline names a service, so when the diagram changes, the next decision changes with it. Now the demo.</aside>
+    <section data-chapter="1" data-speaker="Aaron">
+      <h2>Meet a trade capture system</h2>
+      <p class="sub">Five boxes. Traders send trades in; the Client Ledger keeps every client's positions.</p>
+      <figure class="map" data-version="1.0"></figure>
+      <aside class="notes">Aaron. This is the system we'll use all talk, and you only need to learn it once. A trader sends trades to the Trade API. The Trade API stores them, and asks the Position Service to update positions. The Position Service writes to the Client Ledger, gold, on the right: the bank's book of record, every client's holdings. If the ledger is wrong, the bank is wrong.</aside>
     </section>
 
-    <section data-station="none" class="step">
-      <h2>A routine change merges with no human <span class="live">live</span></h2>
-      <div class="screen hub">
-        <div>
-          <p class="pane-head"><strong>CALM Hub</strong> &middot; after the merge gateway's decision</p>
-          <div class="shot-wrap"><img class="shot" src="img/hub/routine.png" alt="Trade API shows Met in CALM Hub"><span class="ring good" data-node="trade-api"></span><span class="pin good" data-node="trade-api" data-place="below">&#10003; Merged, no human</span></div>
-        </div>
-        <aside class="callout-panel">
-          <h3>What this shows</h3>
-          <p>An agent adds an endpoint to Trade API. Reviewing its own change: DENY. Reviewed by the approved review bot: ALLOW.</p>
-          <h3>Take away</h3>
-          <p class="takeaway">Most changes should look like this: fast, machine-reviewed, no ceremony, still on the record.</p>
-        </aside>
+    <section data-chapter="1" data-speaker="Aaron">
+      <h2>Most changes are harmless</h2>
+      <p class="sub">A new endpoint on the Trade API. Nothing near the ledger.</p>
+      <figure class="map" data-version="1.0" data-ok="trade-api" data-pins="trade-api:ok:Harmless"></figure>
+      <aside class="notes">Aaron. Most changes look like this. A new endpoint on the Trade API: useful, low risk, nowhere near the ledger. You want these to go through fast. If a person has to approve every one, they stop reading.</aside>
+    </section>
+
+    <section data-chapter="1" data-speaker="Aaron">
+      <h2>Some are not</h2>
+      <p class="sub">A change to the Position Service. It writes the Client Ledger.</p>
+      <figure class="map" data-version="1.0" data-bad="position-service" data-hot="position-service>client-ledger" data-pins="position-service:bad:Risky"></figure>
+      <aside class="notes">Aaron. And then some changes are not harmless. The same kind of change, a new endpoint, but on the Position Service, and the Position Service writes to the ledger. Notice that nothing in the change itself says "ledger". It's risky because of where it sits on the map.</aside>
+    </section>
+
+    <section data-chapter="1" data-speaker="Aaron">
+      <div class="middle">
+        <p class="sub">So banks have a rule like this:</p>
+        <div><p class="quote sticky">Any change to a service that connects to the Client Ledger needs a person to approve it.</p></div>
       </div>
-      <aside class="notes">Speaker: Matthew. Live: run the routine session. The agent adds an account summary endpoint to Trade API, and first tries to review its own change. Deny, and the reason is the catalog's sentence: the author may not review its own change. The approved review bot reviews it instead, and it merges. No human. Trade API turns green in the Hub: the decision is already on the diagram. This matters: if every change needed a person, people would stop reading. The fast lane is the point. If the live run fails, this slide is the recording.</aside>
+      <aside class="notes">Aaron. So every bank has a rule like this one. Any change to a service that connects to the Client Ledger needs a person to approve it. Your auditors know it, your regulator expects it. This is the rule we'll follow for the rest of the talk.</aside>
     </section>
 
-    <section data-station="none" class="step">
-      <h2>A change near the ledger: the diagram says no <span class="live">live</span></h2>
-      <div class="screen hub">
-        <div>
-          <p class="pane-head"><strong>CALM Hub</strong> &middot; hovering over Position Service</p>
-          <div class="shot-wrap"><img class="shot" src="img/hub/ledger.png" alt="Position Service and its connection to the Client Ledger show Not met; the hover card says Requires: A human approved this change"><span class="ring bad" data-node="position-service"></span><span class="pin bad" data-node="position-service" data-place="right">&#10007; Needs a human: it connects to the Client Ledger</span></div>
-        </div>
-        <aside class="callout-panel">
-          <h3>What this shows</h3>
-          <p>A position total on Position Service. The code never mentions the ledger; the rule follows Position Service's connection to it: DENY.</p>
-          <h3>Take away</h3>
-          <p class="takeaway">Nobody listed Position Service as risky. The architecture did.</p>
-        </aside>
+    <section class="dark" data-chapter="1" data-speaker="Aaron">
+      <p class="after" style="margin:0 0 30px">Who checks that rule today?</p>
+      <p class="big">A reviewer.<br>From memory.</p>
+      <p class="after">Someone who happens to know that this service talks to the ledger.</p>
+      <aside class="notes">Aaron. Who actually checks that rule today? Honestly: a reviewer, from memory. Somebody who happens to know that the Position Service writes to the ledger. Maybe a CODEOWNERS file someone wrote two years ago. None of it notices when the system changes.</aside>
+    </section>
+
+    <section data-chapter="1" data-speaker="Aaron">
+      <h2>Now agents write the code</h2>
+      <div class="numbers">
+        <div><b>40</b><span>pull requests a day, from one agent</span></div>
+        <div><b>0</b><span>of them read the wiki first</span></div>
+        <div><b>1</b><span>reviewer, who can't remember everything</span></div>
       </div>
-      <aside class="notes">Speaker: Matthew. Live: the ledger session. The same agent, the same kind of change, a position total endpoint on Position Service, reviewed by the same bot. Denied. Nothing in the code mentions the ledger; the rule found it through the architecture, because Position Service connects to the Client Ledger. Hover the box in the Hub and it says exactly what is missing: a human approved this change. The connection itself is red. This is the pull request from the start of the talk, caught.</aside>
+      <p class="sub" style="margin-top:70px">Memory doesn't scale. The rule needs to check itself.</p>
+      <aside class="notes">Aaron. And now agents write the code. One agent can open forty pull requests a day. It has never read your wiki, and it takes the shortest path to green. Your reviewer can't remember everything. Memory doesn't scale. The rule needs to check itself.</aside>
     </section>
 
-    <section data-station="none" class="step">
-      <h2>The human approves the real diff</h2>
-      <div class="screen">
-        <div>
-          <p class="pane-head"><strong>Terminal</strong> &middot; the approval service</p>
-          <pre class="term" data-capture="approve"></pre>
-        </div>
-        <aside class="callout-panel">
-          <h3>What this shows</h3>
-          <p>Alice sees the diff straight from the repository, never the agent's summary of it. She approves, and the approval is signed and bound to this commit and this exact diff.</p>
-          <h3>Take away</h3>
-          <p class="takeaway">An approval of this change, not of the agent's description of it.</p>
-        </aside>
+    <section data-chapter="1" data-speaker="Aaron">
+      <h2>The industry wrote the controls down, together</h2>
+      <p class="sub">The FINOS SDLC Common Controls Catalog: banks and vendors, writing once what every bank was writing alone.</p>
+      <div class="cards">
+        <div class="card blue"><h3>22 controls</h3><p>From code review to deployment gating</p></div>
+        <div class="card blue"><h3>11 risks</h3><p>The things the controls exist to stop</p></div>
+        <div class="card blue"><h3>Mapped</h3><p>To NIST SP 800-53, and to DORA, SSDF and SLSA where they fit</p></div>
       </div>
-      <aside class="notes">Speaker: Matthew. The agent can ask for approval; it cannot give it. Alice, a person, sees the diff rendered from the repository, not a summary the agent wrote, because an agent that has been prompt-injected will describe a dangerous change in reassuring words. She types the code that stands in for a passkey and the service signs an approval bound to this commit and the hash of this exact diff, good once, for ten minutes. Be honest: the passkey is mocked; the signature and the binding are real.</aside>
+      <p class="sub" style="margin-top:50px">It says <b>what</b> must be true. Only your architecture knows <b>where</b>.</p>
+      <aside class="notes">Aaron. The good news: the industry already wrote the controls down, together. In FINOS we built the SDLC Common Controls Catalog: twenty two controls, eleven risks, mapped to NIST and DORA. Code review is in there, including "risky changes need a person". But a catalog can only say what must be true. It can't know which of your changes are risky. Only your architecture knows that. Matthew.</aside>
     </section>
 
-    <section data-station="none" class="step">
-      <h2>One more line, and the approval is void <span class="live">live</span></h2>
-      <div class="screen">
-        <div>
-          <p class="pane-head"><strong>Terminal</strong> &middot; the merge gateway</p>
-          <pre class="term" data-capture="amended allowed"></pre>
-        </div>
-        <aside class="callout-panel">
-          <h3>What this shows</h3>
-          <p>The agent slips in one line after Alice approved and presents her approval: DENY, the approval is for a different diff. The change she actually saw: ALLOW, and main moves.</p>
-          <h3>Take away</h3>
-          <p class="takeaway">The approval dies with the diff. The catalog's "bound to the current change set", as a hash comparison.</p>
-        </aside>
-      </div>
-      <aside class="notes">Speaker: Matthew. Live: this is the moment people remember. After Alice approved, the agent adds one more line and presents her approval with it. Denied: the approval is for this exact diff, and this is not that diff. Then the change she actually saw, with her approval: allowed, and main moves. The catalog asks for review outcomes bound to the change set; here that sentence is a hash comparison the agent cannot argue with.</aside>
+    <!-- ============================================================ 2. The idea (Matthew) -->
+
+    <section class="dark" data-chapter="2" data-speaker="Matthew">
+      <p class="big">Your architecture already knows which changes are <em>risky</em>.</p>
+      <p class="after">It's just trapped in a picture.</p>
+      <aside class="notes">Matthew. Here's the idea. Your architecture already knows which changes are risky: it knows the Position Service writes to the ledger. The trouble is that it's trapped in a picture on a wiki, and a picture can't check anything.</aside>
     </section>
 
-    <section data-station="none" class="step">
-      <h2>The shortcut: a connection that is not on the diagram <span class="live">live</span></h2>
-      <div class="screen hub">
-        <div>
-          <p class="pane-head"><strong>CALM Hub</strong> &middot; hovering over Trade API</p>
-          <div class="shot-wrap"><img class="shot" src="img/hub/shortcut.png" alt="Trade API shows Not met; the hover card says trade-api to client-ledger: Requires: The architecture has this connection"><span class="ring bad" data-node="trade-api"></span><span class="pin bad" data-node="position-service" data-place="right">&#10007; Trade API to Client Ledger is not in the architecture</span></div>
-        </div>
-        <aside class="callout-panel">
-          <h3>What this shows</h3>
-          <p>The agent takes a shortcut: Trade API reads the ledger's file directly. That connection is not in the architecture: DENY.</p>
-          <h3>Take away</h3>
-          <p class="takeaway">If it is not on the diagram, it does not exist. The fix is an architect, not a cleverer agent.</p>
-        </aside>
-      </div>
-      <aside class="notes">Speaker: Matthew. Live: the shortcut. Agents take the shortest path to green, so this one skips Position Service and reads the ledger's file directly from Trade API. The code declares the connection it makes, and the architecture has no such connection. Denied, by the service dependency control from the catalog. The point: a connection that is not in the model does not exist. If the business really needs it, the answer is not a cleverer agent. It is an architect.</aside>
-    </section>
-
-    <section data-station="none">
-      <h2>The architect changes the diagram</h2>
-      <div class="cols cc">
-        <div class="code-col">
-<pre class="code">{
-  "unique-id": "trade-api-to-client-ledger",
-  "description": "Trade API writes
-    end-of-day trade snapshots straight to
-    the Client Ledger (SPEC-003).",
-  "relationship-type": {
-    "connects": {
-      "source": { "node": "trade-api" },
-      "destination": {
-        "node": "client-ledger",
-        "interfaces": ["client-ledger-file"]
-      }
+    <section data-chapter="2" data-speaker="Matthew">
+      <h2>Write the map down as data</h2>
+      <p class="sub">FINOS CALM: your architecture as code. Every box and every line is in a file.</p>
+      <div class="split wide-left">
+        <figure class="map" data-version="1.0" data-hot="position-service>client-ledger"></figure>
+        <pre class="json">{
+  <span class="k">"unique-id"</span>:
+    <span class="s">"position-service-to-client-ledger"</span>,
+  <span class="k">"relationship-type"</span>: {
+    <span class="k">"connects"</span>: {
+      <span class="k">"source"</span>:
+        { <span class="k">"node"</span>: <span class="s hl">"position-service"</span> },
+      <span class="k">"destination"</span>:
+        { <span class="k">"node"</span>: <span class="s hl">"client-ledger"</span> }
     }
   }
 }</pre>
-        </div>
-        <div class="commentary">
-          <ul>
-            <li>Bob, an architect, decides Trade API should write end-of-day snapshots to the ledger. He adds one connection.</li>
-            <li>The architecture is itself controlled: the gateway wants a human for it, and Alice approves.</li>
-            <li>It merges, and CALM Hub has version 1.1.0 of the architecture. Nobody touched the pipeline.</li>
-          </ul>
-        </div>
       </div>
-      <aside class="notes">Speaker: Matthew. Live: the architect session. Bob decides the business needs Trade API to write end-of-day snapshots to the ledger. He does not edit a pipeline or a CODEOWNERS file. He adds one connection to the architecture, this JSON. Changing the architecture is changing the rules, so the gateway wants a human for that too, and Alice approves it. It merges and CALM Hub now holds version 1.1.0. Pause here. What do you think happens to the next routine change to Trade API?</aside>
+      <aside class="notes">Matthew. So write the map down as data. FINOS CALM is architecture as code: every box and every line in a file a machine can read. This is the red line on the map, Position Service connects to Client Ledger, as it sits in the file. Nothing exotic, just JSON, versioned in git next to the code.</aside>
     </section>
 
-    <section data-station="none" class="step">
-      <h2>Same change, new diagram: now it needs a human <span class="live">live</span></h2>
-      <div class="screen hub">
-        <div>
-          <p class="pane-head"><strong>CALM Hub</strong> &middot; Trade Capture, version 1.1.0</p>
-          <div class="shot-wrap"><img class="shot" src="img/hub/climax.png" alt="Version 1.1.0: Trade API and its new connection to the Client Ledger show Not met"><span class="ring bad" data-node="trade-api"></span><span class="pin key" data-node="position-service" data-place="above">New in 1.1.0: Trade API writes to the ledger</span><span class="pin bad" data-node="position-service" data-place="right">&#10007; Now it needs a human</span></div>
-        </div>
-        <aside class="callout-panel">
-          <h3>What this shows</h3>
-          <p>A trade count on Trade API: the kind of change that merged with no human ten minutes ago. Now Trade API connects to the ledger: DENY.</p>
-          <h3>Take away</h3>
-          <p class="takeaway">Nobody edited a pipeline, a policy or a list of services. The architect changed the diagram, and the control followed.</p>
-        </aside>
-      </div>
-      <aside class="notes">Speaker: Matthew. Live: the climax session. A trade count endpoint on Trade API, exactly the kind of change that went through with no human at the start of the demo. Denied: it needs a human approver. Nobody edited the rule, the gateway or a list of services. The architect changed the diagram and the control followed it, on the new connection, in red, on the version of the architecture that introduced it. Say the tagline: when the architecture changes, the controls follow. Let it land.</aside>
+    <section data-chapter="2" data-speaker="Matthew">
+      <h2>Pin the rule to the box</h2>
+      <p class="sub">The rule lives on the Client Ledger itself. It names the box, not a list of services.</p>
+      <figure class="map" data-version="1.0" data-rule="1"></figure>
+      <aside class="notes">Matthew. Then pin the rule to the box it protects. In CALM any box can carry controls, so the rule lives on the Client Ledger: any change to a service that connects to it needs a person. Look at what it doesn't say: it never names the Position Service. It names a relationship. So when the map changes, what the rule applies to changes with it. Remember that.</aside>
     </section>
 
-    <section data-station="none" class="step">
-      <h2>Every decision is pinned to the diagram</h2>
-      <div class="screen hub">
-        <div>
-          <p class="pane-head"><strong>CALM Hub</strong> &middot; the evaluations on version 1.1.0</p>
-          <img class="shot" src="img/hub/evidence.png" alt="The evaluations panel: Not met for the client ledger control on trade-api, with every unmet requirement, the commit and the spec">
-        </div>
-        <aside class="callout-panel">
-          <h3>What this shows</h3>
-          <p>Every decision is published to CALM Hub as CALM decorators, one per control: met or not, which boxes, each unmet requirement, the commit, the spec.</p>
-          <h3>Take away</h3>
-          <p class="takeaway">"Who approved every change near the client ledger last quarter?" becomes a query, not a project.</p>
-        </aside>
-      </div>
-      <aside class="notes">Speaker: Matthew. The evidence. Every decision the gateway made is in CALM Hub as decorators, one per control per decision, attached to the architecture version it was made against. Met or not met, which boxes and connections, each unmet requirement in words, the commit, the spec, who approved. The format is a draft CALM Standard we are proposing, so any tool can write it and any tool can read it. Aaron, your risk register has a sentence about this.</aside>
+    <section data-chapter="2" data-speaker="Matthew">
+      <h2>Every pull request asks the map</h2>
+      <svg class="flow" viewBox="0 0 1680 600" aria-label="A pull request is checked against the architecture: green means it can merge, red means a person must approve; every decision goes to CALM Hub">
+        <defs><marker id="fa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#59636e"/></marker></defs>
+        <g font-family="Helvetica Neue, Helvetica, Arial" text-anchor="middle">
+          <rect x="0" y="120" width="380" height="200" rx="20" fill="#f6f8fa" stroke="#d1d9e0" stroke-width="4"/>
+          <text x="190" y="205" font-size="44" font-weight="700" fill="#1f2328">Pull request</text>
+          <text x="190" y="260" font-size="30" fill="#59636e">from the agent</text>
+          <line x1="390" y1="220" x2="520" y2="220" stroke="#59636e" stroke-width="6" marker-end="url(#fa)"/>
+          <rect x="530" y="100" width="520" height="240" rx="20" fill="#ddf4ff" stroke="#0969da" stroke-width="5"/>
+          <text x="790" y="190" font-size="44" font-weight="700" fill="#0969da">Architecture controls</text>
+          <text x="790" y="245" font-size="30" fill="#1f2328">which boxes does it touch?</text>
+          <text x="790" y="290" font-size="30" fill="#1f2328">which rules are on them?</text>
+          <path d="M1060 180 L1180 110" stroke="#59636e" stroke-width="6" fill="none" marker-end="url(#fa)"/>
+          <path d="M1060 260 L1180 330" stroke="#59636e" stroke-width="6" fill="none" marker-end="url(#fa)"/>
+          <rect x="1190" y="40" width="490" height="130" rx="20" fill="#dafbe1" stroke="#1a7f37" stroke-width="5"/>
+          <text x="1435" y="100" font-size="40" font-weight="700" fill="#1a7f37">✓ Merge</text>
+          <text x="1435" y="145" font-size="28" fill="#1f2328">nothing needs a person</text>
+          <rect x="1190" y="270" width="490" height="130" rx="20" fill="#ffebe9" stroke="#cf222e" stroke-width="5"/>
+          <text x="1435" y="330" font-size="40" font-weight="700" fill="#cf222e">✗ Blocked</text>
+          <text x="1435" y="375" font-size="28" fill="#1f2328">until a person approves</text>
+          <line x1="790" y1="350" x2="790" y2="452" stroke="#59636e" stroke-width="6" marker-end="url(#fa)"/>
+          <rect x="530" y="460" width="520" height="130" rx="20" fill="#fff8c5" stroke="#d4a72c" stroke-width="5"/>
+          <text x="790" y="518" font-size="38" font-weight="700" fill="#9a6700">CALM Hub</text>
+          <text x="790" y="562" font-size="28" fill="#1f2328">every decision, pinned on the map</text>
+        </g>
+      </svg>
+      <p class="caption" style="margin-top:20px">The check reads each rule with <b>ergo</b>, an open source project, and explains every answer in plain words.</p>
+      <aside class="notes">Matthew. So every pull request asks the map. A check called Architecture controls works out which boxes the change touches and which rules are on them. Nothing needs a person: green, merge. Something does: blocked until a person approves, and it says why. It reads the rules with ergo, an open source project that explains every answer in words. And every decision goes back onto the map, in CALM Hub, as a record. Let's see it.</aside>
     </section>
 
-    <section data-station="none" class="middle">
-      <h2>Why you should care</h2>
+    <section class="ergo" data-chapter="2" data-speaker="Matthew">
+      <img class="ergo-mark" src="img/logos/ergo-wordmark-white.svg" alt="ergo">
+      <h2>Rego says no. ergo says why.</h2>
+      <p class="sub">An open source language for explainable policies on Open Policy Agent. Every decision is a report: what was checked, and why it passed or failed.</p>
       <div class="cards">
-        <div><p class="verb">Developers</p><p>A fast lane. Routine changes merge with a machine review. A human is asked only where the architecture says it matters, and the denial says why.</p></div>
-        <div><p class="verb">Architects</p><p>The diagram does real work. It cannot quietly go stale, because the next change is judged against it.</p></div>
-        <div><p class="verb">Risk and audit</p><p>Evidence is a by-product. Every decision is recorded on the architecture, per control, with who approved and what they saw.</p></div>
+        <div class="card"><span class="n">1</span><h3>Subjects</h3><p>What you're judging, and where to find it.</p><p class="ours">every connection in the architecture</p></div>
+        <div class="card"><span class="n">2</span><h3>Scope</h3><p>Which of them the rule is about. The rest are recorded, not dropped.</p><p class="ours">into the Client Ledger, from a box this change touches</p></div>
+        <div class="card"><span class="n">3</span><h3>Checks</h3><p>What each one must pass.</p><p class="ours">a person approved this exact commit</p></div>
       </div>
-      <p class="kicker quote-line">Risk SDLC-RC-005, in the catalog's words</p>
-      <p class="statement small">"Banking and financial regulators treat unsubstantiated controls as absent controls."</p>
-      <aside class="notes">Speaker: Aaron, back in. Three audiences, three reasons. Developers get a fast lane: most changes merge without waiting for a person, and when one is denied it says why. Architects get a diagram that matters: it cannot go stale, because the next change is judged against it. Risk and audit get evidence as a by-product, on the architecture, per control. One sentence from our own risk register: regulators treat unsubstantiated controls as absent controls. If you cannot produce the record, the control did not operate. Here the record writes itself.</aside>
+      <p class="caption">One Rego file next to your policies. No lock-in. <a href="https://ergo.kosli.com/">ergo.kosli.com</a></p>
+      <aside class="notes">Matthew. A word on ergo, because it's what turns a no into a why. Plain policy engines answer allow or deny. ergo is an open source language on top of Open Policy Agent where every decision comes back as a report: what was checked and why it passed or failed. A rule has three parts. Subjects: what you're judging, for us every connection in the architecture. Scope: which of those the rule is about, for us connections into the Client Ledger from a box this change touches; the rest are recorded, not silently dropped. Checks: what each must pass, for us a person approved this exact commit. That report is what you'll see on the pull requests, and what lands on the map. It's one Rego file you copy next to your policies.</aside>
     </section>
 
-    <section data-station="none" class="middle">
-      <h2>All of it is open</h2>
+    <!-- ============================================================ 3. Live on GitHub (Matthew) -->
+
+    <section data-chapter="3" data-speaker="Matthew">
+      <h2>Live on GitHub <a class="live" data-repo>github.com/rocketstack-matt/osffny-sdlc-calm</a></h2>
+      <p class="sub">A real repository with the trade capture system and its architecture. The cast:</p>
+      <div class="cards five">
+        <div class="card"><span class="icon">🤖</span><h3>The agent</h3><span class="who">calm-trade-agent</span><p>writes code, opens pull requests</p></div>
+        <div class="card"><span class="icon">🔍</span><h3>Review bot</h3><span class="who">github-actions</span><p>reviews every commit</p></div>
+        <div class="card blue"><span class="icon">🗺️</span><h3>The check</h3><span class="who">Architecture controls</span><p>asks the map</p></div>
+        <div class="card gold"><span class="icon">✍️</span><h3>The approver</h3><span class="who">@aaronsearle</span><p>Aaron, live: approves when a person is needed</p></div>
+        <div class="card"><span class="icon">📐</span><h3>Matthew</h3><span class="who">@rocketstack-matt</span><p>the architect: changes the map</p></div>
+      </div>
+      <aside class="notes">Matthew. Live mode: switch to the browser on the repository's pull requests. Backup: stay on the slides, every step is a screenshot; in them a demo account plays the approver. Introduce the cast. The agent is a GitHub App that writes code and opens pull requests. A review bot reviews every commit. The check, Architecture controls, asks the map. Aaron approves when a person is needed. And I'm the architect.</aside>
+    </section>
+
+    <section data-chapter="3" data-speaker="Matthew">
+      <h2>1. A harmless change <a class="live" data-repo>live</a></h2>
+      <div class="split">
+        <figure class="map" data-version="1.0" data-ok="trade-api" data-pins="trade-api:ok:✓ can merge"></figure>
+        <div class="screen">
+          <img class="shot" src="img/github/1-harmless.png" alt="The Architecture controls comment: all controls met">
+          <p class="caption">The agent adds an endpoint to the Trade API. The review bot reviews it. <b>Green: it can merge, no person needed.</b></p>
+        </div>
+      </div>
+      <aside class="notes">Matthew. Live: the agent opens "Account summary endpoint on trade-api". The review bot approves it. The check runs: every control met, green, and I can press Merge. No person needed. This is the fast lane, and most changes should look like this.</aside>
+    </section>
+
+    <section data-chapter="3" data-speaker="Matthew">
+      <h2>2. A change near the ledger <a class="live" data-repo>live</a></h2>
+      <div class="split">
+        <figure class="map" data-version="1.0" data-bad="position-service" data-hot="position-service>client-ledger" data-pins="position-service:bad:✗ needs a person"></figure>
+        <div class="screen">
+          <img class="shot" src="img/github/2-ledger.png" alt="The Architecture controls comment: a human approval is needed because Position Service connects to the Client Ledger">
+          <p class="caption">Same kind of change, on the Position Service. The code never mentions the ledger; <b>the map does.</b> Merging is blocked.</p>
+        </div>
+      </div>
+      <aside class="notes">Matthew. Live: the agent opens "Position total endpoint on position-service". Same kind of change, same review bot. Red. The check says why, in words: Position Service connects to the Client Ledger, so a human must approve, and it names who can: Aaron. Nobody wrote "Position Service is risky" anywhere. The map did that. Merging is blocked.</aside>
+    </section>
+
+    <section data-chapter="3" data-speaker="Aaron">
+      <h2>3. A person approves <a class="live" data-repo>live</a></h2>
+      <div class="split">
+        <figure class="map" data-version="1.0" data-ok="position-service" data-pins="position-service:ok:✓ approved"></figure>
+        <div class="screen">
+          <img class="shot" src="img/github/3-approved.png" alt="The approver approved these changes, and the check turns green">
+          <p class="caption">The approver reads the real diff on GitHub and approves with the usual button. <b>Green.</b></p>
+        </div>
+      </div>
+      <aside class="notes">Aaron. Live: I open the pull request on my own laptop, read the actual diff, and approve with GitHub's own button. A few seconds later the check turns green. Nothing new to learn: it's the review button you already use. The difference is that the map decided I was needed.</aside>
+    </section>
+
+    <section data-chapter="3" data-speaker="Matthew">
+      <h2>4. One more line after approval <a class="live" data-repo>live</a></h2>
+      <div class="split">
+        <figure class="map" data-version="1.0" data-bad="position-service" data-hot="position-service>client-ledger" data-pins="position-service:bad:✗ approval out of date"></figure>
+        <div class="screen">
+          <img class="shot" src="img/github/4-stale.png" alt="After a new commit, the check fails: the approval was for an earlier commit">
+          <p class="caption">The agent slips in one more line. GitHub still shows the approval, but <b>it was for an earlier commit.</b> Red again.</p>
+        </div>
+      </div>
+      <aside class="notes">Matthew. Live: before anyone merges, the agent pushes one more line. GitHub still shows Aaron's approval in the timeline. But the check goes red: the approval was for an earlier commit, not this one. An approval counts for exactly what the person saw. Aaron approves again, and now we merge.</aside>
+    </section>
+
+    <section data-chapter="3" data-speaker="Matthew">
+      <h2>5. The shortcut <a class="live" data-repo>live</a></h2>
+      <div class="split">
+        <figure class="map" data-version="1.0" data-bad="trade-api" data-illegal="trade-api>client-ledger" data-pins="trade-api:bad:✗ not on the map"></figure>
+        <div class="screen">
+          <img class="shot" src="img/github/5-shortcut.png" alt="The Architecture controls comment: the architecture has no connection from Trade API to Client Ledger">
+          <p class="caption">The agent makes the Trade API read the ledger directly. <b>That line isn't on the map,</b> so it doesn't exist.</p>
+        </div>
+      </div>
+      <aside class="notes">Matthew. Live: agents take the shortest path to green, so this one skips the Position Service and reads the ledger's file straight from the Trade API. Red: the architecture has no connection from Trade API to Client Ledger. If it's not on the map, it doesn't exist. But what if the business really needs it? The fix isn't a cleverer agent. It's an architect.</aside>
+    </section>
+
+    <section data-chapter="3" data-speaker="Matthew">
+      <h2>6. The architect changes the map <a class="live" data-repo>live</a></h2>
+      <div class="split">
+        <figure class="map" data-version="1.1" data-new="trade-api>client-ledger" data-pins="client-ledger:new:+ one new line"></figure>
+        <div class="screen">
+          <img class="shot" src="img/github/6-architect.png" alt="The architect's pull request: one new relationship in the architecture, approved by a person">
+          <p class="caption">I add one line to the architecture: the Trade API may write end-of-day snapshots to the ledger. <b>Changing the map needs a person too.</b> A person approves; it merges.</p>
+        </div>
+      </div>
+      <aside class="notes">Matthew. Live: as the architect, I open a pull request that changes the architecture file: one new relationship, the Trade API writes end-of-day snapshots to the Client Ledger. Changing the map is changing the rules, so it needs a person too. Aaron approves, and I merge. CALM Hub now has version 1.1 of the architecture. Pause. What happens to a harmless Trade API change now?</aside>
+    </section>
+
+    <section data-chapter="3" data-speaker="Matthew">
+      <h2>7. The same harmless change, again <a class="live" data-repo>live</a></h2>
+      <div class="split">
+        <figure class="map" data-version="1.1" data-bad="trade-api" data-hot="trade-api>client-ledger" data-pins="trade-api:bad:✗ now needs a person"></figure>
+        <div class="screen">
+          <img class="shot" src="img/github/7-climax.png" alt="The Architecture controls comment: Trade API now connects to the Client Ledger, so a human approval is needed">
+          <p class="caption">A new endpoint on the Trade API, like change 1. <b>Now the Trade API connects to the ledger, so it needs a person.</b></p>
+        </div>
+      </div>
+      <aside class="notes">Matthew. Live: the agent opens "Trade count endpoint on trade-api". Exactly the kind of change that went straight through at the start. Red: Trade API now connects to the Client Ledger, so a human must approve. Nobody touched the rule, the check or the pipeline. Let it land.</aside>
+    </section>
+
+    <section class="dark" data-chapter="3" data-speaker="Matthew">
+      <p class="big">Nobody touched the pipeline.</p>
+      <p class="after">The architect changed the map, and the rule followed.<br>When the architecture changes, the controls follow.</p>
+      <aside class="notes">Matthew. Say it plainly. Nobody touched the pipeline, the rule, or a list of services. The architect changed the map, and the rule followed it. When the architecture changes, the controls follow.</aside>
+    </section>
+
+    <section data-chapter="3" data-speaker="Matthew">
+      <h2>And every decision is on the map</h2>
+      <p class="sub">CALM Hub, version 1.1: the Trade API and its new line, marked not met, with the reason.</p>
+      <div class="middle" style="align-items:flex-start">
+        <div class="shot-wrap"><img class="shot" src="img/hub/climax.png" alt="CALM Hub showing Trade API and its new connection to the Client Ledger as not met"><span class="ring" data-node="trade-api"></span><span class="tag" data-node="trade-api" data-place="below">✗ Needs a person</span><span class="tag blue" data-node="position-service" data-place="above">New in 1.1</span></div>
+      </div>
+      <aside class="notes">Matthew. Every decision the check made is also on the architecture itself, in CALM Hub. Each one is a CALM decorator: met or not, which boxes, why, who approved, which commit. Here's version 1.1 with the Trade API in red. For an auditor, "who approved every change near the client ledger last quarter" stops being a project and becomes a query.</aside>
+    </section>
+
+    <!-- ============================================================ 4. Why it matters (Aaron) -->
+
+    <section data-chapter="4" data-speaker="Aaron">
+      <h2>Why it matters</h2>
       <div class="cards">
-        <div class="catalog"><div class="logo-row"><img src="img/logos/sdlc-common-controls.svg" alt="SDLC Common Controls Catalog"></div><p class="verb">What to control</p><p>The SDLC Common Controls Catalog: the controls and risks, written once by the industry.</p></div>
-        <div class="calm"><div class="logo-row"><img src="img/logos/calm.svg" alt="FINOS CALM"></div><p class="verb">Where it applies</p><p>FINOS CALM: the architecture as data, the controls on its boxes, and decorators that carry every result back.</p></div>
-        <div class="ergo"><div class="logo-row"><span class="wordmark">ergo</span></div><p class="verb">How to decide</p><p>An open source project for rules written as data. It explains every answer in words.</p></div>
+        <div class="card ok"><h3>Developers</h3><p>Most changes fly through. When one is blocked, it says why, and who can help.</p></div>
+        <div class="card blue"><h3>Architects</h3><p>The diagram can't go stale, because every change is checked against it.</p></div>
+        <div class="card gold"><h3>Risk and audit</h3><p>The proof writes itself: every decision, on the map, with who approved what.</p></div>
       </div>
-      <p class="caption">Real in the demo: the rules, the decisions, the signed single-use approvals bound to the diff, the decorators, CALM Hub. Mocked: the approver's passkey is a typed code.</p>
-      <aside class="notes">Speaker: Aaron. Nothing you saw is a product. The catalog says what to control, written once by the industry. CALM says where it applies: the architecture as data, with the controls on its boxes and decorators carrying the results back. ergo, an open source project, decides and explains. Be straight about the demo: the rules, the decisions, the signed approvals bound to the diff and the decorators in CALM Hub are all real. The passkey is a typed code. Everything is in the repository on the next slide.</aside>
+      <p class="sub" style="margin-top:60px">"Regulators treat unsubstantiated controls as absent controls." <span style="font-size:28px">SDLC Common Controls Catalog, risk SDLC-RC-005</span></p>
+      <aside class="notes">Aaron. Why should you care? Developers get a fast lane: most changes fly through, and a blocked one says why and who can help. Architects get a diagram that can't go stale, because every change is checked against it. And for risk and audit, the proof writes itself. One line from our own catalog: regulators treat unsubstantiated controls as absent controls. Here the evidence is a by-product.</aside>
     </section>
 
-    <section data-station="none" class="middle">
-      <h2>Take one control</h2>
-      <p class="statement small">Pick one control and one repository. Put the control on the diagram, and let the diagram say no.</p>
-      <dl class="kv links">
-        <dt>The catalog</dt><dd><a data-hub="catalog">finos.github.io/sdlc-common-controls</a></dd>
-        <dt>CALM</dt><dd><a href="https://calm.finos.org">calm.finos.org</a></dd>
-        <dt>Everything you saw</dt><dd><a data-hub="repo">github.com/rocketstack-matt/agentic-sdlc-blueprint</a></dd>
-        <dt>CALM Hub</dt><dd><a data-hub="hub">hub.calm.finos.org</a></dd>
-      </dl>
-      <aside class="notes">Speaker: both. One ask. Pick one control, code review if you like, and one repository. Put the control on the architecture and let the architecture say no. The catalog, CALM and the demo repository are all open; the decorator Standard is a draft we want your feedback on. Bring what you learn back to the working group.</aside>
+    <section data-chapter="4" data-speaker="Aaron">
+      <h2>Built from open parts</h2>
+      <div class="cards">
+        <div class="card"><img src="img/logos/sdlc-common-controls.svg" alt="SDLC Common Controls Catalog"><h3>What to control</h3><p>The SDLC Common Controls Catalog, written once by the industry.</p></div>
+        <div class="card"><img src="img/logos/calm.svg" alt="FINOS CALM"><h3>Where it applies</h3><p>FINOS CALM: the architecture as data, the rules on its boxes, the decisions back on the map.</p></div>
+        <div class="card"><img class="keep" src="img/logos/ergo-wordmark-dark.svg" alt="ergo"><h3>How to decide</h3><p>An open source project that checks rules written as data and says why.</p></div>
+      </div>
+      <p class="caption" style="margin-top:50px">Everything you saw is real: the repository, the pull requests, the approvals, the checks and CALM Hub.</p>
+      <aside class="notes">Aaron. None of this is a product. The catalog says what to control. CALM says where it applies, and holds the decisions. ergo, an open source project, decides and explains. Everything you saw was real: a real repository, real pull requests, real approvals.</aside>
     </section>
 
-    <section class="title" data-background-image="img/background.png" data-background-size="cover">
-      <img class="logo" src="img/logo.svg" alt="Open Source in Finance Forum">
+    <section data-chapter="4" data-speaker="Aaron and Matthew">
+      <div class="middle">
+        <p class="big" style="font-size:84px">Pick one rule.<br>Pin it to one box.<br>Let the map say no.</p>
+        <dl class="links">
+          <dt>The demo</dt><dd><a data-repo>github.com/rocketstack-matt/osffny-sdlc-calm</a></dd>
+          <dt>Everything behind it</dt><dd><a href="https://github.com/rocketstack-matt/agentic-sdlc-blueprint">github.com/rocketstack-matt/agentic-sdlc-blueprint</a></dd>
+          <dt>The catalog</dt><dd><a href="https://finos.github.io/sdlc-common-controls/">finos.github.io/sdlc-common-controls</a></dd>
+          <dt>CALM</dt><dd><a href="https://calm.finos.org">calm.finos.org</a></dd>
+        </dl>
+      </div>
+      <aside class="notes">Both. One ask. Pick one rule you already have. Pin it to one box in your architecture. Let the map say no. The demo repository, the code behind it, the catalog and CALM are all open. Bring what you learn back to FINOS.</aside>
+    </section>
+
+    <section class="cover" data-background-image="img/background.png" data-background-size="cover">
+      <img class="logo" src="img/logo.svg" alt="Open Source in Finance Forum, New York 2026">
       <div class="block">
         <h1>Thank you</h1>
-        <p>When the architecture changes,<br>the controls follow.<br><span class="small">Matthew Bain and Aaron Searle<br><a data-hub="repo"></a></span></p>
-        <div class="logos"><img src="img/logos/calm.svg" alt="FINOS CALM"><img src="img/logos/sdlc-common-controls.svg" alt="SDLC Common Controls Catalog"></div>
+        <p class="tag">When the architecture changes, the controls follow.</p>
+        <p class="who">Matthew Bain and Aaron Searle<br><a data-repo>github.com/rocketstack-matt/osffny-sdlc-calm</a></p>
       </div>
-      <aside class="notes">Speaker: both. Thank you. Leave them with the line: when the architecture changes, the controls follow. Then questions. If asked about ergo, it is an open source project for policy as data; we used it unmodified, and the controls read the CALM architecture as their data.</aside>
+      <aside class="notes">Both. Thank you. Leave the line on screen: when the architecture changes, the controls follow. Then questions.</aside>
     </section>
 
   </div>
@@ -391,55 +344,91 @@
 
 <script src="vendor/reveal/dist/reveal.js"></script>
 <script src="vendor/reveal/dist/plugin/notes.js"></script>
-<script src="captures.js"></script>
 <script src="img/hub/positions.js"></script>
 <script>
-// Links to the published artefacts.
-const HUB_LINKS = {
-  repo: 'https://github.com/rocketstack-matt/agentic-sdlc-blueprint',
-  catalog: 'https://finos.github.io/sdlc-common-controls/',
-  hub: 'https://hub.calm.finos.org/',
-};
+const REPO_URL = 'https://github.com/rocketstack-matt/osffny-sdlc-calm/pulls?q=is%3Apr';
+// Live mode (the default) shows the "live" badges that link to the demo's pull requests. backup.html, or ?backup,
+// is the same deck with screenshots only.
+const backup = new URLSearchParams(location.search).has('backup');
 
-// Fill terminal panes from captures.js. A pane names one or more sessions; each is shown whole, the command on a
-// prompt line and its output as it came out.
-const esc = (text) => text.replace(/&/g, '&amp;').replace(/</g, '&lt;');
-const colour = (line) => esc(line)
-  .replace(/^(DENY)$/, '<span class="bad">$1</span>')
-  .replace(/^(ALLOW)$/, '<span class="ok">$1</span>')
-  .replace(/^(\s*✗ .*)$/, '<span class="bad">$1</span>')
-  .replace(/^(approved by .*)$/, '<span class="ok">$1</span>')
-  .replace(/^(binding code .*)$/, '<span class="hl">$1</span>');
-for (const pre of document.querySelectorAll('pre.term[data-capture]')) {
-  const keys = pre.dataset.capture.split(/\s+/).filter(Boolean);
-  const missing = keys.filter((k) => !Array.isArray(window.CAPTURES?.[k]));
-  if (missing.length) { pre.classList.add('missing'); pre.textContent = `capture missing: ${missing.join(', ')}. See slides/README.md`; continue; }
-  pre.innerHTML = keys.flatMap((k) => window.CAPTURES[k]).map(({ cmd, out }) => {
-    const lines = [`<span class="ln cmd"><span class="prompt">$</span> ${esc(cmd)}</span>`];
-    if (out.trim()) for (const l of out.trimEnd().split('\n')) lines.push(`<span class="ln">${colour(l) || ' '}</span>`);
-    return lines.join('');
-  }).join('');
+// ---- The map -------------------------------------------------------------------------------------------------
+// One system, drawn the same way on every slide. Attributes: data-version (1.0, or 1.1 with the architect's line),
+// data-ok / data-bad (boxes), data-hot / data-new / data-illegal (lines, as from>to), data-pins (box:kind:text, ...),
+// data-rule (the rule pinned to the Client Ledger).
+const BOXES = {
+  'trade-api': { x: 200, y: 250, title: 'Trade API', sub: 'takes trades' },
+  'position-service': { x: 640, y: 450, title: 'Position Service', sub: 'keeps positions' },
+  'trade-store': { x: 200, y: 560, title: 'Trade Store', sub: 'stores trades' },
+  'client-ledger': { x: 1120, y: 250, title: 'Client Ledger', sub: 'the book of record', ledger: true },
+};
+const W = 340, H = 130;
+const LINES = {
+  'trader>trade-api': 'M140 315 L190 315',
+  'trade-api>position-service': 'M540 330 C 600 330, 575 515, 630 515',
+  'trade-api>trade-store': 'M370 380 L370 550',
+  'position-service>client-ledger': 'M980 515 C 1150 515, 1290 470, 1290 390',
+  'trade-api>client-ledger': 'M540 290 L1110 290',
+};
+const COLOURS = { line: '#8c959f', hot: '#cf222e', new: '#0969da', illegal: '#cf222e' };
+let mapCount = 0;
+function drawMap(fig) {
+  const d = fig.dataset;
+  const uid = `m${(mapCount += 1)}`; // marker ids must be unique in the document, or hidden slides' markers win
+  const list = (v) => (v ? v.split(/\s+/).filter(Boolean) : []);
+  const ok = list(d.ok), bad = list(d.bad), hot = list(d.hot), fresh = list(d.new), illegal = list(d.illegal);
+  const lines = Object.keys(LINES).filter((k) => k !== 'trade-api>client-ledger' || d.version === '1.1' || fresh.includes(k) || illegal.includes(k));
+  const marker = (name, colour) => `<marker id="${uid}-${name}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="${colour}"/></marker>`;
+  let svg = `<svg viewBox="0 170 1500 550" role="img" aria-label="The trade capture system"><defs>${Object.entries(COLOURS).map(([k, c]) => marker(k, c)).join('')}</defs>`;
+  for (const k of lines) {
+    const kind = illegal.includes(k) ? 'illegal' : fresh.includes(k) ? 'new' : hot.includes(k) ? 'hot' : 'line';
+    const width = kind === 'line' ? 6 : 10;
+    svg += `<path d="${LINES[k]}" fill="none" stroke="${COLOURS[kind]}" stroke-width="${width}" ${kind === 'illegal' ? 'stroke-dasharray="24 16"' : ''} marker-end="url(#${uid}-${kind})"/>`;
+    if (kind === 'illegal') svg += '<circle cx="826" cy="290" r="34" fill="#cf222e"/><text x="826" y="304" text-anchor="middle" font-size="44" font-weight="700" fill="#fff">✗</text>';
+  }
+  svg += '<g font-family="Helvetica Neue, Helvetica, Arial"><circle cx="90" cy="285" r="26" fill="none" stroke="#59636e" stroke-width="6"/><path d="M45 362 C 45 320, 135 320, 135 362" fill="none" stroke="#59636e" stroke-width="6"/><text x="90" y="410" text-anchor="middle" font-size="30" fill="#59636e">Trader</text>';
+  for (const [id, b] of Object.entries(BOXES)) {
+    const state = ok.includes(id) ? 'ok' : bad.includes(id) ? 'bad' : b.ledger ? 'ledger' : 'plain';
+    const [fill, stroke] = { ok: ['#dafbe1', '#1a7f37'], bad: ['#ffebe9', '#cf222e'], ledger: ['#fff8c5', '#d4a72c'], plain: ['#ffffff', '#afb8c1'] }[state];
+    svg += `<rect x="${b.x}" y="${b.y}" width="${W}" height="${H}" rx="18" fill="${fill}" stroke="${stroke}" stroke-width="${state === 'plain' ? 5 : 8}"/>`;
+    svg += `<text x="${b.x + W / 2}" y="${b.y + 62}" text-anchor="middle" font-size="38" font-weight="700" fill="#1f2328">${b.title}</text>`;
+    svg += `<text x="${b.x + W / 2}" y="${b.y + 104}" text-anchor="middle" font-size="28" fill="#59636e">${b.sub}</text>`;
+  }
+  svg += '</g></svg>';
+  let html = svg;
+  const at = (x, y) => `left:${(x / 1500) * 100}%;top:${((y - 170) / 550) * 100}%`;
+  for (const p of (d.pins ?? '').split(',').filter(Boolean)) {
+    const [id, kind, text] = p.split(':');
+    const b = BOXES[id];
+    html += `<span class="pin ${kind}" style="${at(b.x + W / 2, b.y - 16)}">${text}</span>`;
+  }
+  if (d.rule) html += `<span class="note" style="${at(1290, 230)}"><b>Rule on this box</b>Any change to a service that connects to me needs a person to approve it.</span>`;
+  if (d.version) html += `<span class="version">Architecture v${d.version}</span>`;
+  fig.innerHTML = html;
 }
-// Pin the rings and labels over each CALM Hub picture to the box they name, from where hub-screenshots.mjs saw it.
-// A ring frames its box; a label sits below it, to its right, or above it.
+document.querySelectorAll('figure.map').forEach(drawMap);
+
+// ---- CALM Hub picture pins (positions recorded by hub-screenshots.mjs) ---------------------------------------
 for (const wrap of document.querySelectorAll('.shot-wrap')) {
   const shot = wrap.querySelector('img').getAttribute('src').replace(/^.*\/|\.png$/g, '');
   for (const el of wrap.querySelectorAll('[data-node]')) {
     const r = window.HUB_POSITIONS?.[shot]?.[el.dataset.node];
     if (!r) continue;
     const at = el.classList.contains('ring') ? { left: r.x - 1.2, top: r.y - 2.2, width: r.w + 2.4, height: r.h + 4.4 }
-      : { below: { left: r.x - 6, top: r.y + r.h + 4 }, right: { left: r.x + r.w + 3, top: r.y }, above: { left: r.x - 12, top: r.y - 22 } }[el.dataset.place];
+      : { below: { left: r.x - 4, top: r.y + r.h + 5 }, above: { left: r.x - 10, top: r.y - 22 } }[el.dataset.place];
     for (const [k, v] of Object.entries(at)) el.style[k] = `${v}%`;
   }
 }
-// Stamp the top bar with the logo onto every content slide.
-for (const s of document.querySelectorAll('section[data-station]')) {
-  s.classList.add('content');
-  s.insertAdjacentHTML('afterbegin', '<div class="topbar"><img src="img/logo.svg" alt=""></div>');
-}
-for (const a of document.querySelectorAll('a[data-hub]')) { a.href = HUB_LINKS[a.dataset.hub]; if (!a.textContent.trim()) a.textContent = a.href; }
 
-Reveal.initialize({ hash: true, width: 1920, height: 1080, margin: 0.04, minScale: 0.2, maxScale: 2, controls: false, progress: false, slideNumber: 'c/t', transition: 'none', plugins: [RevealNotes] });
+// ---- Chapters, links, mode ------------------------------------------------------------------------------------
+const CHAPTERS = ['The problem', 'The idea', 'Live on GitHub', 'Why it matters'];
+for (const s of document.querySelectorAll('section[data-chapter]')) {
+  const n = Number(s.dataset.chapter);
+  s.insertAdjacentHTML('afterbegin', `<div class="chapters">${CHAPTERS.map((c, i) => `<span class="${i + 1 === n ? 'on' : ''}">${i + 1} ${c}</span>`).join('')}<span class="speaker">${s.dataset.speaker ?? ''}</span></div>`);
+}
+for (const a of document.querySelectorAll('a[data-repo]')) { a.href = REPO_URL; a.target = '_blank'; }
+if (!backup) document.querySelector('.reveal').classList.add('live-mode');
+
+Reveal.initialize({ hash: true, width: 1920, height: 1080, margin: 0, minScale: 0.2, maxScale: 2, controls: false, progress: true, center: false, slideNumber: 'c/t', transition: 'none', backgroundTransition: 'none', plugins: [RevealNotes] });
 </script>
 </body>
 </html>
