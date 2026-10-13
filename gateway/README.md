@@ -46,7 +46,7 @@ the **Architecture controls** check has passed. Who is who:
 | On GitHub | In the model | Does |
 | --- | --- | --- |
 | `calm-trade-agent[bot]` (a GitHub App) | `author-agent` | writes the code and opens the pull requests |
-| `github-actions[bot]` (the review-bot workflow) | `review-bot` | reviews every commit |
+| `calm-review-bot[bot]` (a GitHub App, run by the gateway's watch loop; without it, the review-bot workflow on GitHub Actions) | `review-bot` | reviews every commit |
 | `calm-merge-gateway[bot]` (a GitHub App) | the merge gateway | posts the check and a comment on every decision |
 | `@aaronsearle` live, a demo account in the screenshots | `alice` | approves, with GitHub's own review, when a person is needed |
 | `@rocketstack-matt` | `bob` | the architect: changes the architecture |
@@ -56,21 +56,28 @@ comments name `DEMO_APPROVER`, or the first in the list. The gateway runs on the
 to a local CALM Hub. A person's approval counts for the
 commit they approved and no other, so a push after it fails the check again.
 
-    node gateway/gh-apps.mjs        # once: create the two GitHub Apps (opens a page; then install both on the repo)
-    CALM_HUB_URL=http://localhost:8080 node gateway/gh-reset.mjs            # the repo, its protection and the Hub, from the start
-    CALM_HUB_URL=http://localhost:8080 node gateway/gh-gateway.mjs --watch  # the gateway: leave it running
+    node gateway/gh-apps.mjs        # once: create the three GitHub Apps (opens a page; then install each on the repo)
 
-The moments, in order (each pull request waits a few seconds for the review bot):
+On the day:
 
-    node gateway/gh-propose.mjs demo/changes/account-summary.json      # 1. harmless: green, press Merge
-    node gateway/gh-propose.mjs demo/changes/position-total.json       # 2. near the ledger: red, needs @aaronsearle
-                                                                       # 3. Aaron approves on GitHub: green
-    node gateway/gh-propose.mjs demo/changes/position-total-amended.json --onto <pr> --message "Add a source header to the position total"
-                                                                       # 4. one more line: red again; Aaron approves again, press Merge
-    node gateway/gh-propose.mjs demo/changes/ledger-shortcut.json      # 5. the shortcut: red, not in the architecture; close it
-    node gateway/gh-propose.mjs demo/changes/architect-ledger-connection.json --as owner
-                                                                       # 6. the architect: red until Aaron approves; press Merge
-    node gateway/gh-propose.mjs demo/changes/trade-count.json          # 7. the same harmless change: now red
+    export CALM_HUB_URL=http://localhost:8080
+    node gateway/gh-reset.mjs            # the repo, its protection, CALM Hub and its layout, from the start
+    node gateway/gh-gateway.mjs --watch  # in its own terminal: the gateway and the review bot; leave it running
+    node gateway/gh-preflight.mjs        # everything checked; prints the two links to open
+    node gateway/gh-demo.mjs             # the demo: Enter for each moment, m to merge, o / h to open GitHub / CALM Hub
+
+The moments `gh-demo` plays, in order (moment 3 is Aaron approving; there is nothing to press for it):
+
+1. A harmless change: green in about 15 seconds; press Merge.
+2. A change near the ledger: red, naming @aaronsearle. 3. Aaron approves on GitHub: green in about 8 seconds.
+4. One more line after approval: red again. Aaron approves again; press Merge.
+5. The shortcut: red, not in the architecture. The next key closes it.
+6. The architect changes the architecture (opened as you): red until Aaron approves; press Merge, and move CALM Hub to
+   1.1.0.
+7. The same harmless change: now red.
+
+`gh-demo` remembers where it got to, so it can be stopped and started again; `gh-reset` starts everything afresh. The
+moments can also be played by hand with `node gateway/gh-propose.mjs` (see `gh-demo.mjs` for the arguments).
 
 The gateway's decisions, decorators and Hub state are in `.gh/`, apart from the local demo's; the apps' ids are in
 `.github-demo.json` and their keys in `keys/`, all kept out of git.

@@ -2,7 +2,8 @@
 // ids and private keys in gateway/.github-demo.json and gateway/keys/. Open the page it prints, press each button,
 // confirm on GitHub, then install each app on the demo repository from the link the page shows.
 //   the agent    opens the demo's pull requests (it writes the code)
-//   the gateway  reports the "Architecture controls" check, comments, and merges on ALLOW
+//   the reviewer the review bot: approves every new commit, from the laptop (no GitHub Actions in the way)
+//   the gateway  reports the "Architecture controls" check and comments on every decision
 import { createServer } from 'node:http';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -16,6 +17,11 @@ const apps = {
     name: 'calm-trade-agent',
     description: 'The coding agent in the OSFF New York demo: opens pull requests on the trade capture system.',
     default_permissions: { contents: 'write', pull_requests: 'write', metadata: 'read' },
+  },
+  reviewer: {
+    name: 'calm-review-bot',
+    description: 'The review bot in the OSFF New York demo: an automated reviewer the architecture names as approved.',
+    default_permissions: { contents: 'read', pull_requests: 'write', metadata: 'read' },
   },
   gateway: {
     name: 'calm-merge-gateway',
@@ -39,7 +45,7 @@ function page() {
       : `<form method="post" action="https://github.com/settings/apps/new?state=${role}"><input type="hidden" name="manifest" value="${esc(manifest(role))}"><p><b>${role}</b>: ${esc(apps[role].description)} <button>Create ${esc(apps[role].name)}</button></p></form>`;
   }).join('\n');
   return `<!doctype html><meta charset="utf-8"><title>GitHub Apps for the demo</title><body style="font:18px system-ui;max-width:52em;margin:3em auto">
-<h1>GitHub Apps for ${REPO}</h1>${rows}<p>When both are installed, close this page; the terminal will finish.</p></body>`;
+<h1>GitHub Apps for ${REPO}</h1>${rows}<p>When each is installed, stop the terminal with Ctrl-C.</p></body>`;
 }
 
 run(async () => {
@@ -64,5 +70,5 @@ run(async () => {
     }
     res.writeHead(200, { 'content-type': 'text/html' }).end(page());
   });
-  server.listen(PORT, () => console.log(`open http://localhost:${PORT}/ to create the demo's GitHub Apps (Ctrl-C when both are installed)`));
+  server.listen(PORT, () => console.log(`open http://localhost:${PORT}/ to create the demo's GitHub Apps (Ctrl-C when each is installed)`));
 });

@@ -18,9 +18,9 @@ export const approvers = () => loadConfig().approvers ?? ['aaronsearle'];
 // The approver the gateway names in its comments: DEMO_APPROVER, else the first approver.
 export const approver = () => process.env.DEMO_APPROVER ?? approvers()[0];
 export const identityOf = (login) => {
-  const agent = loadConfig().apps?.agent?.slug;
-  if (agent && login === `${agent}[bot]`) return 'author-agent';
-  if (login === 'github-actions[bot]') return 'review-bot';
+  const { agent, reviewer } = loadConfig().apps ?? {};
+  if (agent && login === `${agent.slug}[bot]`) return 'author-agent';
+  if ((reviewer && login === `${reviewer.slug}[bot]`) || login === 'github-actions[bot]') return 'review-bot';
   if (approvers().includes(login)) return 'alice';
   if (login === OWNER) return 'bob';
   return login;
@@ -62,9 +62,9 @@ export async function appToken(role) {
   return tokens[role].token;
 }
 
-// A REST client acting as one of the apps ('agent', 'gateway'), the repository's owner ('owner'), or a GitHub login.
+// A REST client acting as one of the apps ('agent', 'reviewer', 'gateway'), the repository's owner ('owner'), or a GitHub login.
 export async function as(role) {
-  const token = role === 'agent' || role === 'gateway' ? await appToken(role) : role === 'owner' ? (process.env.GH_TOKEN ?? tokenOf(OWNER)) : tokenOf(role);
+  const token = ['agent', 'reviewer', 'gateway'].includes(role) ? await appToken(role) : role === 'owner' ? (process.env.GH_TOKEN ?? tokenOf(OWNER)) : tokenOf(role);
   const call = (method, path, body) => request(token, method, path, body);
   return { token, get: (p) => call('GET', p), post: (p, b) => call('POST', p, b ?? {}), put: (p, b) => call('PUT', p, b ?? {}), patch: (p, b) => call('PATCH', p, b ?? {}), del: (p) => call('DELETE', p) };
 }

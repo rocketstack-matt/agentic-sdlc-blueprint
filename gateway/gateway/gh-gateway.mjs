@@ -14,6 +14,7 @@ import { baseArchitectureText, changeInput } from '../../gates/lib/calm.mjs';
 import { evaluateControls } from '../../gates/lib/controls.mjs';
 import { buildDecorators, checkRank, validateDecorator } from './decorators.mjs';
 import { CHECK, CLONE, GH, REPO, appSlug, approver, as, diffIn, identityOf, inClone } from './github.mjs';
+import { reviewBotOnLaptop, reviewOpenPullRequests } from './gh-review.mjs';
 import { hubEnabled, postDecorator, publishArchitecture } from './hub.mjs';
 import { ARCHITECTURE, parseArgs, run, sha256 } from './lib.mjs';
 
@@ -204,15 +205,24 @@ run(async () => {
   const tick = async () => {
     const gw = await as(appSlug('gateway') ? 'gateway' : 'owner');
     if (!flags['dry-run']) await followMain(state);
+    // The review bot runs beside the gateway when it is a GitHub App on the laptop; it is a separate identity.
+    if (!flags['dry-run'] && reviewBotOnLaptop()) await reviewOpenPullRequests().catch((e) => console.error(`${now()}  review bot: ${e.message}`));
     const prs = flags.pr ? [await gw.get(`/repos/${REPO}/pulls/${flags.pr}`)] : await gw.get(`/repos/${REPO}/pulls?state=open&per_page=50`);
     for (const pr of prs.filter((p) => p.state === 'open')) {
-      try { await decide(gw, pr, state, { force: Boolean(flags.pr) || Boolean(flags['dry-run']), dry: Boolean(flags['dry-run']) }); } catch (e) { console.error(`${now()}  #${pr.number} error: ${e.message}`); }
+      try {
+        await decide(gw, pr, state, { force: Boolean(flags.pr) || Boolean(flags['dry-run']), dry: Boolean(flags['dry-run']) });
+      } catch (e) {
+        // A pull request opened a moment ago may not have its ref yet; the next pass decides it.
+        if (!/couldn't find remote ref/.test(e.message)) console.error(`${now()}  #${pr.number} error: ${e.message}`);
+      }
     }
   };
   if (!flags.watch) { await tick(); return; }
   console.log(`watching ${REPO} (Ctrl-C to stop)`);
+  // For gh-preflight: this gateway is running, and whom its comments name as the approver.
+  writeFileSync(join(GH, 'gateway-run.json'), `${JSON.stringify({ pid: process.pid, approver: approver(), startedAt: new Date().toISOString() })}\n`);
   for (;;) {
     try { await tick(); } catch (e) { console.error(`${now()}  error: ${e.message}`); }
-    await new Promise((r) => setTimeout(r, Number(process.env.GATEWAY_POLL_MS ?? 4000)));
+    await new Promise((r) => setTimeout(r, Number(process.env.GATEWAY_POLL_MS ?? 3000)));
   }
 });

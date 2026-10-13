@@ -68,11 +68,14 @@ run(async () => {
   // 1. main: the trade capture system, one commit.
   const dir = mkdtempSync(join(tmpdir(), 'osffny-'));
   execFileSync('sh', ['-c', `git -C "${BLUEPRINT}" archive HEAD ${KEEP.join(' ')} | tar -x -C "${dir}"`]);
-  mkdirSync(join(dir, '.github', 'workflows'), { recursive: true });
   writeFileSync(join(dir, 'README.md'), README);
   writeFileSync(join(dir, 'package.json'), `${JSON.stringify(PACKAGE, null, 2)}\n`);
   writeFileSync(join(dir, '.gitignore'), 'node_modules\n');
-  writeFileSync(join(dir, '.github', 'workflows', 'review-bot.yml'), REVIEW_BOT);
+  // With the review bot on the laptop, GitHub Actions does not review as well.
+  if (!loadConfig().apps?.reviewer) {
+    mkdirSync(join(dir, '.github', 'workflows'), { recursive: true });
+    writeFileSync(join(dir, '.github', 'workflows', 'review-bot.yml'), REVIEW_BOT);
+  }
   const g = (...args) => execFileSync('git', args, { cwd: dir, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
   g('init', '-q', '-b', 'main');
   g('add', '-A');
