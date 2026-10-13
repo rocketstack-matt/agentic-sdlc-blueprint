@@ -48,10 +48,12 @@ the **Architecture controls** check has passed. Who is who:
 | `calm-trade-agent[bot]` (a GitHub App) | `author-agent` | writes the code and opens the pull requests |
 | `github-actions[bot]` (the review-bot workflow) | `review-bot` | reviews every commit |
 | `calm-merge-gateway[bot]` (a GitHub App) | the merge gateway | posts the check and a comment on every decision |
-| `@aaronsearle` | `alice` | approves, with GitHub's own review, when a person is needed |
+| `@aaronsearle` live, a demo account in the screenshots | `alice` | approves, with GitHub's own review, when a person is needed |
 | `@rocketstack-matt` | `bob` | the architect: changes the architecture |
 
-The gateway runs on the presenter's laptop, so it publishes to a local CALM Hub. A person's approval counts for the
+The approvers are listed in `.github-demo.json` as `"approvers": ["aaronsearle", "<demo account>"]`; the gateway's
+comments name `DEMO_APPROVER`, or the first in the list. The gateway runs on the presenter's laptop, so it publishes
+to a local CALM Hub. A person's approval counts for the
 commit they approved and no other, so a push after it fails the check again.
 
     node gateway/gh-apps.mjs        # once: create the two GitHub Apps (opens a page; then install both on the repo)

@@ -13,7 +13,7 @@ import { join } from 'node:path';
 import { baseArchitectureText, changeInput } from '../../gates/lib/calm.mjs';
 import { evaluateControls } from '../../gates/lib/controls.mjs';
 import { buildDecorators, checkRank, validateDecorator } from './decorators.mjs';
-import { CHECK, CLONE, GH, REPO, appSlug, as, diffIn, identityOf, inClone } from './github.mjs';
+import { CHECK, CLONE, GH, REPO, appSlug, approver, as, diffIn, identityOf, inClone } from './github.mjs';
 import { hubEnabled, postDecorator, publishArchitecture } from './hub.mjs';
 import { ARCHITECTURE, parseArgs, run, sha256 } from './lib.mjs';
 
@@ -21,7 +21,6 @@ const STATE = join(GH, 'prs.json');
 const DECISIONS = join(GH, 'decisions.ndjson');
 const DECORATORS = join(GH, 'decorators');
 const REVIEW_BOT_WAIT_MS = 120_000;
-const APPROVER = { alice: 'aaronsearle' }; // the GitHub handle of each person the model lets approve
 const loadState = () => (existsSync(STATE) ? JSON.parse(readFileSync(STATE, 'utf8')) : {});
 const saveState = (s) => writeFileSync(STATE, `${JSON.stringify(s, null, 2)}\n`);
 const hash = (v) => createHash('sha256').update(JSON.stringify(v)).digest('hex').slice(0, 16);
@@ -158,7 +157,7 @@ async function decide(gw, pr, state, { force = false, dry = false } = {}) {
 
   const words = explain(outcome, arch);
   const version = published && !published.error ? published.version : null;
-  const body = markdown({ allowed: outcome.allowed, ...words }, { version, approverHandles: Object.values(APPROVER) });
+  const body = markdown({ allowed: outcome.allowed, ...words }, { version, approverHandles: [approver()] });
   if (dry) { console.log(`#${n} ${head.slice(0, 7)}  ${outcome.allowed ? 'ALLOW' : 'DENY'}  (author ${author}, review ${input.change.review?.reviewer ?? 'none'}, approval ${input.change.approval?.approver ?? 'none'})\n${body}\n`); return; }
   await gw.post(`/repos/${REPO}/check-runs`, {
     name: CHECK, head_sha: head, status: 'completed', conclusion: outcome.allowed ? 'success' : 'failure', external_id: decisionId,

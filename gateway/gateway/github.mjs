@@ -11,13 +11,22 @@ export const CHECK = 'Architecture controls';
 const CONFIG = join(ROOT, '.github-demo.json');
 
 // Who is who. The model's controls name review-bot as the approved reviewer and alice as the person who may approve;
-// on GitHub those are the review workflow and Aaron. Anyone not listed keeps their GitHub login, so an unknown
-// reviewer or approver never counts.
-const PEOPLE = { 'github-actions[bot]': 'review-bot', aaronsearle: 'alice', 'rocketstack-matt': 'bob' };
+// on GitHub those are the review workflow and the approvers: Aaron live, and a demo account for the screenshots
+// (config "approvers"). Anyone not listed keeps their GitHub login, so an unknown reviewer or approver never counts.
+export const OWNER = REPO.split('/')[0];
+export const approvers = () => loadConfig().approvers ?? ['aaronsearle'];
+// The approver the gateway names in its comments: DEMO_APPROVER, else the first approver.
+export const approver = () => process.env.DEMO_APPROVER ?? approvers()[0];
 export const identityOf = (login) => {
   const agent = loadConfig().apps?.agent?.slug;
-  return agent && login === `${agent}[bot]` ? 'author-agent' : PEOPLE[login] ?? login;
+  if (agent && login === `${agent}[bot]`) return 'author-agent';
+  if (login === 'github-actions[bot]') return 'review-bot';
+  if (approvers().includes(login)) return 'alice';
+  if (login === OWNER) return 'bob';
+  return login;
 };
+// A person's token from the gh CLI's keyring (gh auth login once per account), whichever account is active.
+export const tokenOf = (login) => execFileSync('gh', ['auth', 'token', '--user', login], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
 
 export const loadConfig = () => (existsSync(CONFIG) ? JSON.parse(readFileSync(CONFIG, 'utf8')) : {});
 export const saveConfig = (cfg) => { writeFileSync(`${CONFIG}.tmp`, `${JSON.stringify(cfg, null, 2)}\n`); renameSync(`${CONFIG}.tmp`, CONFIG); };
@@ -53,9 +62,9 @@ export async function appToken(role) {
   return tokens[role].token;
 }
 
-// A REST client acting as one of the apps, or as the person logged in to the gh CLI ('owner').
+// A REST client acting as one of the apps ('agent', 'gateway'), the repository's owner ('owner'), or a GitHub login.
 export async function as(role) {
-  const token = role === 'owner' ? (process.env.GH_TOKEN ?? execFileSync('gh', ['auth', 'token'], { encoding: 'utf8' }).trim()) : await appToken(role);
+  const token = role === 'agent' || role === 'gateway' ? await appToken(role) : role === 'owner' ? (process.env.GH_TOKEN ?? tokenOf(OWNER)) : tokenOf(role);
   const call = (method, path, body) => request(token, method, path, body);
   return { token, get: (p) => call('GET', p), post: (p, b) => call('POST', p, b ?? {}), put: (p, b) => call('PUT', p, b ?? {}), patch: (p, b) => call('PATCH', p, b ?? {}), del: (p) => call('DELETE', p) };
 }
