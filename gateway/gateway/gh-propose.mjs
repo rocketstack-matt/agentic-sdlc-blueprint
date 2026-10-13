@@ -4,7 +4,8 @@
 import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
-import { CLONE, REPO, appSlug, as, inClone, remote } from './github.mjs';
+import { existsSync } from 'node:fs';
+import { GH, REPO, appSlug, as, remote } from './github.mjs';
 import { label, parseArgs, run } from './lib.mjs';
 
 run(async () => {
@@ -23,8 +24,15 @@ run(async () => {
     const me = await gh.get('/user');
     who = { name: me.name ?? me.login, email: `${me.id}+${me.login}@users.noreply.github.com` };
   }
-  const commit = (message) => execFileSync('git', ['-c', `user.name=${who.name}`, '-c', `user.email=${who.email}`, 'commit', '-q', '-m', message], { cwd: CLONE });
+  // Your own signing key would not match the agent's address (GitHub would mark the commit Unverified), so the agent's
+  // commits go unsigned; yours keep your usual signing.
+  const unsigned = role === 'agent' ? ['-c', 'commit.gpgsign=false'] : [];
+  const commit = (message) => execFileSync('git', [...unsigned, '-c', `user.name=${who.name}`, '-c', `user.email=${who.email}`, 'commit', '-q', '-m', message], { cwd: WORK });
   const patch = join(dirname(file), '..', 'patches', desc.patch);
+  // The author's own checkout, apart from the gateway's clone, so the two never hold the same git locks.
+  const WORK = join(GH, 'author');
+  if (!existsSync(WORK)) execFileSync('git', ['clone', '-q', `https://github.com/${REPO}.git`, WORK]);
+  const inClone = (...args) => execFileSync('git', args, { cwd: WORK, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
   inClone('fetch', '-q', 'origin');
 
   if (flags.onto) {
