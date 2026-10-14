@@ -153,49 +153,39 @@ try {
   await hubShot('1-harmless', '1.0.0', FOCUS);
   await merge(one);
 
-  // 2. Near the ledger: red. 3. Aaron approves: green.
+  // 2. Near the ledger: red. 3. The approver approves: green; merge.
   const two = propose('position-total');
   await verdict(two, 'failure');
   await shoot('2-ledger', two, { to: 'needs a person' });
   await hubShot('2-ledger', '1.0.0', FOCUS);
   await waitForApproval(two, 0);
   await verdict(two, 'success');
-  await verdict(two, 'success');
   await shoot('3-approved', two, { only: `${APPROVER} approved` });
   await hubShot('3-approved', '1.0.0', FOCUS);
-
-  // 4. One more line after approval: red. Aaron approves again; merge.
-  propose('position-total-amended', '--onto', String(two), '--message', 'Add a source header to the position total');
-  await sleep(5000);
-  await verdict(two, 'failure');
-  await shoot('4-stale', two, { to: 'earlier commit' });
-  await hubShot('4-stale', '1.0.0', FOCUS);
-  await waitForApproval(two, 1);
-  await verdict(two, 'success');
   await merge(two);
 
-  // 5. The shortcut: red; closed.
-  const five = propose('ledger-shortcut');
-  await verdict(five, 'failure');
-  await shoot('5-shortcut', five, { to: 'not in the architecture' });
-  await hubShot('5-shortcut', '1.0.0', FOCUS);
-  await owner.patch(`/repos/${REPO}/pulls/${five}`, { state: 'closed' });
+  // 4. The shortcut: red; closed.
+  const shortcut = propose('ledger-shortcut');
+  await verdict(shortcut, 'failure');
+  await shoot('4-shortcut', shortcut, { to: 'not in the architecture' });
+  await hubShot('4-shortcut', '1.0.0', FOCUS);
+  await owner.patch(`/repos/${REPO}/pulls/${shortcut}`, { state: 'closed' });
 
-  // 6. The architect: red until Aaron approves; merge.
-  const six = propose('architect-ledger-connection', '--as', 'owner');
-  await verdict(six, 'failure');
-  await waitForApproval(six, 0);
-  await verdict(six, 'success');
-  await shoot('6-architect', six, { only: `${APPROVER} approved` });
-  await merge(six);
+  // 5. The architect: red until the approver approves; merge.
+  const architect = propose('architect-ledger-connection', '--as', 'owner');
+  await verdict(architect, 'failure');
+  await waitForApproval(architect, 0);
+  await verdict(architect, 'success');
+  await shoot('5-architect', architect, { only: `${APPROVER} approved` });
+  await merge(architect);
   await sleep(8000); // the gateway publishes the new architecture to CALM Hub
-  await hubShot('6-architect', '1.1.0', FOCUS);
+  await hubShot('5-architect', '1.1.0', FOCUS);
 
-  // 7. The same harmless change, after the architecture changed: red.
-  const seven = propose('trade-count');
-  await verdict(seven, 'failure');
-  await shoot('7-climax', seven, { to: 'needs a person' });
-  await hubShot('7-climax', '1.1.0', FOCUS);
+  // 6. The same harmless change, after the architecture changed: red.
+  const climax = propose('trade-count');
+  await verdict(climax, 'failure');
+  await shoot('6-climax', climax, { to: 'needs a person' });
+  await hubShot('6-climax', '1.1.0', FOCUS);
 } finally {
   gw?.kill();
   await browser.close();

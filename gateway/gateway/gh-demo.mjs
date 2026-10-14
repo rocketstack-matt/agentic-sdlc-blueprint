@@ -25,19 +25,17 @@ const propose = (...args) => {
 const MOMENTS = [
   { n: 1, title: 'A harmless change', next: 'Green in a few seconds: press Merge on GitHub (or m).',
     run: (s) => { s.prs.harmless = propose('demo/changes/account-summary.json'); return s.prs.harmless; } },
-  { n: 2, title: 'A change near the ledger', next: 'Red: needs a person. Moment 3: Aaron approves on GitHub; it turns green. Do not merge yet.',
+  { n: 2, title: 'A change near the ledger', next: 'Red: needs a person. Moment 3: Aaron approves on GitHub; it turns green. Then press Merge (or m).',
     run: (s) => { s.prs.ledger = propose('demo/changes/position-total.json'); return s.prs.ledger; } },
-  { n: 4, title: 'One more line after approval', next: 'Red: the approval is for an earlier commit. Aaron approves again, then press Merge (or m).',
-    run: (s) => { propose('demo/changes/position-total-amended.json', '--onto', String(s.prs.ledger), '--message', 'Add a source header to the position total'); return s.prs.ledger; } },
-  { n: 5, title: 'The shortcut', next: 'Red: that connection is not in the architecture. The next key closes it.',
+  { n: 4, title: 'The shortcut', next: 'Red: that connection is not in the architecture. The next key closes it.',
     run: (s) => { s.prs.shortcut = propose('demo/changes/ledger-shortcut.json'); return s.prs.shortcut; } },
-  { n: 6, title: 'The architect changes the architecture', next: 'Red until Aaron approves; then press Merge (or m), and move CALM Hub to 1.1.0 (or h).',
+  { n: 5, title: 'The architect changes the architecture', next: 'Red until Aaron approves; then press Merge (or m), and move CALM Hub to 1.1.0 (or h).',
     run: async (s) => {
       if (s.prs.shortcut) await (await as('owner')).patch(`/repos/${REPO}/pulls/${s.prs.shortcut}`, { state: 'closed' });
       s.prs.architect = propose('demo/changes/architect-ledger-connection.json', '--as', 'owner');
       return s.prs.architect;
     } },
-  { n: 7, title: 'The same harmless change, again', next: 'Red: now it needs a person. Back to the slides.',
+  { n: 6, title: 'The same harmless change, again', next: 'Red: now it needs a person. Back to the slides.',
     run: (s) => { s.prs.climax = propose('demo/changes/trade-count.json'); return s.prs.climax; } },
 ];
 

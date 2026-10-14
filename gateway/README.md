@@ -69,12 +69,12 @@ On the day:
 The moments `gh-demo` plays, in order (moment 3 is Aaron approving; there is nothing to press for it):
 
 1. A harmless change: green in about 15 seconds; press Merge.
-2. A change near the ledger: red, naming @aaronsearle. 3. Aaron approves on GitHub: green in about 8 seconds.
-4. One more line after approval: red again. Aaron approves again; press Merge.
-5. The shortcut: red, not in the architecture. The next key closes it.
-6. The architect changes the architecture (opened as you): red until Aaron approves; press Merge, and move CALM Hub to
+2. A change near the ledger: red, naming @aaronsearle. 3. Aaron approves on GitHub: green in about 8 seconds; press
+   Merge.
+4. The shortcut: red, not in the architecture. The next key closes it.
+5. The architect changes the architecture (opened as you): red until Aaron approves; press Merge, and move CALM Hub to
    1.1.0.
-7. The same harmless change: now red.
+6. The same harmless change: now red.
 
 `gh-demo` remembers where it got to, so it can be stopped and started again; `gh-reset` starts everything afresh. The
 moments can also be played by hand with `node gateway/gh-propose.mjs` (see `gh-demo.mjs` for the arguments).
