@@ -274,15 +274,6 @@
 .reveal .pr-card .pr-timeline li { padding: 14px 0; border-bottom: 2px solid #e3e5ea; display: flex; align-items: center; gap: 16px; }
 .reveal .pr-card .pr-dot { width: 22px; height: 22px; border-radius: 50%; background: var(--green); flex: 0 0 auto; }
 .reveal .pr-card .pr-dot.merged { background: #8250df; }
-.reveal .v5-maps { display: grid; grid-template-columns: 1fr 1fr; gap: 26px 40px; }
-.reveal .v5-maps div { background: #f4f5f7; border-radius: 16px; padding: 22px 28px; }
-.reveal .v5-maps h3 { font-size: 30px; margin: 0 0 10px; color: var(--blue); }
-.reveal .v5-maps p { font-size: 27px; line-height: 1.35; margin: 0; }
-.reveal .v5-timeline { display: grid; grid-template-columns: 1fr 1fr; gap: 0 60px; }
-.reveal .v5-timeline h3 { font-size: 32px; margin: 0 0 12px; }
-.reveal .v5-timeline ol { list-style: none; margin: 0; padding: 0; }
-.reveal .v5-timeline li { display: grid; grid-template-columns: 150px 1fr; gap: 18px; font-size: 26px; line-height: 1.3; padding: 9px 0; border-top: 2px solid #e3e5ea; }
-.reveal .v5-timeline li b { color: var(--blue); }
 .reveal .v5-quotes { list-style: none; counter-reset: q; margin: 0; padding: 0; }
 .reveal .v5-quotes li { counter-increment: q; position: relative; padding-left: 70px; font-size: 30px; line-height: 1.35; margin: 0 0 16px; }
 .reveal .v5-quotes li::before { content: counter(q); position: absolute; left: 0; top: 2px; width: 46px; height: 46px; border-radius: 50%; background: var(--blue); color: #fff; font-size: 26px; font-weight: 700; text-align: center; line-height: 46px; }
@@ -295,3 +286,129 @@
 .reveal .statement.small { margin-bottom: 0.7em; }
 .reveal .v5-links { margin-top: 0.4em; }
 /* v5: end */
+/* v4, the catalog then and now: a five-step timeline along a rule, then three status cards in the catalog's teal. */
+.reveal .v4-timeline { list-style: none; margin: 8px 0 34px; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 0 26px; border-top: 4px solid var(--catalog); }
+.reveal .v4-timeline li { position: relative; padding: 30px 0 0; margin: 0; font-size: 23px; line-height: 1.3; }
+.reveal .v4-timeline li::before { content: ""; position: absolute; left: 0; top: -14px; width: 24px; height: 24px; border-radius: 50%; background: var(--catalog); border: 4px solid #fff; box-sizing: border-box; }
+.reveal .v4-timeline li:last-child::before { width: 30px; height: 30px; top: -17px; background: var(--ink); }
+.reveal .v4-timeline li b { display: block; font-size: 30px; color: var(--catalog); margin-bottom: 6px; }
+.reveal .v4-timeline li:last-child b { color: var(--ink); }
+/* The gap step: the rule turns dashed and the dot gives way to an ellipsis, to show time passing. */
+.reveal .v4-timeline li.gap::before { display: none; }
+.reveal .v4-timeline li.gap::after { content: ""; position: absolute; top: -4px; left: -26px; right: -26px; height: 4px; background: repeating-linear-gradient(90deg, var(--catalog) 0 14px, #fff 14px 28px); }
+.reveal .v4-timeline li.gap b { color: var(--muted); letter-spacing: 0.1em; }
+.reveal .v4-timeline li.gap { color: var(--muted); font-style: italic; }
+.reveal .v4-when { font-size: 22px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 700; margin: 0 0 10px !important; }
+.reveal .v4-now { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px 28px; }
+.reveal .v4-now div { background: #f4f5f7; border-left: 8px solid var(--catalog); border-radius: 0 14px 14px 0; padding: 16px 24px; }
+.reveal .v4-now h3 { font-size: 29px; margin: 0 0 6px; color: var(--catalog); }
+.reveal .v4-now p { font-size: 24px; line-height: 1.35; margin: 0; }
+.reveal .v4-foot { font-size: 24px; color: var(--muted); margin: 22px 0 0; }
+.reveal .v4-foot b { color: var(--ink); }
+
+
+/* Slide 5 in the catalog site's own SDLC3 palette (sdlc-common-controls.finos.org, Controls by Phase): the pipeline
+   phases step through the logo's purple-to-pink gradient, lifecycle is slate, meta purple, each with a pale tint. */
+.reveal .v3-catalog { --s3-ink: #1f1a2e; --s3-muted: #6b6880; --s3-line: #ece9f3; }
+.reveal .s3-code      { --phase: #4600d2; --tint: #f3eefe; }
+.reveal .s3-build     { --phase: #7300c4; --tint: #f6eefd; }
+.reveal .s3-release   { --phase: #a6009f; --tint: #fbeefa; }
+.reveal .s3-runtime   { --phase: #d4096f; --tint: #fdeef5; }
+.reveal .s3-lifecycle { --phase: #3f4a5e; --tint: #f1f3f6; }
+.reveal .s3-meta      { --phase: #6f42c1; --tint: #f4f0fb; }
+.reveal .s3-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px 18px; }
+.reveal .s3-phase, .reveal .s3-band { position: relative; background: #fff; border: 2px solid var(--s3-line); border-top: 5px solid var(--phase); border-radius: 12px; }
+.reveal .s3-phase:not(:nth-child(4))::after { content: "\2192"; position: absolute; right: -19px; top: 9px; z-index: 2; width: 20px; height: 20px; border-radius: 50%; background: #a9a2c2; color: #fff; font-size: 15px; line-height: 20px; text-align: center; font-weight: 700; }
+.reveal .s3-head { display: flex; align-items: center; gap: 10px; padding: 6px 10px; background: var(--tint); border-bottom: 2px solid var(--s3-line); border-radius: 8px 8px 0 0; font-size: 24px; line-height: 1.2; font-weight: 700; color: var(--phase); }
+.reveal .s3-step { flex: 0 0 auto; width: 30px; height: 30px; border-radius: 50%; background: var(--phase); color: #fff; font-size: 18px; line-height: 30px; text-align: center; }
+.reveal .s3-count { margin-left: auto; min-width: 30px; padding: 0 8px; border-radius: 999px; background: #fff; border: 2px solid color-mix(in srgb, var(--phase) 25%, transparent); font-size: 18px; line-height: 24px; text-align: center; }
+.reveal .s3-grid .v3-col { padding: 6px; gap: 5px; }
+.reveal .s3-grid .v3-chip { border: 0; border-left: 4px solid var(--phase); border-radius: 0 8px 8px 0; background: #fafafc; padding: 4px 8px; font-size: 21px; color: var(--s3-ink); }
+.reveal .s3-grid .v3-chip b { color: var(--phase); font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 18px; margin-right: 8px; }
+.reveal .s3-grid .v3-chip.v3-on { background: var(--phase); color: #fff; }
+.reveal .s3-grid .v3-chip.v3-on b { color: #fff; }
+.reveal .s3-band { grid-column: 1 / -1; display: flex; align-items: stretch; }
+.reveal .s3-band .s3-head { flex: 0 0 220px; flex-direction: column; align-items: flex-start; justify-content: center; gap: 0; border-bottom: 0; border-right: 2px solid var(--s3-line); border-radius: 8px 0 0 8px; }
+.reveal .s3-band .s3-head small { font-size: 18px; font-weight: 400; color: var(--s3-muted); }
+.reveal .s3-band .v3-band { flex: 1; padding: 6px; gap: 8px; align-items: center; }
+.reveal .s3-unplaced { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+.reveal .s3-unplaced .v3-chip { --phase: #66637a; }
+.reveal .s3-unplaced-label { font-size: 18px; color: var(--s3-muted); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; }
+.reveal .v3-catalog .v3-head b, .reveal .v3-catalog .v3-rail .v3-head b { color: var(--s3-ink); }
+.reveal .v3-catalog .v3-rail { background: #f7f5fb; border: 2px solid var(--s3-line); }
+.reveal .v3-catalog .v3-risks li { color: var(--s3-ink); }
+.reveal .v3-catalog .v3-risks li b { color: #6f42c1; }
+.reveal .v3-catalog .v3-risks li.v3-on { background: #4600d2; color: #fff; }
+.reveal .v3-catalog .v3-risks li.v3-on b { color: #fff; }
+.reveal .v3-catalog + .v3-foot .v3-swatch { background: #4600d2; }
+.reveal .v3-catalog + .v3-foot .v3-link { color: #4600d2; }
+
+/* Slide 6, all about risk, in the catalog's SDLC3 palette: the catalog's three risks in indigo, the six risks review
+   carries in practice stepping through the logo's purple-to-pink gradient. */
+.reveal .v7-jobs { --s3-ink: #1f1a2e; --s3-muted: #6b6880; --s3-line: #ece9f3; display: grid; grid-template-columns: 500px minmax(0, 1fr); gap: 40px; align-items: start; }
+.reveal .v7-head { font-size: 22px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--s3-muted); font-weight: 700; margin: 0 0 12px; }
+.reveal .v7-risks ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 16px; }
+.reveal .v7-risks li { margin: 0; padding: 16px 22px 18px; border-radius: 14px; background: linear-gradient(135deg, #4600d2, #6f42c1); color: #fff; box-shadow: 0 4px 16px rgba(70,0,210,0.18); }
+.reveal .v7-risks .v7-id { display: block; font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 19px; letter-spacing: 0.04em; opacity: 0.8; }
+.reveal .v7-risks b { display: block; font-size: 28px; line-height: 1.2; margin: 2px 0 6px; }
+.reveal .v7-risks .v7-desc { display: block; font-size: 21px; line-height: 1.3; opacity: 0.92; }
+.reveal .v7-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 16px 20px; }
+.reveal .v7-grid li { position: relative; margin: 0; padding: 14px 20px 14px 76px; background: #fff; border: 2px solid var(--s3-line); border-left: 6px solid var(--c); border-radius: 0 14px 14px 0; box-shadow: 0 1px 2px rgba(31,26,46,0.04), 0 4px 16px rgba(31,26,46,0.05); }
+.reveal .v7-grid li:nth-child(1) { --c: #4600d2; --t: #f3eefe; }
+.reveal .v7-grid li:nth-child(2) { --c: #5d00cb; --t: #f4eefe; }
+.reveal .v7-grid li:nth-child(3) { --c: #7300c4; --t: #f6eefd; }
+.reveal .v7-grid li:nth-child(4) { --c: #a6009f; --t: #fbeefa; }
+.reveal .v7-grid li:nth-child(5) { --c: #bd0587; --t: #fceef7; }
+.reveal .v7-grid li:nth-child(6) { --c: #d4096f; --t: #fdeef5; }
+.reveal .v7-n { position: absolute; left: 18px; top: 16px; width: 42px; height: 42px; border-radius: 50%; background: var(--c); color: #fff; font-size: 22px; font-weight: 700; line-height: 42px; text-align: center; box-shadow: 0 2px 6px color-mix(in srgb, var(--c) 35%, transparent); }
+.reveal .v7-grid b { display: block; font-size: 27px; line-height: 1.2; color: var(--s3-ink); }
+.reveal .v7-grid .v7-desc { display: block; font-size: 21px; line-height: 1.3; color: var(--s3-muted); margin: 4px 0 8px; }
+.reveal .v7-grid .v7-job { display: inline-block; font-size: 17px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; color: var(--c); background: var(--t); border-radius: 999px; padding: 3px 12px; }
+.reveal .v7-grid .v7-job::before { content: "Review as: "; font-weight: 400; }
+.reveal .v7-grid li { display: flex; flex-direction: column; align-items: flex-start; }
+.reveal .v7-grid .v7-job { margin-top: auto; }
+
+/* Slide 6: the invitation under the risks, in the catalog's SDLC3 indigo. */
+.reveal .v8-join { margin: 22px 0 0; padding: 14px 22px; border-radius: 12px; background: linear-gradient(90deg, rgba(70,0,210,0.07), rgba(255,20,140,0.07)); border: 2px solid #ece9f3; font-size: 26px; line-height: 1.35; color: #1f1a2e; }
+.reveal .v8-join b { color: #4600d2; }
+.reveal .v8-join span { white-space: nowrap; font-weight: 700; color: #1f1a2e; }
+.reveal .v7-head small { font-size: 20px; letter-spacing: 0; text-transform: none; font-weight: 400; font-style: italic; margin-left: 10px; }
+/* Slide 6 carries the invitation too, so its cards sit a little tighter. */
+.reveal .v7-grid { gap: 12px 20px; }
+.reveal .v7-grid li { padding-top: 11px; padding-bottom: 11px; }
+.reveal .v7-grid .v7-desc { margin: 2px 0 6px; }
+.reveal .v7-risks ul { gap: 12px; }
+.reveal .v7-risks li { padding: 12px 22px 14px; }
+.reveal .v7-jobs + .v8-join { margin-top: 16px; padding: 10px 20px; font-size: 23px; }
+.reveal .v7-head { margin-bottom: 8px; }
+.reveal .v7-jobs + .v8-join { margin-top: 8px; }
+/* Slide 7: the evidence requirement, set apart as the one that matters most. */
+.reveal .v5-quotes li.v8-evidence { margin-top: 26px; padding-top: 14px; padding-bottom: 14px; padding-right: 22px; background: linear-gradient(90deg, rgba(70,0,210,0.07), rgba(255,20,140,0.07)); border-radius: 0 12px 12px 0; }
+.reveal .v5-quotes li.v8-evidence::before { top: 16px; background: #4600d2; }
+.reveal .v5-quotes li.v8-evidence span { display: block; font-weight: 700; color: #4600d2; margin-bottom: 4px; }
+.reveal .v5-quotes li.v8-evidence b { color: #4600d2; }
+
+/* Slide 8, the bridge: what the catalog expects (SDLC3 indigo) and how it is enforced (CALM blue), then the hand-over. */
+.reveal .statement.v9-statement { font-size: 56px; margin-bottom: 36px; }
+.reveal .v9-bridge { display: grid; grid-template-columns: 1fr 90px 1fr; align-items: stretch; gap: 0; }
+.reveal .v9-what, .reveal .v9-how { border-radius: 16px; padding: 24px 30px; background: #fff; border: 2px solid #ece9f3; box-shadow: 0 4px 16px rgba(31,26,46,0.05); }
+.reveal .v9-what { border-top: 8px solid #4600d2; background: linear-gradient(180deg, #f3eefe, #fff 60%); }
+.reveal .v9-how { border-top: 8px solid var(--calm); background: linear-gradient(180deg, #eef4fe, #fff 60%); }
+.reveal .v9-bridge img { height: 52px; width: auto; display: block; margin: 0 0 14px; }
+.reveal .v9-bridge h3 { font-size: 36px; margin: 0 0 8px; }
+.reveal .v9-what h3 { color: #4600d2; }
+.reveal .v9-how h3 { color: var(--calm); }
+.reveal .v9-bridge p { font-size: 27px; line-height: 1.35; margin: 0; color: #1f1a2e; }
+.reveal .v9-arrow { position: relative; }
+.reveal .v9-arrow::before { content: ""; position: absolute; left: 16px; right: 30px; top: 50%; height: 6px; margin-top: -3px; background: linear-gradient(90deg, #4600d2, var(--calm)); border-radius: 3px; }
+.reveal .v9-arrow::after { content: ""; position: absolute; right: 12px; top: 50%; margin-top: -16px; border: 16px solid transparent; border-right: 0; border-left: 24px solid var(--calm); }
+.reveal .v9-next { font-size: 40px; line-height: 1.3; margin: 36px 0 0; color: #1f1a2e; }
+.reveal .v9-next b { color: var(--calm); }
+.reveal .v9-how { border-top-color: var(--yours); background: linear-gradient(180deg, #f4f5f7, #fff 60%); }
+.reveal .v9-how h3 { color: var(--ink); }
+.reveal .v9-bridge .v9-tag { height: 52px; display: flex; align-items: center; margin: 0 0 14px; font-size: 24px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: var(--muted); }
+.reveal .v9-arrow::before { background: linear-gradient(90deg, #4600d2, var(--yours)); }
+.reveal .v9-arrow::after { border-left-color: var(--yours); }
+.reveal .v9-next { display: flex; align-items: center; gap: 30px; margin: 40px 0 0; padding: 22px 32px; border-radius: 16px; background: #eef4fe; border-left: 10px solid var(--calm); }
+.reveal .v9-next img { height: 72px; width: auto; }
+.reveal .v9-next p { font-size: 40px; line-height: 1.3; margin: 0; color: #1f1a2e; }

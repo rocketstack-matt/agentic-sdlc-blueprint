@@ -55,21 +55,23 @@
       <aside class="notes">Speaker: Aaron. Part one is the catalog: where it came from, what it is, and the one control we follow all the way to the gate in part two. I filed the proposal, so this is first person.</aside>
     </section>
 
-    <section data-station="none" class="step">
-      <h2>A problem written down in July 2025</h2>
-      <div class="screen">
-        <div>
-          <p class="pane-head"><strong>GitHub</strong> &middot; finos/devops-automation, issue 261, 11 July 2025</p>
-          <img class="shot" src="img/catalog/da261-problems.png" alt="The proposal's three problems: duplication, drift, fragmentation">
-        </div>
-        <aside class="callout-panel">
-          <h3>What this shows</h3>
-          <p>The proposal that started the catalog, filed in the FINOS DevOps Automation group: every institution interpreting, writing and auditing its own SDLC controls, drifting apart, in its own vocabulary.</p>
-          <h3>Take away</h3>
-          <p class="takeaway">Write the controls once, in the open, as a library each institution references. Even sharing the language saves time.</p>
-        </aside>
+    <section data-station="none">
+      <h2>From an issue in July 2025 to a FINOS project</h2>
+      <ol class="v4-timeline">
+        <li><b>Jul 2025</b>The proposal: issue 261 in FINOS DevOps Automation. Duplication, drift, fragmentation.</li>
+        <li><b>Oct 2025</b>Introduced at OSFF New York. First content lands in a new FINOS repository.</li>
+        <li class="gap"><b>&middot; &middot; &middot;</b>Nearly 30 working-group calls and around half a dozen workshops, every two weeks since the August 2025 kickoff.</li>
+        <li><b>Jul 2026</b>Contributed to FINOS as an Incubating project.</li>
+        <li><b>Oct 2026</b>The first batch of controls approved and starting to be consumed. Every card versioned.</li>
+      </ol>
+      <p class="v4-when">October 2026 &middot; where we are now</p>
+      <div class="v4-now">
+        <div><h3>A FINOS Incubating project</h3><p>An open standard under the FINOS Community Specification, run in the DevOps Automation SIG. Live at <span style="white-space: nowrap">sdlc-common-controls.finos.org</span>.</p></div>
+        <div><h3>Built across the industry</h3><p>Maintainers from Morgan Stanley, Deutsche Bank, UBS and Kosli. Fidelity, TD Bank, JFrog, Anchore, Chainloop, GitLab and KPMG among those taking part. 87 pull requests merged.</p></div>
+        <div><h3>First batch approved, starting to be consumed</h3><p>Code Review (v1.0) and Version Control (v1.2) are approved by the working group, with the Insider Threat risk. Nineteen more controls have passed first reading.</p></div>
       </div>
-      <aside class="notes">Speaker: Aaron, first person. I filed this in July 2025. We had just spent months at my own firm interpreting the same regulatory guidance every other bank was interpreting, writing controls every other bank was writing, and paying auditors to test them. Duplication, drift, fragmentation. The proposal was a catalog, not a policy: nobody expected a common SDLC policy, but a shared library of controls and risks that institutions pick from and reference. Even sharing the language was worth it.</aside>
+      <p class="v4-foot">Open to anyone: calls every two weeks, alternating with a three-hour workshop. <b>sdlc-common-controls+subscribe@lists.finos.org</b></p>
+      <aside class="notes">Speaker: Aaron, first person. I filed this in July 2025. We had just spent months at my own firm interpreting the same regulatory guidance every other bank was interpreting, writing controls every other bank was writing, and paying auditors to test them. Duplication, drift, fragmentation. The proposal was a catalog, not a policy: a shared library of controls and risks that institutions pick from and reference. Toby Weston and I introduced it at this conference, OSFF New York, last year, as an idea and a working group. A year on, it is not a proposal any more. FINOS approved the contribution in July, and the catalog is now an Incubating project, an open standard under the Community Specification, live on its own site. It is built across the industry: maintainers from Morgan Stanley, Deutsche Bank, UBS and Kosli, banks like Fidelity and TD alongside vendors like JFrog, Anchore, Chainloop and GitLab, and 87 pull requests merged. This month we reached a milestone: the first controls are approved by the working group. Code review, the control this talk follows, is at version 1.0, with version control and the insider threat risk; nineteen more controls have passed first reading and are on their way. Every card is versioned with a snapshot, so you can cite the exact text in a policy or an audit response. And we have started on agents: this month we merged the first agentic risk and control, unapproved agentic processes and their provenance. If you own controls at your firm, come and join us: the calls are open.</aside>
     </section>
 
     <section data-station="none">
@@ -77,49 +79,59 @@
         <div class="v3-catalog">
     <div>
       <p class="v3-head"><b>22 controls</b>, SDLC-PREV-001 to 022, by the lifecycle phase each applies to</p>
-      <div class="v3-grid">
-        <div class="v3-phase v3-next">Code</div>
-        <div class="v3-phase v3-next">Build</div>
-        <div class="v3-phase v3-next">Release</div>
-        <div class="v3-phase">Runtime</div>
-        <ul class="v3-col">
-          <li class="v3-chip v3-on"><b>001</b>Code Review</li>
-          <li class="v3-chip"><b>005</b>Vulnerability Scanning: SAST</li>
-          <li class="v3-chip"><b>008</b>Version Control</li>
-          <li class="v3-chip"><b>010</b>Secret Detection</li>
-        </ul>
-        <ul class="v3-col">
-          <li class="v3-chip"><b>003</b>Software Artifact Provenance</li>
-          <li class="v3-chip"><b>007</b>Vulnerability Scanning: Dependencies</li>
-          <li class="v3-chip"><b>009</b>Component Inventory</li>
-          <li class="v3-chip"><b>014</b>Test Evidence Retention</li>
-          <li class="v3-chip"><b>016</b>Test Execution and Sign-Off</li>
-        </ul>
-        <ul class="v3-col">
-          <li class="v3-chip"><b>006</b>Vulnerability Scanning: DAST</li>
-          <li class="v3-chip"><b>012</b>Deployment Gating</li>
-          <li class="v3-chip"><b>019</b>Version Release Approval Gating</li>
-          <li class="v3-chip"><b>020</b>Requirements Approval for Release</li>
-          <li class="v3-chip"><b>021</b>Infrastructure Dependencies</li>
-        </ul>
-        <ul class="v3-col">
-          <li class="v3-chip"><b>017</b>Service Dependency Control</li>
-        </ul>
-        <div class="v3-rule"></div>
-        <ul class="v3-band">
-          <li class="v3-band-label">Whole lifecycle <small>every phase</small></li>
-          <li class="v3-chip"><b>004</b>Requirements Repository</li>
-          <li class="v3-chip"><b>011</b>Vulnerability Remediation SLAs</li>
-          <li class="v3-chip"><b>013</b>System Inventory</li>
-          <li class="v3-chip"><b>015</b>Testing Requirements</li>
-        </ul>
-        <div class="v3-rule"></div>
-        <ul class="v3-band">
-          <li class="v3-band-label">Governance of the controls <small>META in the catalog</small></li>
-          <li class="v3-chip"><b>002</b>Content Addressable Identities</li>
-          <li class="v3-chip"><b>022</b>Data Retention and Disposal</li>
-          <li class="v3-cell"><span class="v3-band-label">Not yet placed</span><span class="v3-chip"><b>018</b>Dependency Curation</span></li>
-        </ul>
+      <div class="s3-grid">
+        <div class="s3-phase s3-code">
+          <div class="s3-head"><span class="s3-step">1</span>Code<span class="s3-count">4</span></div>
+          <ul class="v3-col">
+            <li class="v3-chip v3-on"><b>001</b>Code Review</li>
+            <li class="v3-chip"><b>005</b>Vulnerability Scanning: SAST</li>
+            <li class="v3-chip"><b>008</b>Version Control</li>
+            <li class="v3-chip"><b>010</b>Secret Detection</li>
+          </ul>
+        </div>
+        <div class="s3-phase s3-build">
+          <div class="s3-head"><span class="s3-step">2</span>Build<span class="s3-count">5</span></div>
+          <ul class="v3-col">
+            <li class="v3-chip"><b>003</b>Software Artifact Provenance</li>
+            <li class="v3-chip"><b>007</b>Vulnerability Scanning: Dependencies</li>
+            <li class="v3-chip"><b>009</b>Component Inventory</li>
+            <li class="v3-chip"><b>014</b>Test Evidence Retention</li>
+            <li class="v3-chip"><b>016</b>Test Execution and Sign-Off</li>
+          </ul>
+        </div>
+        <div class="s3-phase s3-release">
+          <div class="s3-head"><span class="s3-step">3</span>Release<span class="s3-count">5</span></div>
+          <ul class="v3-col">
+            <li class="v3-chip"><b>006</b>Vulnerability Scanning: DAST</li>
+            <li class="v3-chip"><b>012</b>Deployment Gating</li>
+            <li class="v3-chip"><b>019</b>Version Release Approval Gating</li>
+            <li class="v3-chip"><b>020</b>Requirements Approval for Release</li>
+            <li class="v3-chip"><b>021</b>Infrastructure Dependencies</li>
+          </ul>
+        </div>
+        <div class="s3-phase s3-runtime">
+          <div class="s3-head"><span class="s3-step">4</span>Runtime<span class="s3-count">1</span></div>
+          <ul class="v3-col">
+            <li class="v3-chip"><b>017</b>Service Dependency Control</li>
+          </ul>
+        </div>
+        <div class="s3-band s3-lifecycle">
+          <div class="s3-head">Lifecycle<small>every phase</small></div>
+          <ul class="v3-band">
+            <li class="v3-chip"><b>004</b>Requirements Repository</li>
+            <li class="v3-chip"><b>011</b>Vulnerability Remediation SLAs</li>
+            <li class="v3-chip"><b>013</b>System Inventory</li>
+            <li class="v3-chip"><b>015</b>Testing Requirements</li>
+          </ul>
+        </div>
+        <div class="s3-band s3-meta">
+          <div class="s3-head">Meta<small>governance of the controls</small></div>
+          <ul class="v3-band">
+            <li class="v3-chip"><b>002</b>Content Addressable Identities</li>
+            <li class="v3-chip"><b>022</b>Data Retention and Disposal</li>
+            <li class="s3-unplaced"><span class="s3-unplaced-label">Not yet placed</span><span class="v3-chip"><b>018</b>Dependency Curation</span></li>
+          </ul>
+        </div>
       </div>
     </div>
     <aside class="v3-rail">
@@ -147,72 +159,65 @@
     </section>
 
     <section data-station="none">
-      <h2>Which obligation does this discharge?</h2>
-      <p class="lead">Every control carries its mappings, in the catalog's own words, so the examiner's question has an answer before it is asked. Code review:</p>
-      <div class="v5-maps">
-        <div><h3>NIST SP 800-53r5</h3><p>CM-3 Configuration Change Control. CM-5 Access Restrictions for Change. SA-10 Developer Configuration Management. SA-11 Developer Testing and Evaluation.</p></div>
-        <div><h3>EU DORA</h3><p>RTS Art. 16(3) "mandates source code reviews". Art. 17(1)(b) "requires independence between the functions approving a change and those requesting or implementing it".</p></div>
-        <div><h3>UK FCA and PRA</h3><p>"There is no UK rule that says 'perform code reviews'." Outcome-based: SYSC 15A impact tolerances, and the review records are the evidence of the capability.</p></div>
-        <div><h3>FFIEC</h3><p>"Code review involves a second individual to review code before it is released to test environments."</p></div>
-      </div>
-      <aside class="notes">Speaker: Aaron. This is the part the control people in the room care about, and the part we argued about most. Each control carries its mappings. Code review maps to four NIST controls; DORA's technical standard literally mandates source code reviews and requires the approver to be independent of the implementer, which is the regulatory basis for "the author may not review their own change"; the FCA has no rule that says perform code reviews, it is outcome-based, so the review records become evidence of resilience capability; and the FFIEC handbook uses code review as its example of dual control. The mapping is our answer to "which obligation does this discharge", and we answer it once, for everyone.</aside>
-    </section>
-
-    <section data-station="none">
-      <p class="kicker">Risk SDLC-RC-005, in the catalog's words</p>
-      <p class="statement">Banking and financial regulators treat unsubstantiated controls as absent controls.</p>
-      <p class="follow">Evidence is the product. Since October 2026 the catalog hashes its own versions, card by card, so a citation points at exactly what it cited.</p>
-      <aside class="notes">Speaker: Aaron. One sentence from our audit and compliance evidence failure risk, and I would stand behind every word of it. If you cannot produce the record, the control did not operate. That is why every control we write says what evidence it produces and how long it is kept, and why, in October 2026, we started hashing the catalog's own versions card by card, so that when a bank cites a control it cites exactly that text. Keep this sentence for part two: the gate's decisions are the evidence.</aside>
-    </section>
-
-    <section data-station="none">
-      <h2>Fifteen months, and one control's year</h2>
-      <p class="lead">The catalog grew in bursts. Its founding control took a year and is still argued over.</p>
-      <div class="v5-timeline">
-        <div>
-          <h3>The catalog</h3>
-          <ol>
-            <li><b>Jul 2025</b>The proposal: duplication, drift, fragmentation.</li>
-            <li><b>Oct 2025</b>First content, forked from the AI Governance Framework's structure (PR #3).</li>
-            <li><b>Mar 2026</b>A workshop day: eleven pull requests, risks and phases take shape.</li>
-            <li><b>Jul 2026</b>Regulatory mappings piloted on code review (#88).</li>
-            <li><b>Sep 2026</b>Agentic provenance proposed, still open (PR #103).</li>
-            <li><b>Oct 2026</b>Per-card versioning with immutable snapshots (#121).</li>
-          </ol>
+      <h2>All about risk</h2>
+      <p class="lead">Every job we give code review is a risk we expect it to catch.</p>
+      <div class="v7-jobs">
+        <div class="v7-risks">
+          <p class="v7-head">Named in the catalog</p>
+          <ul>
+            <li><span class="v7-id">SDLC-SEC-008</span><b>Unauthorised Change</b><span class="v7-desc">Code, configuration or build artefacts changed without authority, by a malicious actor or through weak controls.</span></li>
+            <li><span class="v7-id">SDLC-SEC-004</span><b>Vulnerable Software in Production</b><span class="v7-desc">Software with known vulnerabilities deployed, and left running, where attackers scan for them.</span></li>
+            <li><span class="v7-id">SDLC-RC-005</span><b>Audit and Compliance Evidence Failure</b><span class="v7-desc">No records, on demand, that show the SDLC governance operated as intended.</span></li>
+          </ul>
         </div>
         <div>
-          <h3>Code review</h3>
-          <ol>
-            <li><b>2025</b>Tested first, at the working group's offsite: "never alone".</li>
-            <li><b>Mar 2026</b>Removed: "too broad in terms of risks mitigated" (#37).</li>
-            <li><b>Jun 2026</b>Rewritten and re-added (#80).</li>
-            <li><b>Jul 2026</b>The first control with regulatory mappings (#88).</li>
-            <li><b>Open</b>"The deterministic 'machine evaluated' should be a 'could' instead of a must." (#81)</li>
-            <li><b>Open</b>"Keep the word 'eligible'. We want to call out that the review was done by an eligible party." (#81)</li>
+          <p class="v7-head">Carried by review in practice <small>often written down as reviewer guidance and expectations</small></p>
+          <ol class="v7-grid">
+            <li><span class="v7-n">1</span><b>A malicious change slips in</b><span class="v7-desc">A second person sees every change before it ships.</span><span class="v7-job">Insider threat detection</span></li>
+            <li><span class="v7-n">2</span><b>Defects reach production</b><span class="v7-desc">A fresh pair of eyes catches what the author cannot see: readable, maintainable, fit for purpose.</span><span class="v7-job">Quality assessment</span></li>
+            <li><span class="v7-n">3</span><b>Tests that prove nothing</b><span class="v7-desc">Green checks only count if the tests actually exercise this change.</span><span class="v7-job">Testing efficacy</span></li>
+            <li><span class="v7-n">4</span><b>Software that does the wrong thing</b><span class="v7-desc">The code does what the requirement asked, and only that.</span><span class="v7-job">Meets the requirements</span></li>
+            <li><span class="v7-n">5</span><b>A big change waved through as small</b><span class="v7-desc">Someone identifies the risk of the change: tier&nbsp;1 or tier&nbsp;2, which sets the review it needs.</span><span class="v7-job">Risk assessing the change</span></li>
+            <li><span class="v7-n">6</span><b>Only one person understands it</b><span class="v7-desc">Knowledge of the code spreads beyond its author.</span><span class="v7-job">Socialisation and awareness</span></li>
           </ol>
         </div>
       </div>
-      <aside class="notes">Speaker: Aaron. Two timelines, and I was in the room for all of it. The catalog: I proposed it in July 2025, first content that October, built mostly on workshop days, regulatory mappings last July, an agentic provenance control proposed in September and still open, and versioning this month. Code review, our founding control: we tested it first at the offsite, removed it in March as too broad, rewrote it in June, made it the first control with regulatory mappings in July, and we are still arguing over it: whether machine-evaluable policy should be a must or a could, and whether a machine can be an eligible reviewer. Say the word eligible; part two is about it.</aside>
+      <p class="v8-join">We are not focusing on these risks today. If you want to help shape, define or use the controls that mitigate them, <b>join us!</b> <span>sdlc-common-controls+subscribe@lists.finos.org</span></p>
+      <aside class="notes">Speaker: Aaron. Code review is the most overloaded control we have. On paper, the catalog says it mitigates three risks: unauthorised change, vulnerable software reaching production, and failing to evidence the change to an auditor. In practice every firm leans on it for much more. It is our insider threat control: a second person sees every change. It is quality assessment. It is how we check the tests are real and actually test the change. It is how we check the code does what the requirement asked. It is where someone risk assesses the change. And it is socialisation: more than one person knows how the code works. Remember why we removed it in March: "too broad in terms of risks mitigated". That is the overloading. Notice that insider threat is not even on the card's own list, and yet it is the first thing a control owner will say review is for. Now give the review to an agent. Some of those six still happen, some happen better, and some quietly stop. That is why the catalog has to write the control precisely, which is the next slide.</aside>
     </section>
 
     <section data-station="none">
       <h2>Code review, as the catalog writes it today</h2>
-      <p class="lead">Five requirements, quoted. Read them as a specification for a gate.</p>
+      <p class="lead">From here we focus back on the machinery: the review taking place, and evidence that it did. Six requirements, quoted.</p>
       <ol class="v5-quotes">
         <li>"The policy MUST define deterministic, machine-evaluable criteria for selecting the required review mode"</li>
         <li>"non-deterministic review (such as manual peer review or <b>approved cognitive review engines</b>)"</li>
         <li>"pipeline controls MUST technically block admission to the protected baseline when the required review outcome is absent, expired, revoked, or <b>no longer bound to the current change set</b>"</li>
         <li>"Review outcomes MUST be bound to an immutable identity for the reviewed content, such as a commit SHA"</li>
         <li>"the author of the change set <b>MUST NOT</b> satisfy the human-review requirement for their own change"</li>
+        <li class="v8-evidence"><span>And most importantly, we must evidence that it took place:</span>"<b>Review records MUST include</b> the review mode, decision, reviewer identity or approved automated-review tool identity, timestamp, policy inputs sufficient to justify the selected review mode"</li>
       </ol>
-      <p class="caption muted">SDLC-PREV-001 Code Review, version 0.1, finos.github.io/sdlc-common-controls</p>
-      <aside class="notes">Speaker: Aaron. The control as we write it today, five requirements. A deterministic, machine-evaluable policy chooses the review mode. Non-deterministic review can be a human or an approved cognitive review engine: we already admit machine reviewers, by name. The pipeline must block admission when the review outcome is absent, expired, revoked, or no longer bound to the change set. Outcomes are bound to an immutable identity, a commit. And the author may not satisfy the review of their own change. Read those five again and they are a specification for a gate. Matthew built that gate.</aside>
+      <p class="caption muted">SDLC-PREV-001 Code Review, version 1.0, approved by the working group October 2026. <span style="white-space: nowrap">sdlc-common-controls.finos.org</span></p>
+      <aside class="notes">Speaker: Aaron. The control as we write it today, approved by the working group this month at version 1.0. Five requirements. A deterministic, machine-evaluable policy chooses the review mode. Non-deterministic review can be a human or an approved cognitive review engine: we already admit machine reviewers, by name. The pipeline must block admission when the review outcome is absent, expired, revoked, or no longer bound to the change set. Outcomes are bound to an immutable identity, a commit. And the author may not satisfy the review of their own change. Read those five again and they are a specification for a gate. Matthew built that gate.</aside>
     </section>
 
     <section data-station="none">
       <p class="kicker">Where the catalog stops</p>
-      <p class="statement">The catalog says what. It cannot make a developer obey it who never sleeps, never reads the wiki, and takes the shortest path to green.</p>
-      <p class="follow">So who was the eligible reviewer of that pull request? The working group's own minutes: "difficult to detect and enforce, but something we are thinking about."</p>
+      <p class="statement v9-statement">The catalog says what is expected. It deliberately stops short of how to implement and enforce it.</p>
+      <div class="v9-bridge">
+        <div class="v9-what">
+          <img src="img/logos/sdlc-common-controls.svg" alt="SDLC Common Controls Catalog">
+          <h3>What is expected</h3>
+          <p>Shared, technology-agnostic requirements. Every institution reads the same words, and cites the same version.</p>
+        </div>
+        <div class="v9-arrow" aria-hidden="true"></div>
+        <div class="v9-how">
+          <p class="v9-tag">The hard part</p>
+          <h3>How do you enforce it on an agent?</h3>
+          <p>It will never read the policy, and it will happily bypass it if given the chance.</p>
+        </div>
+      </div>
+      <div class="v9-next"><img src="img/logos/calm.svg" alt="FINOS CALM"><p>Here is one way it could be done: <b>by leveraging FINOS CALM.</b></p></div>
       <aside class="notes">Speaker: Aaron. Where my catalog stops. It says what, and now it even says machines may review. It cannot make a developer obey it who never sleeps, never reads the wiki and takes the shortest path to green. Back to the pull request from the start: who was the eligible reviewer? Our own minutes from September say provenance of agentic changes is difficult to detect and enforce, but something we are thinking about. Matthew, how do you enforce this? Leave the question on the screen.</aside>
     </section>
 
