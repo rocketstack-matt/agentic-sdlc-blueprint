@@ -216,8 +216,15 @@
 
     <!-- ============================================================ 2. The idea (Matthew) -->
 
+    <section class="dark" data-chapter="2">
+      <p class="big">Your architecture already knows which changes are <em>risky</em>.</p>
+      <p class="after">It's just trapped in a picture.</p>
+      <aside class="notes">Matthew. Here's the idea. Your architecture already knows which changes are risky: it knows which services write to the client ledger, the bank's book of record. The trouble is that it's trapped in a picture on a wiki, and a picture can't check anything. So write it down as data. FINOS CALM is architecture as code: every box and every line in a file a machine can read, versioned in git next to the code. And once it's data, every pull request can be checked against it.</aside>
+    </section>
+
     <section data-chapter="2">
       <h2>Every pull request is checked against the architecture</h2>
+      <p class="sub">The rules live on the architecture as <b>CALM controls</b>.</p>
       <svg class="flow" viewBox="0 0 1680 230" aria-label="A pull request is checked against the architecture: green means it can merge, red means a person must approve; each decision is saved to CALM Hub as a CALM decorator">
         <defs><marker id="fa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#59636e"/></marker></defs>
         <g font-family="Helvetica Neue, Helvetica, Arial" text-anchor="middle">
@@ -240,24 +247,54 @@
           <text x="1502" y="148" font-size="26" fill="#1f2328">saved in CALM Hub</text>
         </g>
       </svg>
-      <div class="ergo-band">
-        <img src="img/logos/ergo-wordmark-white.svg" alt="ergo">
-        <div class="ergo-text">
-          <p class="ergo-lead"><b>Rego says no. ergo says why.</b> The check reads each rule with ergo, an open source language for explainable policies on Open Policy Agent.</p>
-          <ol>
-            <li><b>Subjects</b><span>every connection in the architecture</span></li>
-            <li><b>Scope</b><span>into the Client Ledger, from a box this change touches</span></li>
-            <li><b>Checks</b><span>a person approved this exact commit</span></li>
-          </ol>
+      <div class="calm-controls">
+        <div class="cc-what">
+          <img src="img/logos/calm.svg" alt="FINOS CALM">
+          <h3>What a CALM control is</h3>
+          <p>A named rule written into the architecture file, next to the thing it governs. It points at the requirement it implements, here a control from the SDLC catalog, and carries its own settings.</p>
         </div>
+        <ol class="cc-where">
+          <li><b>On the architecture</b><span>applies to every change</span><code>"controls": { "sdlc-prev-001-code-review": … }</code></li>
+          <li class="on"><b>On a node</b><span>the Client Ledger's rule</span><code>client-ledger › "controls": { "client-ledger-human-approval": … }</code></li>
+          <li><b>On a relationship</b><span>a rule for one connection</span><code>a relationship › "controls": { … }</code></li>
+        </ol>
       </div>
-      <aside class="notes">Matthew. Here's the idea: every pull request is checked against the architecture. A check called Architecture controls works out which boxes the change touches and which rules are on them. Nothing needs a person: green, merge. Something does: blocked until a person approves, and it says why. Each decision is saved back onto the architecture in CALM Hub as a CALM decorator. The rules are read by ergo, an open source language for explainable policies on Open Policy Agent: plain policy engines say no, ergo says why. Our rule in ergo's three parts: the subjects are every connection in the architecture; the scope is connections into the Client Ledger from a box this change touches; the check is that a person approved this exact commit. For that, the architecture has to be something a machine can read.</aside>
+      <aside class="notes">Matthew. So every pull request is checked against the architecture. A check called Architecture controls works out which boxes the change touches and which rules are on them. Nothing needs a person: green, merge. Something does: blocked until a person approves, and it says why. Each decision is saved back onto the architecture in CALM Hub as a CALM decorator. The rules are CALM controls. A control is a named rule written into the architecture file, next to the thing it governs, pointing at the requirement it implements, here a control from Aaron's catalog, with its own settings. You can put one on the whole architecture, so it applies to every change, like code review; on a node, like our rule on the Client Ledger, the bank's book of record: any change to a service that connects to it needs a human approver; or on a relationship, a rule for one connection. Notice the ledger rule never names a service. It names a relationship, so when the architecture changes, what the rule applies to changes with it. Remember that.</aside>
     </section>
 
-    <section class="dark" data-chapter="2">
-      <p class="big">Your architecture already knows which changes are <em>risky</em>.</p>
-      <p class="after">It's just trapped in a picture.</p>
-      <aside class="notes">Matthew. And your architecture already knows which changes are risky: it knows which services write to the client ledger, the bank's book of record. The trouble is that it's trapped in a picture on a wiki, and a picture can't check anything. So write it down as data. FINOS CALM is architecture as code: every box and every line in a file a machine can read, versioned in git next to the code. And CALM lets any box carry controls, so a rule can sit on the box it protects. On the Client Ledger, the bank's book of record: any change to a service that connects to it needs a human approver. It never names a service. It names a relationship, so when the architecture changes, what the rule applies to changes with it. Remember that. Let's see it.</aside>
+    <section data-chapter="2">
+      <h2 class="ergo-title"><img src="img/logos/ergo-wordmark-dark.svg" alt="ergo"><span>the gate shows its working</span></h2>
+      <p class="sub">An open source library for <b>Open Policy Agent</b>. The policy is written as data, inside the CALM control, and every decision comes with its evidence.</p>
+      <div class="ergo-slide">
+        <div class="ergo-col">
+          <p class="where">The rule, readable</p>
+          <pre class="json ergo-policy"><span class="k">subject</span>: <span class="s">connection to the client ledger, changed</span>
+  <span class="k">of</span>: <span class="s">every connection in the architecture</span>
+  <span class="k">applies_to</span>:
+    <span class="k">into_the_ledger</span>: <span class="s">destination = client-ledger</span>
+    <span class="k">from_a_changed_node</span>: <span class="s">source in change.nodes</span>
+<span class="k">checks</span>:
+  <span class="k">human_approved</span>: <span class="s">"A human approved this change"</span>
+  <span class="k">approver_is_not_the_author</span>
+  <span class="k">approval_for_this_commit</span></pre>
+          <p class="ergo-note">Plain Rego would hide this in rules only a policy engineer reads. Here an architect or an auditor can read it.</p>
+        </div>
+        <div class="ergo-col">
+          <p class="where">The decision, with its evidence</p>
+          <div class="ergo-vs">
+            <div class="rego"><b>Plain Rego</b><code>{ "allow": false }</code><span>But why?</span></div>
+            <div class="ergo"><p class="ergo-label">ergo</p>
+              <table>
+                <tr><th>subject</th><th>check</th><th>read</th><th>cause</th></tr>
+                <tr><td>trade-api-to-client-ledger</td><td>human_approved</td><td>approver = null</td><td class="bad">absent</td></tr>
+                <tr><td>trade-api-to-trade-store</td><td>$applies</td><td>dest = trade-store</td><td class="muted">out of scope</td></tr>
+              </table>
+            </div>
+          </div>
+          <p class="ergo-note">One row per subject and check: the values it read, and why it passed, failed or was out of scope. Same policy and input, the same report, byte for byte. That report is what goes back onto the architecture.</p>
+        </div>
+      </div>
+      <aside class="notes">Matthew. How does the check decide? With ergo, an open source project, and it does two things for us. First, the policy is readable. ergo is a library for Open Policy Agent, the engine most of you already run for policy as code. Instead of Rego that only a policy engineer can read, the rule is written as data: what you're judging, what's in scope and what must hold. And it lives inside the CALM control on the Client Ledger. The subject is every connection in the architecture; in scope are connections into the Client Ledger from a box this change touches; the checks are that a human approved it, that the approver didn't write it, and that the approval is for this exact commit. Second, evidence. Rego on its own says allow false. ergo says why: one row per subject and check, the value it actually read, and the cause: here, no approver, so absent. Even the connections it ruled out of scope are recorded. Nothing disappears. Same policy and same input give the same report, byte for byte, so you can hash it and store it. A decision nobody can inspect isn't evidence. Rego says no; ergo says why. And that report is exactly what we save back onto the architecture, as you'll see. Let's see it.</aside>
     </section>
 
     <!-- ============================================================ 3. Live on GitHub (Matthew) -->

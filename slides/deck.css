@@ -100,16 +100,39 @@ html, body, .reveal-viewport { background: #fff; }
 .reveal ol.legend li b { color: var(--ink); }
 .reveal ol.legend li::before { content: counter(l); position: absolute; left: 0; top: 0; }
 
-/* ergo, in its own colours, under the flow. */
-.reveal .ergo-band { display: flex; gap: 50px; align-items: center; margin-top: 40px; background: #080f1a; color: #f7f7ef; border-radius: 20px; padding: 36px 44px; }
-.reveal .ergo-band img { height: 84px; width: auto; flex: 0 0 auto; }
-.reveal .ergo-band .ergo-lead { font-size: 30px; line-height: 1.35; color: #b9c0c9; margin-bottom: 22px; }
-.reveal .ergo-band .ergo-lead b { color: #f7f7ef; }
-.reveal .ergo-band ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; counter-reset: e; }
-.reveal .ergo-band li { counter-increment: e; font-size: 26px; line-height: 1.3; }
-.reveal .ergo-band li b { display: block; color: #f7f7ef; font-size: 30px; margin-bottom: 6px; }
-.reveal .ergo-band li b::before { content: counter(e); display: inline-block; background: #d5ff4d; color: #080f1a; border-radius: 6px; padding: 0 10px; margin-right: 12px; font-family: "SF Mono", Menlo, monospace; }
-.reveal .ergo-band li span { font-family: "SF Mono", Menlo, monospace; font-size: 22px; color: #d5ff4d; }
+/* Under the flow: what a CALM control is, and the three places it can go. */
+.reveal .calm-controls { display: grid; grid-template-columns: 640px 1fr; gap: 40px; margin-top: 40px; align-items: stretch; }
+.reveal .cc-what { background: var(--blue-bg); border-left: 10px solid var(--blue); border-radius: 0 18px 18px 0; padding: 26px 32px; }
+.reveal .cc-what img { height: 56px; margin-bottom: 12px; }
+.reveal .cc-what h3 { font-size: 36px; margin-bottom: 10px; color: var(--blue); }
+.reveal .cc-what p { font-size: 27px; line-height: 1.35; }
+.reveal .cc-where { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; justify-content: center; }
+.reveal .cc-where li { display: grid; grid-template-columns: 250px 1fr; grid-template-rows: auto auto; column-gap: 24px; align-items: baseline; background: var(--wash); border: 2px solid var(--line); border-radius: 14px; padding: 14px 22px; }
+.reveal .cc-where li b { font-size: 30px; grid-row: 1 / 3; align-self: center; }
+.reveal .cc-where li span { font-size: 24px; color: var(--muted); }
+.reveal .cc-where li code { font-size: 20px; color: var(--blue); white-space: nowrap; }
+.reveal .cc-where li.on { background: var(--gold-bg); border-color: #d4a72c; }
+
+/* ergo: the rule as data on the left, Rego's answer against ergo's report on the right, in ergo's own colours. */
+.reveal h2.ergo-title { display: flex; align-items: center; gap: 30px; }
+.reveal h2.ergo-title img { height: 84px; width: auto; }
+.reveal .ergo-slide { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; flex: 1; min-height: 0; }
+.reveal .ergo-col { display: flex; flex-direction: column; min-width: 0; }
+.reveal .where { font-size: 22px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 700; margin: 0 0 10px; }
+.reveal pre.json.ergo-policy { font-size: 23px; line-height: 1.5; margin: 0; white-space: pre-wrap; }
+.reveal .ergo-note { font-size: 25px; line-height: 1.35; color: var(--muted); margin-top: 18px; }
+.reveal .ergo-vs { display: flex; flex-direction: column; gap: 16px; }
+.reveal .ergo-vs .rego { display: flex; align-items: center; gap: 24px; background: var(--wash); border: 2px solid var(--line); border-radius: 14px; padding: 16px 24px; font-size: 26px; }
+.reveal .ergo-vs .rego code { font-size: 24px; }
+.reveal .ergo-vs .rego span { color: var(--red); font-weight: 700; margin-left: auto; }
+.reveal .ergo-vs .ergo { background: #080f1a; color: #f7f7ef; border-radius: 16px; padding: 14px 24px; }
+.reveal .ergo-vs table { width: 100%; border-collapse: collapse; font-family: "SF Mono", Menlo, monospace; font-size: 16px; }
+.reveal .ergo-vs td { white-space: nowrap; }
+.reveal .ergo-vs td.muted { color: #8b95a3; }
+.reveal .ergo-vs th { text-align: left; color: #8b95a3; font-weight: 400; padding: 4px 8px; border-bottom: 1px solid #2a3442; }
+.reveal .ergo-vs td { padding: 8px; color: #f7f7ef; border-bottom: 1px solid #1c2633; }
+.reveal .ergo-vs td.bad { color: #ff8182; font-weight: 700; }
+.reveal .ergo-vs td.ok { color: #d5ff4d; font-weight: 700; }
 
 /* Part one's catalog slides (Aaron): the catalog then and now, its controls by phase, the risks review carries,
    the code review control as written, and where the catalog stops. Ported from his refresh of the old deck. */
@@ -280,3 +303,4 @@ html, body, .reveal-viewport { background: #fff; }
 .reveal .ask-q { font-size: 50px; font-weight: 700; line-height: 1.15; }
 .reveal .ask-q em { font-style: normal; color: var(--gold); }
 .reveal .ask-hint { font-size: 30px; line-height: 1.35; color: var(--muted); margin-top: 22px; }
+.reveal .ergo-vs .ergo-label { font-size: 22px; font-weight: 700; color: #d5ff4d; margin-bottom: 6px; }
