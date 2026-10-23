@@ -216,12 +216,6 @@
 
     <!-- ============================================================ 2. The idea (Matthew) -->
 
-    <section class="dark" data-chapter="2">
-      <p class="big">Your architecture already knows which changes are <em>risky</em>.</p>
-      <p class="after">It's just trapped in a picture.</p>
-      <aside class="notes">Matthew. Here's the idea. Your architecture already knows which changes are risky: it knows which services write to the client ledger, the bank's book of record. The trouble is that it's trapped in a picture on a wiki, and a picture can't check anything. So write it down as data. FINOS CALM is architecture as code: every box and every line in a file a machine can read, versioned in git next to the code. And CALM lets any box carry controls, so a rule can sit on the box it protects. On the Client Ledger, the bank's book of record: any change to a service that connects to it needs a human approver. It never names a service. It names a relationship, so when the architecture changes, what the rule applies to changes with it. Remember that.</aside>
-    </section>
-
     <section data-chapter="2">
       <h2>Every pull request is checked against the architecture</h2>
       <svg class="flow" viewBox="0 0 1680 230" aria-label="A pull request is checked against the architecture: green means it can merge, red means a person must approve; each decision is saved to CALM Hub as a CALM decorator">
@@ -257,7 +251,13 @@
           </ol>
         </div>
       </div>
-      <aside class="notes">Matthew. So every pull request is checked against the architecture. A check called Architecture controls works out which boxes the change touches and which rules are on them. Nothing needs a person: green, merge. Something does: blocked until a person approves, and it says why. Each decision is saved back onto the architecture in CALM Hub as a CALM decorator. The rules are read by ergo, an open source language for explainable policies on Open Policy Agent: plain policy engines say no, ergo says why. Our rule in ergo's three parts: the subjects are every connection in the architecture; the scope is connections into the Client Ledger from a box this change touches; the check is that a person approved this exact commit. Let's see it.</aside>
+      <aside class="notes">Matthew. Here's the idea: every pull request is checked against the architecture. A check called Architecture controls works out which boxes the change touches and which rules are on them. Nothing needs a person: green, merge. Something does: blocked until a person approves, and it says why. Each decision is saved back onto the architecture in CALM Hub as a CALM decorator. The rules are read by ergo, an open source language for explainable policies on Open Policy Agent: plain policy engines say no, ergo says why. Our rule in ergo's three parts: the subjects are every connection in the architecture; the scope is connections into the Client Ledger from a box this change touches; the check is that a person approved this exact commit. For that, the architecture has to be something a machine can read.</aside>
+    </section>
+
+    <section class="dark" data-chapter="2">
+      <p class="big">Your architecture already knows which changes are <em>risky</em>.</p>
+      <p class="after">It's just trapped in a picture.</p>
+      <aside class="notes">Matthew. And your architecture already knows which changes are risky: it knows which services write to the client ledger, the bank's book of record. The trouble is that it's trapped in a picture on a wiki, and a picture can't check anything. So write it down as data. FINOS CALM is architecture as code: every box and every line in a file a machine can read, versioned in git next to the code. And CALM lets any box carry controls, so a rule can sit on the box it protects. On the Client Ledger, the bank's book of record: any change to a service that connects to it needs a human approver. It never names a service. It names a relationship, so when the architecture changes, what the rule applies to changes with it. Remember that. Let's see it.</aside>
     </section>
 
     <!-- ============================================================ 3. Live on GitHub (Matthew) -->
@@ -265,7 +265,6 @@
     <section class="dark" data-chapter="3">
       <p class="big">Let's see it live.</p>
       <p class="after">An agent opens pull requests on a real GitHub repository. The architecture decides which ones need a person.</p>
-      <p class="after"><a data-repo>github.com/rocketstack-matt/osffny-sdlc-calm</a></p>
       <aside class="notes">Matthew. Switch to the browser: the repository's pull requests, with CALM Hub in presentation mode in a second tab; npm run demo drives it. In CALM Hub, the system: traders send trades to the Trade API, which stores them and asks the Position Service to update positions; the Position Service writes to the Client Ledger, and the rule sits on the ledger. The cast: the agent, a GitHub App that writes code and opens pull requests; a review bot that reviews every commit; the check, Architecture controls, which reads the architecture; Aaron, who approves when a person is needed; and me, the architect. One. "Account summary endpoint on trade-api": reviewed, every control met, green, merge; CALM Hub shows it on the Trade API box. This is the fast lane. Two. "Position total endpoint on position-service": same kind of change, red, because the Position Service connects to the Client Ledger; the check names who can approve. Nobody wrote "Position Service is risky" anywhere: the architecture did that. Three, Aaron: open it on your laptop, read the real diff, approve with GitHub's own button; green in a few seconds, merge; CALM Hub shows who approved which commit. Four. The shortcut: the Trade API reads the ledger's file directly. Red: that connection is not in the architecture, so it does not exist. If the business really needs it, the fix is an architect, not a cleverer agent. Five. As the architect, I add one relationship to the architecture: the Trade API writes end-of-day snapshots to the Client Ledger. Changing the architecture is changing the rules, so Aaron approves; merge; CALM Hub moves to version 1.1. Six. "Trade count endpoint on trade-api", the kind of change that went straight through at the start. Red: the Trade API now connects to the Client Ledger. Then say it plainly: nobody touched the pipeline, the rule or a list of services. The architect changed the architecture, and the rule followed it. When the architecture changes, the controls follow.</aside>
     </section>
 

@@ -36,7 +36,6 @@ html, body, .reveal-viewport { background: #fff; }
 .reveal section.dark .chapters .on { color: #fff; }
 .reveal .big { font-size: 96px; font-weight: 700; line-height: 1.1; max-width: 1640px; }
 .reveal .big em { font-style: normal; color: #7ee2a8; }
-.reveal section.dark a { color: #7ee2a8; }
 .reveal .after { font-size: 44px; line-height: 1.35; margin-top: 40px; color: #b6c2d1; max-width: 1500px; }
 
 /* A slide with a picture on the left and a screen on the right. */
