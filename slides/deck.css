@@ -20,7 +20,6 @@ html, body, .reveal-viewport { background: #fff; }
 /* Where we are in the story: a small strip across the top of every content slide. */
 .reveal .chapters { position: absolute; top: 40px; left: 120px; right: 120px; display: flex; gap: 34px; font-size: 22px; letter-spacing: 0.06em; text-transform: uppercase; color: #8c959f; }
 .reveal .chapters .on { color: var(--ink); font-weight: 700; }
-.reveal .chapters .speaker { margin-left: auto; text-transform: none; letter-spacing: 0; }
 
 /* Title and closing: the conference's artwork. */
 .reveal section.cover { color: #fff; padding: 0; }

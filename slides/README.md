@@ -9,7 +9,7 @@ overview.
 - **Slides only** (`backup.html`, or `index.html?backup`): the same deck. It has no screenshots of the demo, so
   without a network the demo is told from the notes.
 
-One story in four chapters, shown in the strip across the top of every slide: the problem (Aaron), the idea
+One story in four chapters, shown in the strip across the top of the slides (apart from the catalog slides): the problem (Aaron), the idea
 (Matthew), live on GitHub (Matthew, with Aaron approving), and why it matters (Aaron). The first chapter is the bot's
 pull request and the FINOS SDLC Common Controls Catalog. From CALM on, the trade capture system is CALM Hub itself, in presentation mode with the decision overlay, beside the pull request on GitHub where the
 **Architecture controls** check explains the same decision. The demo itself is in
