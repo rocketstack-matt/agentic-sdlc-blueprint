@@ -20,23 +20,12 @@
         <p class="tag">When the architecture changes, the controls follow.</p>
         <p class="who">Matthew Bain and Aaron Searle<br>OSFF New York, 4 November 2026</p>
       </div>
-      <aside class="notes">Aaron. Thirty five minutes, one story. I'll start with a problem every bank here has, and it's about to get much bigger. Matthew will show you a way out, live, on GitHub. The line to remember is on the slide: when the architecture changes, the controls follow.</aside>
+      <aside class="notes">Aaron. Thirty five minutes, one story. I'll start with the controls the industry has written down together, and the problem agents make for them. Matthew will show you a way out, live, on GitHub. The line to remember is on the slide: when the architecture changes, the controls follow.</aside>
     </section>
 
-    <section data-chapter="1" data-speaker="Aaron">
-      <h2>Author: a bot. Reviewer: a bot. Merged.</h2>
-      <div class="middle">
-        <div class="pr">
-          <p class="title">Add position total endpoint <span>#42</span></p>
-          <p class="meta"><span class="state">Merged</span><b>coding-agent[bot]</b> merged 1 commit into <code>main</code></p>
-          <ul>
-            <li><span class="dot"></span><b>review-agent[bot]</b>&nbsp;approved these changes</li>
-            <li><span class="dot"></span>All checks have passed <span class="muted">&nbsp;6 successful checks</span></li>
-            <li><span class="dot merged"></span><b>coding-agent[bot]</b>&nbsp;merged into <code>main</code></li>
-          </ul>
-        </div>
-      </div>
-      <aside class="notes">Aaron. A pull request like this merged somewhere this week. Written by an agent, reviewed by an agent, every check green. Nobody looked at it. Was that OK? You can't tell from this screen, and that's the problem. To know whether this change was risky, you'd need to know what that code talks to, and which rules apply to it. The industry has written those rules down, together, and that's where I come in.</aside>
+    <section class="logo-slide">
+      <img src="img/logos/sdlc-common-controls.svg" alt="FINOS SDLC Common Controls Catalog">
+      <aside class="notes">Aaron. I'll start with the FINOS SDLC Common Controls Catalog, the project I proposed in FINOS: the controls the industry has written down together, and the one this talk follows to the gate.</aside>
     </section>
 
     <section data-chapter="1" data-speaker="Aaron">
@@ -202,7 +191,23 @@
         </div>
       </div>
       <div class="v9-next"><img src="img/logos/calm.svg" alt="FINOS CALM"><p>Here is one way it could be done: <b>by leveraging FINOS CALM.</b></p></div>
-      <aside class="notes">Aaron. Where the catalog stops, and it stops there on purpose. It says what is expected, in words every institution can share and cite by version. It does not say how to implement it, and it cannot enforce it. The hard part is the agent from the start of the talk: it will never read the policy, and if there is a shortcut to green, it will take it. Back to that pull request: who decided it did not need a person? Our own working group minutes say provenance of agentic changes is difficult to detect and enforce, but something we are thinking about. Here is one way it could be done: by leveraging FINOS CALM. Matthew.</aside>
+      <aside class="notes">Aaron. Where the catalog stops, and it stops there on purpose. It says what is expected, in words every institution can share and cite by version. It does not say how to implement it, and it cannot enforce it. The hard part is the agent: it will never read the policy, and if there is a shortcut to green, it will take it. Here is one way it could be done: by leveraging FINOS CALM. First, what the problem looks like.</aside>
+    </section>
+
+    <section data-chapter="1" data-speaker="Aaron">
+      <h2>Author: a bot. Reviewer: a bot. Merged.</h2>
+      <div class="middle">
+        <div class="pr">
+          <p class="title">Add position total endpoint <span>#42</span></p>
+          <p class="meta"><span class="state">Merged</span><b>coding-agent[bot]</b> merged 1 commit into <code>main</code></p>
+          <ul>
+            <li><span class="dot"></span><b>review-agent[bot]</b>&nbsp;approved these changes</li>
+            <li><span class="dot"></span>All checks have passed <span class="muted">&nbsp;6 successful checks</span></li>
+            <li><span class="dot merged"></span><b>coding-agent[bot]</b>&nbsp;merged into <code>main</code></li>
+          </ul>
+        </div>
+      </div>
+      <aside class="notes">Aaron. Here's what that looks like. A pull request like this merged somewhere this week. Written by an agent, reviewed by an agent, every check green. Nobody looked at it. Was that OK? Did it need a person? You can't tell from this screen, and that's the problem: to know, you'd need to know what that code talks to, and which rules apply to it. Our own working group minutes say provenance of agentic changes is difficult to detect and enforce, but something we are thinking about. Matthew.</aside>
     </section>
 
     <section class="section-slide" data-background-image="img/background.png" data-background-size="cover">
