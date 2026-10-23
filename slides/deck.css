@@ -39,13 +39,8 @@ html, body, .reveal-viewport { background: #fff; }
 .reveal section.dark a { color: #7ee2a8; }
 .reveal .after { font-size: 44px; line-height: 1.35; margin-top: 40px; color: #b6c2d1; max-width: 1500px; }
 
-
 /* A slide with a picture on the left and a screen on the right. */
 .reveal .split { display: grid; grid-template-columns: 720px 1fr; gap: 56px; align-items: center; flex: 1; min-height: 0; }
-.reveal .split.wide-left { grid-template-columns: 1fr 720px; }
-.reveal .screen { display: flex; flex-direction: column; gap: 22px; align-items: flex-start; min-height: 0; }
-.reveal .shot { display: block; max-width: 100%; max-height: 640px; border: 2px solid var(--line); border-radius: 12px; box-shadow: 0 10px 30px rgba(31,35,40,.12); background: #fff; }
-.reveal .shot.short { max-height: 300px; }
 .reveal .caption { font-size: 30px; line-height: 1.35; color: var(--muted); }
 .reveal .caption b { color: var(--ink); }
 .reveal .live { display: none; font-size: 24px; font-weight: 700; color: #fff; background: var(--red); border-radius: 999px; padding: 8px 20px; margin-left: 18px; vertical-align: middle; text-decoration: none; }
@@ -55,25 +50,16 @@ html, body, .reveal-viewport { background: #fff; }
 .reveal .middle { flex: 1; display: flex; flex-direction: column; justify-content: center; }
 
 /* Numbers, cards, people. */
-.reveal .numbers { display: flex; gap: 80px; margin-top: 30px; }
-.reveal .numbers div { flex: 1; }
-.reveal .numbers b { display: block; font-size: 150px; line-height: 1; font-weight: 700; color: var(--ink); }
-.reveal .numbers span { display: block; font-size: 38px; line-height: 1.25; margin-top: 16px; color: var(--muted); }
 .reveal .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 20px; }
-.reveal .cards.four { grid-template-columns: repeat(4, 1fr); gap: 30px; }
-.reveal .cards.five { grid-template-columns: repeat(5, 1fr); gap: 24px; }
 .reveal .card { background: var(--wash); border-radius: 18px; padding: 34px 36px; border-top: 10px solid var(--line); }
 .reveal .card.ok { border-top-color: var(--green); }
-.reveal .card.bad { border-top-color: var(--red); }
 .reveal .card.blue { border-top-color: var(--blue); }
 .reveal .card.gold { border-top-color: #d4a72c; }
 .reveal .card h3 { font-size: 40px; font-weight: 700; margin-bottom: 14px; line-height: 1.15; }
 .reveal .card p { font-size: 30px; line-height: 1.35; color: var(--muted); }
 .reveal .card .who { font-family: "SF Mono", Menlo, monospace; font-size: 22px; color: var(--ink); background: #fff; border: 2px solid var(--line); border-radius: 999px; padding: 4px 14px; display: inline-block; margin-bottom: 18px; }
-.reveal .card .icon { font-size: 64px; line-height: 1; margin-bottom: 14px; display: block; }
 .reveal .card img { height: 64px; margin-bottom: 18px; filter: brightness(0); }
 .reveal .card img.keep { filter: none; }
-.reveal .card .wordmark { font-family: "SF Mono", Menlo, monospace; font-size: 54px; font-weight: 700; line-height: 64px; display: block; margin-bottom: 18px; }
 
 /* Code, kept short. */
 .reveal pre.json { font-size: 25px; line-height: 1.4; background: var(--wash); border: 2px solid var(--line); border-radius: 14px; padding: 28px 34px; margin: 0; white-space: pre; box-shadow: none; width: auto; color: var(--ink); }
@@ -115,24 +101,6 @@ html, body, .reveal-viewport { background: #fff; }
 .reveal ol.legend li b { color: var(--ink); }
 .reveal ol.legend li::before { content: counter(l); position: absolute; left: 0; top: 0; }
 
-/* A demo moment: CALM Hub as large as the slide allows, and the pull request on GitHub as a card in the bottom right
-   corner, where the diagram has no boxes (the Trade Store is out of these pictures). */
-.reveal .moment { position: relative; flex: 1; min-height: 0; }
-.reveal .moment figure { margin: 0; }
-.reveal .where { font-size: 22px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 700; margin: 0 0 8px; }
-.reveal .moment .hub .shot { display: block; max-width: 100%; max-height: 640px; width: auto; }
-.reveal .moment .gh { position: absolute; right: 0; bottom: 0; width: 480px; background: #fff; padding: 12px 14px 14px; border-radius: 14px; box-shadow: 0 18px 44px rgba(31,35,40,.25); }
-.reveal .moment .gh .shot { width: 100%; box-shadow: none; }
-
-/* The architecture in CALM Hub beside the rule it carries. */
-.reveal .split.hero-split { grid-template-columns: auto 620px; justify-content: start; gap: 60px; }
-.reveal .hero-split .hub { margin: 0; }
-.reveal .hero-split .hub .shot { max-height: 600px; max-width: 1000px; width: auto; }
-.reveal .rule-card { background: var(--gold-bg); border: 4px solid #d4a72c; border-radius: 14px; padding: 36px 40px; }
-.reveal .rule-card .rule-id { font-family: "SF Mono", Menlo, monospace; font-size: 28px; color: var(--blue); margin-bottom: 18px; }
-.reveal .rule-card .rule-text { font-size: 44px; line-height: 1.25; font-weight: 700; margin-bottom: 24px; }
-.reveal .rule-card .rule-note { font-size: 30px; color: var(--muted); }
-
 /* ergo, in its own colours, under the flow. */
 .reveal .ergo-band { display: flex; gap: 50px; align-items: center; margin-top: 40px; background: #080f1a; color: #f7f7ef; border-radius: 20px; padding: 36px 44px; }
 .reveal .ergo-band img { height: 84px; width: auto; flex: 0 0 auto; }
@@ -154,16 +122,8 @@ html, body, .reveal-viewport { background: #fff; }
 .reveal .v3-catalog { display: grid; grid-template-columns: 1180px 460px; gap: 40px; align-items: start; }
 .reveal .v3-head { font-size: 24px; line-height: 1.2; margin: 0 0 10px; color: var(--muted); }
 .reveal .v3-head b { color: var(--ink); font-weight: 700; }
-.reveal .v3-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px 16px; }
-.reveal .v3-phase { position: relative; font-size: 24px; line-height: 1.2; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink); padding-bottom: 6px; border-bottom: 4px solid #e3e5ea; }
-.reveal .v3-phase.v3-next::after { content: ""; position: absolute; right: -14px; top: 6px; border: 8px solid transparent; border-right: 0; border-left: 12px solid var(--muted); }
 .reveal .v3-col, .reveal .v3-band, .reveal .v3-risks { list-style: none; display: flex; flex-direction: column; gap: 5px; margin: 0; padding: 0; }
 .reveal .v3-band { grid-column: 1 / -1; flex-direction: row; align-items: flex-start; gap: 12px; }
-.reveal .v3-rule { grid-column: 1 / -1; height: 3px; background: #e3e5ea; margin: 2px 0 0; }
-.reveal .v3-band-label { margin: 0; padding-right: 4px; font-size: 24px; line-height: 1.2; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink); }
-.reveal .v3-band > .v3-band-label { flex: 0 0 270px; }
-.reveal .v3-band-label small, .reveal .v3-head small { display: block; font-size: 22px; line-height: 1.2; font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--muted); }
-.reveal .v3-cell { display: flex; flex: 0 0 auto; flex-direction: column; gap: 6px; margin: 0 0 0 12px; }
 .reveal .v3-chip { display: block; flex: 0 1 auto; margin: 0; padding: 6px 8px; box-sizing: border-box; background: #fff; border: 3px solid var(--teal); border-radius: 12px; font-size: 22px; line-height: 1.2; color: var(--ink); }
 .reveal .v3-chip b { color: var(--teal); font-weight: 700; margin-right: 6px; }
 .reveal .v3-chip.v3-on { background: var(--teal); color: #fff; font-weight: 700; }
@@ -202,7 +162,6 @@ html, body, .reveal-viewport { background: #fff; }
 .reveal .v4-now p { font-size: 24px; line-height: 1.35; margin: 0; }
 .reveal .v4-foot { font-size: 24px; color: var(--muted); margin: 22px 0 0; }
 .reveal .v4-foot b { color: var(--ink); }
-
 
 /* Slide 5 in the catalog site's own SDLC3 palette (sdlc-common-controls.finos.org, Controls by Phase): the pipeline
    phases step through the logo's purple-to-pink gradient, lifecycle is slate, meta purple, each with a pale tint. */
