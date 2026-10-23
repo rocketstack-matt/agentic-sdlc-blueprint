@@ -374,7 +374,7 @@ const REPO_URL = 'https://github.com/rocketstack-matt/osffny-sdlc-calm/pulls?q=i
 const backup = new URLSearchParams(location.search).has('backup');
 
 // ---- Chapters, links, mode ------------------------------------------------------------------------------------
-const CHAPTERS = ['The problem', 'The idea', 'Live on GitHub', 'Why it matters'];
+const CHAPTERS = ['The problem', 'The idea'];
 for (const s of document.querySelectorAll('section[data-chapter]')) {
   const n = Number(s.dataset.chapter);
   s.insertAdjacentHTML('afterbegin', `<div class="chapters">${CHAPTERS.map((c, i) => `<span class="${i + 1 === n ? 'on' : ''}">${i + 1} ${c}</span>`).join('')}</div>`);
