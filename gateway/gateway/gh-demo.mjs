@@ -22,23 +22,36 @@ const propose = (...args) => {
   return Number(out.match(/#(\d+)/)?.[1]);
 };
 
-// The talk's moments. Moment 4 is Aaron approving on GitHub; nothing to press for it.
+// The talk's moments. Moment 4 is Aaron approving on GitHub; nothing to press for it. `does` is what Enter will do,
+// shown before the key is pressed; `next` is what to watch for and do once it has.
 const MOMENTS = [
-  { n: 1, title: 'The architecture', next: 'CALM Hub: the trade capture system, with the Client Ledger and its rule open. Enter for the first pull request.',
+  { n: 1, title: 'The architecture',
+    does: 'opens CALM Hub on the trade capture system, with the Client Ledger and its rule in the details pane',
+    next: 'Walk the system: Trade API, Position Service, Client Ledger, and the rule on the ledger.',
     run: (s) => { openHub('1.0.0', 'client-ledger'); return s.current; } },
-  { n: 2, title: 'A harmless change', next: 'Green in a few seconds: press Merge on GitHub (or m).',
+  { n: 2, title: 'A harmless change',
+    does: 'the agent opens "Account summary endpoint on trade-api": nowhere near the ledger, so it should go green',
+    next: 'Green in a few seconds: press Merge on GitHub (or m).',
     run: (s) => { s.prs.harmless = propose('demo/changes/account-summary.json'); return s.prs.harmless; } },
-  { n: 3, title: 'A change near the ledger', next: 'Red: needs a person. Moment 4: Aaron approves on GitHub; it turns green. Then press Merge (or m).',
+  { n: 3, title: 'A change near the ledger',
+    does: 'the agent opens "Position total endpoint on position-service": the Position Service writes the ledger, so it should go red and ask for a person',
+    next: 'Red: needs a person. Moment 4: Aaron approves on GitHub (or a); it turns green. Then press Merge (or m).',
     run: (s) => { s.prs.ledger = propose('demo/changes/position-total.json'); return s.prs.ledger; } },
-  { n: 5, title: 'The shortcut', next: 'Red: that connection is not in the architecture. The next key closes it.',
+  { n: 5, title: 'The shortcut',
+    does: 'the agent opens a pull request where the Trade API reads the ledger file directly: a connection the architecture does not have, so red',
+    next: 'Red: that connection is not in the architecture. The next Enter closes it.',
     run: (s) => { s.prs.shortcut = propose('demo/changes/ledger-shortcut.json'); return s.prs.shortcut; } },
-  { n: 6, title: 'The architect changes the architecture', next: 'Red until Aaron approves; then press Merge (or m), and move CALM Hub to 1.1.0 (or h).',
+  { n: 6, title: 'The architect changes the architecture',
+    does: 'closes the shortcut, and you, as the architect, open a pull request adding Trade API -> Client Ledger to the architecture: red until a person approves',
+    next: 'Red until Aaron approves (or a); then press Merge (or m), and move CALM Hub to 1.1.0 (or h).',
     run: async (s) => {
       if (s.prs.shortcut) await (await as('owner')).patch(`/repos/${REPO}/pulls/${s.prs.shortcut}`, { state: 'closed' });
       s.prs.architect = propose('demo/changes/architect-ledger-connection.json', '--as', 'owner');
       return s.prs.architect;
     } },
-  { n: 7, title: 'The same harmless change, again', next: 'Red: now it needs a person. Back to the slides.',
+  { n: 7, title: 'The same harmless change, again',
+    does: 'the agent opens "Trade count endpoint on trade-api", the same kind of change as moment 2: now red, because the Trade API connects to the ledger',
+    next: 'Red: now it needs a person. Nobody touched the pipeline. Back to the slides.',
     run: (s) => { s.prs.climax = propose('demo/changes/trade-count.json'); return s.prs.climax; } },
 ];
 
@@ -66,10 +79,14 @@ run(async () => {
   const state = load();
   let busy = false;
   let lastSeen = '';
-  const status = () => {
+  // What Enter will do next, so the presenter never has to remember.
+  const upNext = () => {
     const next = MOMENTS[state.step];
-    say(next ? `next: ${next.n}. ${next.title} (Enter)` : 'all moments done (q to quit)');
+    say(next ? `\n  \x1b[1mEnter -> ${next.n}. ${next.title}\x1b[0m: ${next.does}` : '\n  all moments done (q to quit)');
+  };
+  const status = () => {
     if (state.current) say(`current pull request: ${url(state.current)}`);
+    upNext();
   };
   // Say when the current pull request's check changes, so the presenter knows when to move on.
   setInterval(async () => {
@@ -93,6 +110,7 @@ run(async () => {
       save(state);
       lastSeen = '';
       say(`${state.current ? `  ${url(state.current)}\n` : ''}  ${moment.next}`);
+      upNext();
     },
     async m() {
       if (!state.current) return say('no pull request yet');
