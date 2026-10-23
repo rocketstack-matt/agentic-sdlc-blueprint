@@ -332,47 +332,34 @@
       <aside class="notes">Matthew. And this is what goes back onto the architecture. ergo's report for a pull request you'll see in a moment, saved as a CALM decorator: a standard way to attach facts to an architecture without editing it, so the architecture file stays the architecture. It says which version of the architecture it was decided against, which boxes and lines it's about, which rule and which catalog control, ergo's own finding in plain words, the exact commit, and the hash of the policy that decided. One per rule, per decision. It's a draft CALM Standard we're proposing, so any tool can write one and any tool can read one, and CALM Hub draws them on the diagram. Let's see it.</aside>
     </section>
 
-    <section class="dark" data-chapter="3">
+    <section class="dark">
       <p class="big">Let's see it live.</p>
       <p class="after">An agent opens pull requests on a real GitHub repository. The architecture decides which ones need a person.</p>
       <aside class="notes">Matthew. Switch to the browser on the repository's pull requests; npm run demo drives it, Enter for each moment. One. CALM Hub opens on the system, with the Client Ledger and its rule in the details pane: traders send trades to the Trade API, which stores them and asks the Position Service to update positions; the Position Service writes to the Client Ledger, and the rule sits on the ledger. The cast: the agent, a GitHub App that writes code and opens pull requests; a review bot that reviews every commit; the check, Architecture controls, which reads the architecture; Aaron, who approves when a person is needed; and me, the architect. Two. "Account summary endpoint on trade-api": reviewed, every control met, green, merge; CALM Hub shows it on the Trade API box. This is the fast lane. Three. "Position total endpoint on position-service": same kind of change, red, because the Position Service connects to the Client Ledger; the check names who can approve. Nobody wrote "Position Service is risky" anywhere: the architecture did that. Four, Aaron: open it on your laptop, read the real diff, approve with GitHub's own button; green in a few seconds, merge; CALM Hub shows who approved which commit. Five. The shortcut: the Trade API reads the ledger's file directly. Red: that connection is not in the architecture, so it does not exist. If the business really needs it, the fix is an architect, not a cleverer agent. Six. As the architect, I add one relationship to the architecture: the Trade API writes end-of-day snapshots to the Client Ledger. Changing the architecture is changing the rules, so Aaron approves; merge; CALM Hub moves to version 1.1. Seven. "Trade count endpoint on trade-api", the kind of change that went straight through at the start. Red: the Trade API now connects to the Client Ledger. Then say it plainly: nobody touched the pipeline, the rule or a list of services. The architect changed the architecture, and the rule followed it. When the architecture changes, the controls follow.</aside>
     </section>
 
-    <!-- ============================================================ 4. Why it matters (Aaron) -->
 
-    <section data-chapter="4">
-      <h2>Why it matters</h2>
-      <div class="cards">
-        <div class="card ok"><h3>Developers</h3><p>Most changes fly through. When one is blocked, it says why, and who can help.</p></div>
-        <div class="card blue"><h3>Architects</h3><p>The diagram can't go stale, because every change is checked against it.</p></div>
-        <div class="card gold"><h3>Risk and audit</h3><p>The proof writes itself: every decision, on the architecture, with who approved what.</p></div>
-      </div>
-      <p class="sub" style="margin-top:60px">"Regulators treat unsubstantiated controls as absent controls." <span style="font-size:28px">SDLC Common Controls Catalog, risk SDLC-RC-005</span></p>
-      <aside class="notes">Aaron. Why should you care? Developers get a fast lane: most changes fly through, and a blocked one says why and who can help. Architects get a diagram that can't go stale, because every change is checked against it. And for risk and audit, the proof writes itself. One line from our own catalog: regulators treat unsubstantiated controls as absent controls. Here the evidence is a by-product.</aside>
-    </section>
-
-    <section data-chapter="4">
+    <section>
       <h2>Built from open parts</h2>
       <div class="cards">
-        <div class="card"><img src="img/logos/sdlc-common-controls.svg" alt="SDLC Common Controls Catalog"><h3>What to control</h3><p>The SDLC Common Controls Catalog, written once by the industry.</p></div>
-        <div class="card"><img src="img/logos/calm.svg" alt="FINOS CALM"><h3>Where it applies</h3><p>FINOS CALM: the architecture as code, the rules on its boxes, the decisions back on it as decorators.</p></div>
+        <div class="card"><img class="keep" src="img/logos/sdlc-common-controls.svg" alt="SDLC Common Controls Catalog"><h3>What to control</h3><p>The SDLC Common Controls Catalog, written once by the industry.</p></div>
+        <div class="card"><img class="keep" src="img/logos/calm.svg" alt="FINOS CALM"><h3>Where it applies</h3><p>FINOS CALM: the architecture as code, the rules on its boxes, the decisions back on it as decorators.</p></div>
         <div class="card"><img class="keep" src="img/logos/ergo-wordmark-dark.svg" alt="ergo"><h3>How to decide</h3><p>An open source project that checks rules written as data and says why.</p></div>
       </div>
       <p class="caption" style="margin-top:50px">Everything you saw is real: the repository, the pull requests, the approvals, the checks and CALM Hub.</p>
-      <aside class="notes">Aaron. None of this is a product. The catalog says what to control. CALM says where it applies, and holds the decisions. ergo, an open source project, decides and explains. Everything you saw was real: a real repository, real pull requests, real approvals.</aside>
+      <aside class="notes">Aaron. Why should you care? Developers get a fast lane: most changes fly through, and a blocked one says why. Architects get a diagram that can't go stale, because every change is checked against it. And risk and audit get the evidence as a by-product: regulators treat unsubstantiated controls as absent controls. And none of this is a product. The catalog says what to control. CALM says where it applies, and holds the decisions. ergo, an open source project, decides and explains. Everything you saw was real: a real repository, real pull requests, real approvals.</aside>
     </section>
 
-    <section data-chapter="4">
-      <div class="middle">
-        <p class="big" style="font-size:84px">Pick one rule.<br>Put it on one box.<br>Let the architecture say no.</p>
-        <dl class="links">
-          <dt>The demo</dt><dd><a data-repo>github.com/rocketstack-matt/osffny-sdlc-calm</a></dd>
-          <dt>Everything behind it</dt><dd><a href="https://github.com/rocketstack-matt/agentic-sdlc-blueprint">github.com/rocketstack-matt/agentic-sdlc-blueprint</a></dd>
-          <dt>The catalog</dt><dd><a href="https://finos.github.io/sdlc-common-controls/">finos.github.io/sdlc-common-controls</a></dd>
-          <dt>CALM</dt><dd><a href="https://calm.finos.org">calm.finos.org</a></dd>
-        </dl>
+
+    <section>
+      <p class="big ask-line">Pick one rule. Put it on one box.<br>Let the architecture say no.</p>
+      <div class="qr-links">
+        <a class="qr" data-repo><img src="img/qr/demo.svg" alt="QR code for the demo repository"><b>The demo</b><span>github.com/rocketstack-matt/<br>osffny-sdlc-calm</span></a>
+        <a class="qr" href="https://github.com/rocketstack-matt/agentic-sdlc-blueprint"><img src="img/qr/blueprint.svg" alt="QR code for the blueprint repository"><b>Everything behind it</b><span>github.com/rocketstack-matt/<br>agentic-sdlc-blueprint</span></a>
+        <a class="qr" href="https://sdlc-common-controls.finos.org"><img src="img/qr/catalog.svg" alt="QR code for the SDLC Common Controls Catalog"><b>The catalog</b><span>sdlc-common-controls.finos.org</span></a>
+        <a class="qr" href="https://calm.finos.org"><img src="img/qr/calm.svg" alt="QR code for FINOS CALM"><b>CALM</b><span>calm.finos.org</span></a>
       </div>
-      <aside class="notes">Both. One ask. Pick one rule you already have. Put it on one box in your architecture. Let the architecture say no. The demo repository, the code behind it, the catalog and CALM are all open. Bring what you learn back to FINOS.</aside>
+      <aside class="notes">Both. One ask. Pick one rule you already have. Put it on one box in your architecture. Let the architecture say no. Scan any of these: the demo repository, the code behind it, the catalog and CALM are all open. Bring what you learn back to FINOS.</aside>
     </section>
 
     <section class="cover" data-background-image="img/background.png" data-background-size="cover">

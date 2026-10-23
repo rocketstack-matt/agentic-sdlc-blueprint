@@ -84,9 +84,6 @@ html, body, .reveal-viewport { background: #fff; }
 .reveal .pr .muted { color: var(--muted); }
 
 /* Links at the end. */
-.reveal .links { display: grid; grid-template-columns: max-content 1fr; gap: 20px 50px; font-size: 40px; margin-top: 50px; }
-.reveal .links dt { color: var(--muted); }
-.reveal .links dd { margin: 0; }
 
 .reveal .slide-number { font-size: 16px; background: transparent; color: #8c959f; }
 
@@ -304,3 +301,11 @@ html, body, .reveal-viewport { background: #fff; }
 .reveal .ask-q em { font-style: normal; color: var(--gold); }
 .reveal .ask-hint { font-size: 30px; line-height: 1.35; color: var(--muted); margin-top: 22px; }
 .reveal .ergo-vs .ergo-label { font-size: 22px; font-weight: 700; color: #d5ff4d; margin-bottom: 6px; }
+
+/* The last content slide: the ask, then a QR code for each link. */
+.reveal .big.ask-line { font-size: 76px; }
+.reveal .qr-links { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; margin-top: 60px; }
+.reveal .qr-links .qr { display: flex; flex-direction: column; align-items: center; text-align: center; color: var(--ink); text-decoration: none; }
+.reveal .qr-links img { width: 300px; height: 300px; border: 2px solid var(--line); border-radius: 16px; padding: 10px; background: #fff; box-sizing: border-box; }
+.reveal .qr-links b { font-size: 34px; margin-top: 22px; }
+.reveal .qr-links span { font-size: 22px; line-height: 1.3; color: var(--muted); margin-top: 8px; }
