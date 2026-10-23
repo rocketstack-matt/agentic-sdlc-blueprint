@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# gh-live.sh: the whole GitHub demo from one command, from the blueprint's root: npm run demo
-#   npm run demo                start afresh: reset the demo repository and CALM Hub, start the gateway in the
-#                               background, check everything, open GitHub, and play the demo
-#   npm run demo -- --resume    carry on where the demo stopped, without a reset
+# gh-live.sh: the whole GitHub demo from one command, from the blueprint's root: npm run demo:github
+#   npm run demo:github                start afresh: reset the demo repository and CALM Hub, start the gateway in the
+#                                      background, check everything, open GitHub, and play the demo
+#   npm run demo:github -- --resume    carry on where the demo stopped, without a reset
 # CALM Hub and its UI are started if they are not running, and left running. The gateway stops when the demo ends.
 # Logs: gateway/.live/
 set -euo pipefail
@@ -47,7 +47,7 @@ if ! $RESUME; then
   step "3. Reset the demo repository and CALM Hub"
   node gateway/gh-reset.mjs
 else
-  [ -f .gh/demo-state.json ] || fail "nothing to resume: run npm run demo"
+  [ -f .gh/demo-state.json ] || fail "nothing to resume: run npm run demo:github"
   step "3. Resume (no reset)"
 fi
 
@@ -64,7 +64,7 @@ echo "watching (pid $GATEWAY; log: gateway/.live/gateway.log)"
 
 if ! $RESUME; then
   step "5. Pre-flight"
-  node gateway/gh-preflight.mjs || fail "not ready: fix what is marked ✗ above, then run npm run demo again"
+  node gateway/gh-preflight.mjs || fail "not ready: fix what is marked ✗ above, then run npm run demo:github again"
   open "https://github.com/${DEMO_REPO:-rocketstack-matt/osffny-sdlc-calm}/pulls" # CALM Hub opens on the first moment
 fi
 

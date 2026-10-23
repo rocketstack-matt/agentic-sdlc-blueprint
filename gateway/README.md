@@ -59,9 +59,9 @@ commit they approved and no other, so a push after it fails the check again.
 
 On the day, from the blueprint's root:
 
-    npm run demo                  # everything below, in order: starts CALM Hub and its UI if they are down, resets,
-                                  # runs the gateway in the background, checks, opens GitHub, plays the demo
-    npm run demo -- --resume      # carry on where it stopped, without a reset
+    npm run demo:github              # everything below, in order: starts CALM Hub and its UI if they are down, resets,
+                                     # runs the gateway in the background, checks, opens GitHub, plays the demo
+    npm run demo:github -- --resume  # carry on where it stopped, without a reset
 
 \`gh-demo\`'s keys: Enter for the next moment, \`m\` to merge, \`a\` to approve from the laptop (rehearsals, or if Aaron
 cannot), \`o\` / \`h\` to open GitHub / CALM Hub, \`s\` where we are, \`q\` to quit (which stops the gateway too). Logs

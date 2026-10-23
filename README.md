@@ -42,12 +42,13 @@ You need **Node 22+** and **git**. No API keys, no cloud account, no containers.
 git clone https://github.com/<you>/agentic-sdlc-blueprint   # your fork
 cd agentic-sdlc-blueprint
 npm install
-npm test                  # the services, the gates and the gateway
-npm run gates             # every blocking gate on a clean tree: ADMISSIBLE
-bash gateway/run-demo.sh  # the whole demo, every verdict checked: ends with "demo ok"
+npm run demo   # the whole demo, every verdict checked: ends with "demo ok"
 ```
 
-`run-demo.sh` plays the story on a local copy of this repository (in `gateway/.demo/`): an agent proposes changes,
+Optionally, `npm test` runs the services, gates and gateway tests, and `npm run gates` runs every blocking gate
+(ADMISSIBLE on a clean tree).
+
+`npm run demo` plays the story on a local copy of this repository (in `gateway/.demo/`): an agent proposes changes,
 a review bot reviews them, a person approves where needed, and the gateway decides each merge. It records every
 command and its output in `gateway/.demo/sessions.json`, then checks every verdict.
 
@@ -81,7 +82,7 @@ architecture and every decision to it. You need Java 21+ and a checkout of
 npm install && npm start
 
 # back here
-CALM_HUB_URL=http://localhost:8080 bash gateway/run-demo.sh
+CALM_HUB_URL=http://localhost:8080 npm run demo
 ```
 
 Open http://localhost:5173 and find **Trade Capture (governed)** in the `finos.agentic-sdlc` namespace. Versions
@@ -99,9 +100,9 @@ generated from this one and reset before every run. The gateway runs on the pres
 reports the **Architecture controls** check that `main` requires.
 
 Running it against your own repository needs a one-off setup: three GitHub Apps, branch protection and the `gh` CLI
-logged in. After that, `npm run demo` starts CALM Hub if needed, resets the repository, starts the gateway, runs a
-pre-flight check and plays the demo one key at a time. [`gateway/README.md`](gateway/README.md#the-github-demo) has
-the details.
+logged in. After that, `npm run demo:github` starts CALM Hub if needed, resets the repository, starts the gateway,
+runs a pre-flight check and plays the demo one key at a time.
+[`gateway/README.md`](gateway/README.md#the-github-demo) has the details.
 
 ## Try the controls yourself
 
@@ -112,7 +113,7 @@ the details.
 - **Change the architecture.** The ledger rule is the `client-ledger-human-approval` control on the `client-ledger`
   node in [`architecture/trade-capture.architecture.json`](architecture/trade-capture.architecture.json). Its ergo
   `applies_to` says which connections it covers. Change that, or add a relationship, then commit and run
-  `bash gateway/run-demo.sh` again. The self-check lists every verdict that changed.
+  `npm run demo` again. The self-check lists every verdict that changed.
 - **Run it in CI.** Enable Actions on your fork and open a pull request. The workflow in
   [`.github/workflows/governed-sdlc.yml`](.github/workflows/governed-sdlc.yml) runs the gates on it. Put the spec id
   (`SPEC-001`) in the pull request description.

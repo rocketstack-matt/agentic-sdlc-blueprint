@@ -66,6 +66,6 @@ change will be checked against both. Read this before writing anything.
 | `npm run calm:validate` | validate the model against CALM 1.2, the governed-service pattern and the Standards it names |
 | `npm run calm:context -- --spec SPEC-001` | architectural context for a spec, node or path |
 | `SPEC=SPEC-001 npm run gates` | every blocking gate the model names, including the controls it carries |
-| `bash gateway/run-demo.sh` | the local demo, every verdict checked; needs a clean tree |
-| `npm run demo` | the live GitHub demo, start to finish (`-- --resume` to carry on); see `gateway/README.md` |
+| `npm run demo` | the local demo (`gateway/run-demo.sh`), every verdict checked; needs a clean tree |
+| `npm run demo:github` | the live GitHub demo, start to finish (`-- --resume` to carry on); see `gateway/README.md` |
 | `node slides/check.mjs` / `node slides/overflow-check.mjs` | the deck's checks |
