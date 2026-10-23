@@ -25,7 +25,7 @@ change will be checked against both. Read this before writing anything.
 - Never edit `architecture/`, `gates/`, `agent/`, `.github/` or this file to make a gate pass. Those paths are the
   control plane. Changes there will be read as an attempt to weaken a control.
 - The code review control in the model routes to a human approver every change to a file no node owns, other than
-  `README.md`, `docs/`, `slides/`, `test/`, `LICENSE` and `NOTICE`. That covers the control plane above and also
+  `README.md`, `slides/`, `test/`, `LICENSE` and `NOTICE`. That covers the control plane above and also
   `specs/`, `gateway/`, `tools/`, `gates/test/` and the root config files.
 - If the spec cannot be met within the modelled connections, **stop**. Say which relationship you believe is missing
   and why. A human changes the model first, then you implement.
@@ -44,8 +44,7 @@ change will be checked against both. Read this before writing anything.
 | `gates/` | `check.mjs`, the policy (`policy/`, built to WebAssembly) and the gate tests (`gates/test/`) |
 | `agent/` | the read-only MCP server and `calm:context` |
 | `gateway/` | the merge gateway: the local demo (`run-demo.sh`) and the GitHub demo (`gateway/gh-*.mjs`); see its README |
-| `slides/` | the talk deck (`index.html`, slides-only `backup.html`) and its screenshot scripts; see its README |
-| `docs/` | plans and notes |
+| `slides/` | the talk deck and its checks; see its README |
 
 ## Related repositories
 
@@ -67,6 +66,6 @@ change will be checked against both. Read this before writing anything.
 | `npm run calm:validate` | validate the model against CALM 1.2, the governed-service pattern and the Standards it names |
 | `npm run calm:context -- --spec SPEC-001` | architectural context for a spec, node or path |
 | `SPEC=SPEC-001 npm run gates` | every blocking gate the model names, including the controls it carries |
-| `bash gateway/run-demo.sh` | the local demo, every verdict checked; needs a clean tree, then `git checkout gateway/sessions.json` |
+| `bash gateway/run-demo.sh` | the local demo, every verdict checked; needs a clean tree |
 | `npm run demo` | the live GitHub demo, start to finish (`-- --resume` to carry on); see `gateway/README.md` |
 | `node slides/check.mjs` / `node slides/overflow-check.mjs` | the deck's checks |

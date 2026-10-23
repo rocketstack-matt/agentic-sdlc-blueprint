@@ -1,4 +1,4 @@
-// Assembles sessions.json from the .sessions/ step files that run-demo.sh writes, then checks that
+// Assembles .demo/sessions.json from the .sessions/ step files that run-demo.sh writes, then checks that
 // every session shows the verdict the demo promises. Prints "demo ok" or the failures.
 import { readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
@@ -16,7 +16,7 @@ for (const n of numbers) {
   if (sessions.at(-1)?.key !== key) sessions.push({ key, steps: [] });
   sessions.at(-1).steps.push(step);
 }
-writeFileSync(join(root, 'sessions.json'), `${JSON.stringify(sessions, null, 2)}\n`);
+writeFileSync(join(root, '.demo', 'sessions.json'), `${JSON.stringify(sessions, null, 2)}\n`);
 rmSync(dir, { recursive: true });
 
 // Per session: the substrings each step's output must contain, and must not.
@@ -86,5 +86,5 @@ if (failures.length) {
   for (const f of failures) console.log(`  ${f}`);
   process.exit(1);
 }
-console.log(`${sessions.length} sessions, ${sessions.reduce((n, s) => n + s.steps.length, 0)} steps recorded in sessions.json`);
+console.log(`${sessions.length} sessions, ${sessions.reduce((n, s) => n + s.steps.length, 0)} steps recorded in gateway/.demo/sessions.json`);
 console.log('demo ok');

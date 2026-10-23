@@ -368,19 +368,15 @@
 <script src="vendor/reveal/dist/reveal.js"></script>
 <script src="vendor/reveal/dist/plugin/notes.js"></script>
 <script>
-const REPO_URL = 'https://github.com/rocketstack-matt/osffny-sdlc-calm/pulls?q=is%3Apr';
-// Live mode (the default) shows the "live" badges that link to the demo's pull requests. backup.html, or ?backup,
-// is the same deck with screenshots only.
-const backup = new URLSearchParams(location.search).has('backup');
+const REPO_URL = 'https://github.com/rocketstack-matt/osffny-sdlc-calm';
 
-// ---- Chapters, links, mode ------------------------------------------------------------------------------------
+// ---- Chapters and links ------------------------------------------------------------------------------------------
 const CHAPTERS = ['The problem', 'The idea'];
 for (const s of document.querySelectorAll('section[data-chapter]')) {
   const n = Number(s.dataset.chapter);
   s.insertAdjacentHTML('afterbegin', `<div class="chapters">${CHAPTERS.map((c, i) => `<span class="${i + 1 === n ? 'on' : ''}">${i + 1} ${c}</span>`).join('')}</div>`);
 }
 for (const a of document.querySelectorAll('a[data-repo]')) { a.href = REPO_URL; a.target = '_blank'; }
-if (!backup) document.querySelector('.reveal').classList.add('live-mode');
 
 Reveal.initialize({ hash: true, width: 1920, height: 1080, margin: 0, minScale: 0.2, maxScale: 2, controls: false, progress: true, center: false, slideNumber: 'c/t', transition: 'none', backgroundTransition: 'none', plugins: [RevealNotes] });
 </script>

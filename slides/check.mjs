@@ -18,10 +18,10 @@ sections.forEach((s, i) => {
   const label = `slide ${i + 1}${title ? ` (${title})` : ''}`;
   const notes = s.match(/<aside class="notes">([\s\S]*?)<\/aside>/)?.[1]?.trim() ?? '';
   if (notes.length < 40) problems.push(`${label}: speaker notes missing or too short`);
-  for (const m of s.matchAll(/<img[^>]+src="([^"]+)"/g)) if (!existsSync(join(here, m[1]))) problems.push(`${label}: picture ${m[1]} is missing (run slides/github-screenshots.mjs)`);
+  for (const m of s.matchAll(/<img[^>]+src="([^"]+)"/g)) if (!existsSync(join(here, m[1]))) problems.push(`${label}: picture ${m[1]} is missing`);
 });
 
-for (const file of ['index.html', 'deck.css', 'README.md', 'github-screenshots.mjs']) {
+for (const file of ['index.html', 'deck.css', 'README.md']) {
   if (!existsSync(join(here, file))) continue;
   const text = readFileSync(join(here, file), 'utf8');
   const line = text.split('\n').findIndex((l) => l.includes('—'));

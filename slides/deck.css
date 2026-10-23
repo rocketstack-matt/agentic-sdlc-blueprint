@@ -42,8 +42,6 @@ html, body, .reveal-viewport { background: #fff; }
 .reveal .split { display: grid; grid-template-columns: 720px 1fr; gap: 56px; align-items: center; flex: 1; min-height: 0; }
 .reveal .caption { font-size: 30px; line-height: 1.35; color: var(--muted); }
 .reveal .caption b { color: var(--ink); }
-.reveal .live { display: none; font-size: 24px; font-weight: 700; color: #fff; background: var(--red); border-radius: 999px; padding: 8px 20px; margin-left: 18px; vertical-align: middle; text-decoration: none; }
-.reveal.live-mode .live { display: inline-block; }
 
 /* Words in the middle of the slide. */
 .reveal .middle { flex: 1; display: flex; flex-direction: column; justify-content: center; }

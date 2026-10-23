@@ -130,16 +130,3 @@ test('a change that does not merge cleanly is denied, spends nothing and leaves 
     assert.equal(run(env, 'gateway/propose.mjs', 'demo/changes/account-summary.json').status, 0);
   } finally { rmSync(demo, { recursive: true, force: true }); rmSync(kit, { recursive: true, force: true }); }
 });
-
-test('reset does not count the demo recording as an uncommitted change', () => {
-  const demo = mkdtempSync(join(tmpdir(), 'gw-demo-'));
-  const sessions = new URL('../../gateway/sessions.json', import.meta.url).pathname;
-  const saved = readFileSync(sessions);
-  try {
-    const clean = spawnSync('git', ['status', '--porcelain'], { cwd: new URL('../..', import.meta.url).pathname, encoding: 'utf8' }).stdout.trim();
-    writeFileSync(sessions, `${saved}\n`);
-    const r = run({ GATEWAY_DEMO: demo }, 'gateway/reset.mjs');
-    if (clean === '') assert.doesNotMatch(r.stdout, /uncommitted/);
-    else assert.ok(true, 'the blueprint already has other changes; only checked when clean');
-  } finally { writeFileSync(sessions, saved); rmSync(demo, { recursive: true, force: true }); }
-});

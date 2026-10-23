@@ -1,9 +1,0 @@
-PASS  calm-validate  Architecture valid against CALM 1.2, the governed-service pattern and the control requirement schemas.
-PASS  spec-check     1 spec(s) checked against the model. Change touches trade-api under SPEC-001.
-PASS  drift-check    3 connection(s) observed in code, 3 modelled in CALM.
-PASS  tests          5 passed, 0 failed.
-PASS  review-router  Required review mode: COGNITIVE
-      INFO  services/trade-api/src/app.ts (node trade-api, tier 2, internal): Touches a tier 2+ node holding internal data, or changes requirements or tests
-      INFO  test/trade-capture.test.ts: Touches a tier 2+ node holding internal data, or changes requirements or tests
-ADMISSIBLE: every blocking gate passed.
-exit=0

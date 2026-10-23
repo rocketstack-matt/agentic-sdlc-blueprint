@@ -5,7 +5,7 @@ only thing that merges into its `main`. For every change it works out the facts 
 architecture, evaluates them with ergo (the same `gates/lib/controls.mjs` CI uses, at stage `merge`), records the
 decision as CALM control-evaluation decorators, and merges on ALLOW. Deny by default.
 
-    bash run-demo.sh                                    # every moment, recorded into sessions.json, self-checked
+    bash run-demo.sh                                    # every moment, recorded into .demo/sessions.json, self-checked
     CALM_HUB_URL=http://localhost:8080 bash run-demo.sh # the same, published to a local CALM Hub
 
 The commands: `node gateway/reset.mjs`, `node gateway/propose.mjs demo/changes/<x>.json` (the agent's commit on a
@@ -33,8 +33,7 @@ model, and every decorator is posted against the version it was decided on. The 
 (`.hub-state.json`). To run CALM Hub locally: `../mvnw quarkus:dev -Pstandalone,server-only` in a checkout of
 finos/architecture-as-code's `calm-hub`.
 
-`demo/make-patches.mjs` regenerates the demo patches when the services or the model change. The slides' terminal
-panes come from `sessions.json`.
+`demo/make-patches.mjs` regenerates the demo patches when the services or the model change.
 
 ## The GitHub demo
 
@@ -48,7 +47,7 @@ the **Architecture controls** check has passed. Who is who:
 | `calm-trade-agent[bot]` (a GitHub App) | `author-agent` | writes the code and opens the pull requests |
 | `calm-review-bot[bot]` (a GitHub App, run by the gateway's watch loop; without it, the review-bot workflow on GitHub Actions) | `review-bot` | reviews every commit |
 | `calm-merge-gateway[bot]` (a GitHub App) | the merge gateway | posts the check and a comment on every decision |
-| `@aaronsearle` live, a demo account in the screenshots | `alice` | approves, with GitHub's own review, when a person is needed |
+| `@aaronsearle` live, a demo account for rehearsals | `alice` | approves, with GitHub's own review, when a person is needed |
 | `@rocketstack-matt` | `bob` | the architect: changes the architecture |
 
 The approvers are listed in `.github-demo.json` as `"approvers": ["aaronsearle", "<demo account>"]`; the gateway's

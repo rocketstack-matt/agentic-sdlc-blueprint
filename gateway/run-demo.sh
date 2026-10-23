@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Runs the demo the talk shows with no human at the keyboard and records every command with its exact output in
-# sessions.json: one session per moment, one step per command. Ends with a self-check of every verdict.
+# Runs the demo with no human at the keyboard and records every command with its exact output in
+# .demo/sessions.json: one session per moment, one step per command. Ends with a self-check of every verdict.
 # Set CALM_HUB_URL (for example http://localhost:8080) to publish the architecture and every decision to CALM Hub.
 set -u
 cd "$(dirname "$0")"

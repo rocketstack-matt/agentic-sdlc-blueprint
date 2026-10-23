@@ -1,133 +1,168 @@
 # agentic-sdlc-blueprint
 
-**When the architecture changes, the controls follow.** The SDLC controls sit on the architecture as data, a
-merge gateway asks them about every change, and every decision goes back onto the architecture as evidence.
+**When the architecture changes, the controls follow.**
 
-Companion to the talk *Governing the Agentic SDLC: Driving Agentic Development with FINOS CALM* (Open Source in
-Finance Forum, New York, 4 November 2026; Matthew Bain and Aaron Searle). The talk asks who decides which changes are
-risky when agents write and review the code, and answers: the architecture does. One rule, "any change to a service
-that connects to the Client Ledger needs a human approver", is written once on the Client Ledger in the
-[FINOS CALM](https://calm.finos.org) model, and an architect's change to the model changes what the rule applies to
-with nobody touching the pipeline. This repository is everything the demo shows, runnable with Node and git. The
-slides are in [`slides/`](slides/) and published at
+Coding agents now write and review pull requests. Which of those changes need a person? Today a reviewer decides
+from memory. Here the architecture decides. The system is described in [FINOS CALM](https://calm.finos.org), and
+the SDLC controls from the [FINOS SDLC Common Controls Catalog](https://sdlc-common-controls.finos.org) are
+written on it. A merge gateway checks every change against those controls and records each decision back on the
+architecture.
+
+This repository is the working demo behind the talk *Governing the Agentic SDLC* (Open Source in Finance Forum,
+New York, 4 November 2026; Matthew Bain and Aaron Searle). The slides are in [`slides/`](slides/), published at
 [rocketstack-matt.github.io/agentic-sdlc-blueprint/slides](https://rocketstack-matt.github.io/agentic-sdlc-blueprint/slides/).
 
-Built on two FINOS projects: the catalog says what the controls are, and [FINOS CALM](https://calm.finos.org)
-makes them checkable by holding the architecture, and the controls on it, as data. The agent's own guardrails
-follow two mitigations from the [FINOS AI Governance Framework](https://air-governance-framework.finos.org); see
-[`agent/GUARDRAILS.md`](agent/GUARDRAILS.md).
+> A teaching blueprint, not a product. Fork it and take it apart.
 
-> **Status.** A teaching blueprint, not a product.
+## The idea in one example
 
-## The question, and the answer
+A small trade capture system: a **Trade API**, a **Position Service**, a **Trade Store** and the **Client Ledger**,
+the bank's book of record. One rule sits on the Client Ledger, in the architecture file:
 
-A pull request opened by a coding agent, approved by a review agent, every check green, merged. It changed the
-service that writes the client ledger. Was it risky? Today that is decided by a person, from memory: a CODEOWNERS
-file, a wiki page, a reviewer who remembers what talks to the ledger. None of it notices when the architecture
-changes.
+> Any change to a service that connects to the Client Ledger needs a human approver.
 
-The answer here is that what is risky is a fact about the architecture, so the controls live on the architecture and
-a gate reads them there. Four things, and nothing else:
+The rule never names a service. So a change to the Position Service, which writes to the ledger, needs a person,
+while a change to the Trade API goes straight through. Then an architect adds a connection from the Trade API to the
+ledger. Without anyone touching the pipeline, the same kind of Trade API change now needs a person too.
 
-| | What it is | Where |
+Four parts make that work:
+
+| Part | What it is | Where |
 | --- | --- | --- |
-| **The model** | The system in CALM, with the catalog's controls attached to the parts they govern, as data | [`architecture/`](architecture/) |
-| **The policy** | The controls carry their policy as ergo requirements in the model; one generic module evaluates them | [`gates/policy/`](gates/policy/) |
-| **The gate** | The merge gateway and `gates/check.mjs` | [`gateway/`](gateway/), [`gates/`](gates/) |
-| **The evidence** | Every decision as CALM control-evaluation decorators, on CALM Hub; the CI evidence bundle | [`gateway/`](gateway/), `evidence/out/` |
+| **The architecture** | The system in CALM, with the catalog's controls attached to the architecture, its nodes and relationships | [`architecture/`](architecture/) |
+| **The policy** | Each control carries its rule as data, evaluated by [ergo](https://ergo.kosli.com), an open source library for Open Policy Agent that explains every decision | [`gates/policy/`](gates/policy/) |
+| **The gate** | The merge gateway, plus `npm run gates` for CI | [`gateway/`](gateway/), [`gates/`](gates/) |
+| **The evidence** | Every decision saved as a CALM control-evaluation decorator, on CALM Hub when it is running | [`gateway/`](gateway/) |
 
-The agent is deliberately not one of the four. The best agent and the worst agent meet the same gate.
+## Run it locally
 
-## Run it
-
-Needs Node 22+ and git. No API key, no cloud account, no containers.
-
-**Fork first.** This repository is a template you take away, not a project you send changes to. Fork it, clone
-your fork, and raise pull requests against your fork; the workflow in `.github/workflows/governed-sdlc.yml` runs
-there, on your changes, and writes your evidence.
+You need **Node 22+** and **git**. No API keys, no cloud account, no containers.
 
 ```sh
-git clone https://github.com/<you>/agentic-sdlc-blueprint && cd agentic-sdlc-blueprint
-npm install && npm test && npm run gates        # the gates on a clean tree: ADMISSIBLE
-
-bash gateway/run-demo.sh                        # the demo the talk shows, every verdict checked
-CALM_HUB_URL=http://localhost:8080 bash gateway/run-demo.sh   # the same, published to a local CALM Hub
+git clone https://github.com/<you>/agentic-sdlc-blueprint   # your fork
+cd agentic-sdlc-blueprint
+npm install
+npm test                  # the services, the gates and the gateway
+npm run gates             # every blocking gate on a clean tree: ADMISSIBLE
+bash gateway/run-demo.sh  # the whole demo, every verdict checked: ends with "demo ok"
 ```
 
-What the demo shows, one idea per moment; the gateway's [README](gateway/README.md) has each command:
+`run-demo.sh` plays the story on a local copy of this repository (in `gateway/.demo/`): an agent proposes changes,
+a review bot reviews them, a person approves where needed, and the gateway decides each merge. It records every
+command and its output in `gateway/.demo/sessions.json`, then checks every verdict.
 
-1. **A routine change.** The author agent reviews its own change: **DENY**, with the reason from the code review
-   control. The approved review bot reviews it: **ALLOW**, and `main` moves.
-2. **The Client Ledger.** A change to `position-service`, which connects to the ledger: **DENY** until a human
-   approves. The approval renders the real diff from the repository. Changing one line after approval kills the
-   approval.
-3. **The shortcut.** The agent makes trade-api read the ledger's file directly: **DENY**, that connection is not in
-   the architecture.
-4. **The architect's change.** The architect adds `trade-api -> client-ledger` to the model: a change no node owns,
-   so it needs a human too. With CALM Hub, the new architecture is published as the next version. The same kind
-   of trade-api change that merged in moment 1 is now denied: the diagram changed, so the control followed.
+| | Change | Verdict |
+| --- | --- | --- |
+| 1 | The agent reviews its own Trade API change | **DENY**: the author may not review its own change |
+| | The approved review bot reviews it instead | **ALLOW** |
+| 2 | A Position Service change, which connects to the ledger | **DENY** until a human approves this exact commit and diff |
+| | The approved change, with one more line added after approval | **DENY**: the approval no longer matches |
+| 3 | The Trade API reads the ledger's file directly | **DENY**: that connection is not in the architecture |
+| 4 | The architect adds Trade API → Client Ledger to the architecture | **DENY** until a human approves; then **ALLOW** |
+| | The same kind of Trade API change as in 1 | **DENY**: the Trade API now connects to the ledger |
 
-To see the pipeline run on your own changes, enable Actions on your fork (GitHub disables workflows on forks until
-you do) and open a pull request there.
+To step through it yourself, run the commands in [`gateway/run-demo.sh`](gateway/run-demo.sh) one at a time from
+`gateway/`, starting with `node gateway/reset.mjs`, which also starts it again. The [gateway README](gateway/README.md)
+explains each command.
+
+The demo needs a clean working tree. It copies the last commit, so commit your changes first.
+
+## See the decisions on the architecture (optional)
+
+With [CALM Hub](https://github.com/finos/architecture-as-code/tree/main/calm-hub) running, the demo publishes the
+architecture and every decision to it. You need Java 21+ and a checkout of
+[finos/architecture-as-code](https://github.com/finos/architecture-as-code):
+
+```sh
+# in architecture-as-code/calm-hub: the backend on :8080, with embedded storage
+../mvnw quarkus:dev -Pstandalone,server-only
+
+# in architecture-as-code/calm-hub-ui: the UI on :5173
+npm install && npm start
+
+# back here
+CALM_HUB_URL=http://localhost:8080 bash gateway/run-demo.sh
+```
+
+Open http://localhost:5173 and find **Trade Capture (governed)** in the `finos.agentic-sdlc` namespace. Versions
+1.0.0 and 1.1.0 are the architecture before and after the architect's change, and each version carries the
+decisions made against it as decorators.
+
+The talk used a CALM Hub UI branch that draws those decisions on the diagram, with a larger-text presentation mode.
+It has not been contributed upstream yet. Without it you can still see each decision in the version's decorators.
+
+## The demo on GitHub pull requests (presenters)
+
+At the talk the same story ran on real GitHub pull requests in
+[rocketstack-matt/osffny-sdlc-calm](https://github.com/rocketstack-matt/osffny-sdlc-calm). That repository is
+generated from this one and reset before every run. The gateway runs on the presenter's laptop as a GitHub App and
+reports the **Architecture controls** check that `main` requires.
+
+Running it against your own repository needs a one-off setup: three GitHub Apps, branch protection and the `gh` CLI
+logged in. After that, `npm run demo` starts CALM Hub if needed, resets the repository, starts the gateway, runs a
+pre-flight check and plays the demo one key at a time. [`gateway/README.md`](gateway/README.md#the-github-demo) has
+the details.
+
+## Try the controls yourself
+
+- **Change the code.** Implement [`specs/SPEC-001`](specs/SPEC-001-account-summary.md) your own way, or let a coding
+  agent do it, and run `SPEC=SPEC-001 npm run gates`. Agents get their instructions from [`AGENTS.md`](AGENTS.md),
+  and the architecture context from `npm run calm:context -- --spec SPEC-001` or the read-only MCP server in
+  [`agent/`](agent/).
+- **Change the architecture.** The ledger rule is the `client-ledger-human-approval` control on the `client-ledger`
+  node in [`architecture/trade-capture.architecture.json`](architecture/trade-capture.architecture.json). Its ergo
+  `applies_to` says which connections it covers. Change that, or add a relationship, then commit and run
+  `bash gateway/run-demo.sh` again. The self-check lists every verdict that changed.
+- **Run it in CI.** Enable Actions on your fork and open a pull request. The workflow in
+  [`.github/workflows/governed-sdlc.yml`](.github/workflows/governed-sdlc.yml) runs the gates on it. Put the spec id
+  (`SPEC-001`) in the pull request description.
 
 ## What enforces what
 
-`gates/check.mjs` runs on every change in CI (`npm run gates`): it validates the model, runs the tests and evaluates
-every control's ergo requirements that apply in the pipeline. The merge gateway evaluates the same requirements, with
-the same evaluator, at stage `merge`, where the review and any approval are known.
+| Catalog control | Attached to | Enforced by |
+| --- | --- | --- |
+| SDLC-PREV-001 Code Review | the architecture | an approved reviewer who is not the author; a human approval for any change outside the services, other than docs and tests |
+| SDLC-PREV-001, the Client Ledger rule | the `client-ledger` node | a human approval, bound to the commit and the diff, for any change to a service that connects to the ledger |
+| SDLC-PREV-004 Requirements Repository | the architecture | every change names an approved spec in `specs/` and touches only the nodes it declares |
+| SDLC-PREV-017 Service Dependency Control | the architecture | every connection the code makes is a connection in the architecture |
+| SDLC-PREV-012 Deployment Gating | the architecture | `npm run gates` runs every blocking gate; any failure blocks |
+| SDLC-PREV-014 Test Evidence Retention | the architecture | the decisions log, the decorators and the CI evidence bundle |
 
-| Catalog id | Control | Attached in CALM to | Enforced by |
-| --- | --- | --- | --- |
-| SDLC-PREV-001 | Code Review | system | `code-review` (an approved reviewer who is not the author) and `control-plane-human-approval` (a change to a file no node owns, other than documentation and tests, needs a human approval bound to the commit and the diff); the merge gateway |
-| SDLC-PREV-001 | Client Ledger human approval | `client-ledger` node | `client-ledger-human-approval` (a change to any service that connects to the Client Ledger needs a human approval bound to the commit and the diff); the merge gateway |
-| SDLC-PREV-004 | Requirements Repository | system | `change-names-approved-spec` and `requirements-scope` (a change names an approved spec in `specs/` and touches only the nodes it declares); CI and the merge gateway |
-| SDLC-PREV-017 | Service Dependency Control | system | `service-dependency` (every connection the code makes is a connection in the architecture); CI and the merge gateway |
-| SDLC-PREV-012 | Deployment Gating | system | `gates/check.mjs` runs the gates the model names; any failure blocks |
-| SDLC-PREV-016 | Test Execution and Sign-Off | n/a | the tests gate, one of the blocking gates SDLC-PREV-012 names |
-| SDLC-PREV-014 | Test Evidence Retention | system | `evidence/out/gates.json`; the merge gateway's control-evaluation decorators |
-| SDLC-PREV-007, -009, -010 | Dependency scanning, SBOM, secret detection | n/a | `.github/workflows/governed-sdlc.yml` |
-
-Risks in view: SDLC-OP-007 Configuration Drift, SDLC-SEC-008 Unauthorised Change, SDLC-RC-005 Audit and Compliance
-Evidence Failure.
+CI (`npm run gates`) evaluates the controls that apply before merge. The merge gateway evaluates them all with the
+same evaluator, once the review and any approval are known.
 
 ## Layout
 
 ```
-architecture/   the CALM 1.2 model, the pattern that enforces the controls, the node and interface Standards, copies of the catalog's control requirement documents and their Standard from CALM Hub, URL mapping for offline validation
-gateway/        the merge gateway, its demo, the decorator Standard copy
-gates/          gates/check.mjs, gates/lib (facts and the evaluator), gates/policy (ergo, the generic entrypoint, the built module)
-specs/          version-controlled requirements, pinned to CALM nodes
-services/       two tiny Node/TypeScript services (no framework, no database server)
-agent/          CALM context for agents: shared logic, a CLI, a read-only MCP server, the agent guardrails
-slides/         the talk deck, with the scripts that keep its screens real
-docs/           candidate controls to take back to the catalog, and two recorded live agent runs
-tools/          the generator that turns the catalog's source into its CALM Hub control domain and Standard
-AGENTS.md       the instructions any coding agent gets
+architecture/   the CALM model, the pattern that requires the controls, Standards, offline copies of the catalog's control documents
+services/       the two services the model's nodes own (Node and TypeScript, no framework)
+specs/          approved specs, each pinned to the CALM nodes it may touch
+gates/          npm run gates: the evaluator, the ergo policy module and their tests
+gateway/        the merge gateway, the local demo (run-demo.sh) and the GitHub demo (gh-*.mjs)
+agent/          architecture context for coding agents: a CLI, a read-only MCP server, the guardrails
+slides/         the talk deck
+tools/          regenerates the catalog's CALM Hub control documents from its source
+AGENTS.md       the instructions every coding agent gets
 ```
 
-## Honest limitations
+## Limitations
 
-- The approval ceremony is mocked. A terminal prompt where the approver types a binding code stands in for a
-  passkey on a device the agent runtime cannot reach. In a bank the standards are there: CIBA for the out-of-band
-  request, WebAuthn for the person, RFC 9396 for binding the token to the exact action.
-- CI reads the policy module and the evaluator from the change itself; the gateway reads them from its own checkout.
-  In a bank both come from a protected source, not the change.
-- Agent identity is a string in a signed record. In a bank it is a platform-issued workload identity, and the
-  approved reviewer is recorded as the control's approved tool identity.
-- The service dependency control finds connections with a convention-based scanner (env bindings and cross-node
-  imports), not a general solution. Real estates need richer signals: IaC, service mesh config, OpenAPI clients,
-  runtime traces.
-- Evidence is written to disk, a CI artefact and, when `CALM_HUB_URL` is set, CALM Hub. Immutability and retention
-  are yours to provide. The decorators are validated against the control-evaluation decorator Standard; the CI
-  evidence bundle is hashed JSON, not a CALM document.
-- The pattern requires the system-level controls, pins each to its catalog document, fixes the parameters the gates
-  read, and requires an ergo policy on any control attached to a node. It cannot know which node should carry a
-  control; the human approval control sits on `client-ledger` because that is where the risk is. That stays a
-  modelling decision.
+- **The approval is simulated.** In the local demo the approver types a code shown with the diff. In a bank that
+  would be a passkey on a device the agent cannot reach. On GitHub, the approval is GitHub's own review.
+- **The policy comes from the change.** CI reads the policy module and evaluator from the change itself. In a bank
+  they come from a protected source.
+- **Identities are names.** The agent and reviewer identities are strings in signed records, not platform-issued
+  workload identities.
+- **Connections are found by convention.** The service dependency control looks at environment bindings and imports
+  between services. A real estate needs richer signals, such as infrastructure code, service mesh config or traces.
+- **Evidence storage is up to you.** Evidence goes to disk, a CI artefact and optionally CALM Hub. Immutability and
+  retention are yours to provide.
+- **Placing a control is a modelling decision.** The pattern can require a control, but it cannot know which node
+  should carry it.
 
 ## Contributing
 
-Your own work belongs in your fork. Issues and pull requests here are for the blueprint itself: a verdict the
-gateway gets wrong, a gate that misses something, a control mapped to the wrong catalog entry. The gateway's demo
-replays every decision the talk shows and must stay green on `main`. Licensed under Apache 2.0. If a control here
-looks wrong, the better fix is usually upstream in the [catalog](https://github.com/finos/sdlc-common-controls).
+Your own work belongs in your fork. Issues and pull requests here are for the blueprint itself: a verdict the gateway
+gets wrong, a gate that misses something, a control mapped to the wrong catalog entry. If a control looks wrong, the
+better fix is usually upstream in the [catalog](https://github.com/finos/sdlc-common-controls). Licensed under
+Apache 2.0.
