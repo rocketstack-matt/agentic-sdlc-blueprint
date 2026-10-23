@@ -2,13 +2,14 @@
 // terminal. It remembers where it got to (gateway/.gh/demo-state.json), so it can be stopped and started again.
 //   Enter  the next moment          m  merge the current pull request (when its check has passed)
 //   o      open it on GitHub        h  open CALM Hub at the latest version, in presentation mode
+//   a      approve it from this laptop, as an approver logged in to the gh CLI (rehearsals, or if Aaron cannot)
 //   s      where we are             q  quit
 // Without a terminal (input piped in), each line is a key; an empty line is Enter.
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { createInterface } from 'node:readline';
-import { CHECK, GH, REPO, as } from './github.mjs';
+import { CHECK, GH, REPO, approvers, as, tokenOf } from './github.mjs';
 import { ROOT, run } from './lib.mjs';
 
 const STATE = join(GH, 'demo-state.json');
@@ -62,10 +63,12 @@ run(async () => {
   };
   // Say when the current pull request's check changes, so the presenter knows when to move on.
   setInterval(async () => {
-    if (!state.current || busy) return;
+    const n = state.current;
+    if (!n || busy) return;
     try {
-      const c = await checkOf(state.current);
-      const line = `#${state.current} ${c.state}${c.title ? `: ${c.title}` : ''}`;
+      const c = await checkOf(n);
+      if (n !== state.current) return; // the next moment started while this one was being checked
+      const line = `#${n} ${c.state}${c.title ? `: ${c.title}` : ''}`;
       if (line !== lastSeen) { lastSeen = line; say(`  ${c.state === 'success' ? '✓' : c.state === 'failure' ? '✗' : '·'} ${line}`); }
     } catch { /* the next tick tries again */ }
   }, 3000).unref?.();
@@ -87,6 +90,14 @@ run(async () => {
       if (c.state !== 'success') return say(`#${state.current} is ${c.state}: not merging`);
       await (await as('owner')).put(`/repos/${REPO}/pulls/${state.current}/merge`, { merge_method: 'merge' });
       say(`  merged #${state.current}`);
+    },
+    async a() {
+      if (!state.current) return say('no pull request yet');
+      const who = approvers().find((login) => { try { return Boolean(tokenOf(login)); } catch { return false; } });
+      if (!who) return say('no approver is logged in to the gh CLI on this laptop: approve on GitHub');
+      const { pr } = await checkOf(state.current);
+      await (await as(who)).post(`/repos/${REPO}/pulls/${state.current}/reviews`, { commit_id: pr.head.sha, event: 'APPROVE' });
+      say(`  approved #${state.current} as @${who}`);
     },
     async o() { if (state.current) execFileSync('open', [url(state.current)]); },
     async h() {

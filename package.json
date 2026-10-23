@@ -15,7 +15,8 @@
     "typecheck": "tsc --noEmit",
     "calm:validate": "calm validate -p architecture/governed-service.pattern.json -a architecture/trade-capture.architecture.json -u architecture/url-mapping.json -f pretty",
     "calm:context": "node agent/calm-context.mjs",
-    "gates": "node gates/check.mjs"
+    "gates": "node gates/check.mjs",
+    "demo": "bash gateway/gh-live.sh"
   },
   "devDependencies": {
     "@finos/calm-cli": "^1.60.1",
