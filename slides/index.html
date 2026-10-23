@@ -205,6 +205,13 @@
       <aside class="notes">Aaron. Where the catalog stops, and it stops there on purpose. It says what is expected, in words every institution can share and cite by version. It does not say how to implement it, and it cannot enforce it. The hard part is the agent from the start of the talk: it will never read the policy, and if there is a shortcut to green, it will take it. Back to that pull request: who decided it did not need a person? Our own working group minutes say provenance of agentic changes is difficult to detect and enforce, but something we are thinking about. Here is one way it could be done: by leveraging FINOS CALM. Matthew.</aside>
     </section>
 
+    <section class="section-slide" data-background-image="img/background.png" data-background-size="cover">
+      <p class="tag">Part two. Matthew Bain</p>
+      <h2>The gate</h2>
+      <p>One control, enforced where it counts, when the developer and the reviewer are both machines.</p>
+      <aside class="notes">Matthew. Aaron left the question on the screen. The answer is not to make the agent read the policy. It is to make the gate refuse.</aside>
+    </section>
+
     <!-- ============================================================ 2. The idea (Matthew) -->
 
     <section class="dark" data-chapter="2" data-speaker="Matthew">
@@ -268,83 +275,11 @@
 
     <!-- ============================================================ 3. Live on GitHub (Matthew) -->
 
-    <section data-chapter="3" data-speaker="Matthew">
-      <h2>Live on GitHub <a class="live" data-repo>github.com/rocketstack-matt/osffny-sdlc-calm</a></h2>
-      <p class="sub">A real repository with the trade capture system and its architecture. The cast:</p>
-      <div class="cards five">
-        <div class="card"><span class="icon">🤖</span><h3>The agent</h3><span class="who">calm-trade-agent</span><p>writes code, opens pull requests</p></div>
-        <div class="card"><span class="icon">🔍</span><h3>Review bot</h3><span class="who">calm-review-bot</span><p>reviews every commit</p></div>
-        <div class="card blue"><span class="icon">🏛️</span><h3>The check</h3><span class="who">Architecture controls</span><p>reads the architecture</p></div>
-        <div class="card gold"><span class="icon">✍️</span><h3>The approver</h3><span class="who">@aaronsearle</span><p>Aaron, live: approves when a person is needed</p></div>
-        <div class="card"><span class="icon">📐</span><h3>Matthew</h3><span class="who">@rocketstack-matt</span><p>the architect: changes the architecture</p></div>
-      </div>
-      <aside class="notes">Matthew. Live mode: switch to the browser on the repository's pull requests, with CALM Hub in a second tab. Backup: stay on the slides, every step is a screenshot; in them a demo account plays the approver. Introduce the cast. The agent is a GitHub App that writes code and opens pull requests. A review bot reviews every commit. The check, Architecture controls, reads the architecture. Aaron approves when a person is needed. And I'm the architect.</aside>
-    </section>
-
-    <section data-chapter="3" data-speaker="Matthew">
-      <h2>1. A harmless change <a class="live" data-repo>live</a></h2>
-      <p class="sub">The agent adds an endpoint to the Trade API. <b>Green: it can merge, no person needed.</b></p>
-      <div class="moment">
-        <figure class="hub"><p class="where">CALM Hub</p><img class="shot" src="img/hub/1-harmless.png" alt="CALM Hub: Trade API met, reviewed by the review bot"></figure>
-        <figure class="gh"><p class="where">GitHub</p><img class="shot" src="img/github/1-harmless.png" alt="The Architecture controls comment: all controls met"></figure>
-      </div>
-      <aside class="notes">Matthew. Live: the agent opens "Account summary endpoint on trade-api". The review bot approves it. The check runs: every control met, green, and I can press Merge. CALM Hub shows the same decision on the Trade API box. This is the fast lane, and most changes should look like this.</aside>
-    </section>
-
-    <section data-chapter="3" data-speaker="Matthew">
-      <h2>2. A change near the ledger <a class="live" data-repo>live</a></h2>
-      <p class="sub">Same kind of change, on the Position Service. The code never mentions the ledger; <b>the architecture does.</b> Merging is blocked.</p>
-      <div class="moment">
-        <figure class="hub"><p class="where">CALM Hub</p><img class="shot" src="img/hub/2-ledger.png" alt="CALM Hub: Position Service blocked, requires a human approval"></figure>
-        <figure class="gh"><p class="where">GitHub</p><img class="shot" src="img/github/2-ledger.png" alt="The Architecture controls comment: a person must approve because Position Service connects to the Client Ledger"></figure>
-      </div>
-      <aside class="notes">Matthew. Live: the agent opens "Position total endpoint on position-service". Same kind of change, same review bot. Red. The check says why, in words: Position Service connects to the Client Ledger, so a human must approve, and it names who can. CALM Hub shows the Position Service blocked, on the box. Nobody wrote "Position Service is risky" anywhere. The architecture did that.</aside>
-    </section>
-
-    <section data-chapter="3" data-speaker="Aaron">
-      <h2>3. A person approves <a class="live" data-repo>live</a></h2>
-      <p class="sub">The approver reads the real diff on GitHub and approves with the usual button. <b>Green, and the approval is on the architecture.</b></p>
-      <div class="moment">
-        <figure class="hub"><p class="where">CALM Hub</p><img class="shot" src="img/hub/3-approved.png" alt="CALM Hub: Position Service approved, with the approver and the commit"></figure>
-        <figure class="gh"><p class="where">GitHub</p><img class="shot" src="img/github/3-approved.png" alt="The approver approved, and the check turns green"></figure>
-      </div>
-      <aside class="notes">Aaron. Live: I open the pull request on my own laptop, read the actual diff, and approve with GitHub's own button. A few seconds later the check turns green, CALM Hub shows who approved which commit, and Matthew merges. Nothing new to learn: it's the review button you already use. The difference is that the architecture decided I was needed. If asked: the approval counts for that exact commit only, like GitHub's own stale-review setting, but here it is part of the rule and recorded on the architecture.</aside>
-    </section>
-
-    <section data-chapter="3" data-speaker="Matthew">
-      <h2>4. The shortcut <a class="live" data-repo>live</a></h2>
-      <p class="sub">The agent makes the Trade API read the ledger directly. <b>That line isn't in the architecture,</b> so it doesn't exist.</p>
-      <div class="moment">
-        <figure class="hub"><p class="where">CALM Hub</p><img class="shot" src="img/hub/4-shortcut.png" alt="CALM Hub: Trade API blocked, the architecture has no connection from Trade API to Client Ledger"></figure>
-        <figure class="gh"><p class="where">GitHub</p><img class="shot" src="img/github/4-shortcut.png" alt="The Architecture controls comment: that connection is not in the architecture"></figure>
-      </div>
-      <aside class="notes">Matthew. Live: agents take the shortest path to green, so this one skips the Position Service and reads the ledger's file straight from the Trade API. Red: the architecture has no connection from Trade API to Client Ledger. If it's not in the architecture, it doesn't exist. But what if the business really needs it? The fix isn't a cleverer agent. It's an architect.</aside>
-    </section>
-
-    <section data-chapter="3" data-speaker="Matthew">
-      <h2>5. The architect changes the architecture <a class="live" data-repo>live</a></h2>
-      <p class="sub">I add one line: the Trade API may write end-of-day snapshots to the ledger. <b>Changing the architecture needs a person too.</b> Approved, merged: version 1.1.</p>
-      <div class="moment">
-        <figure class="hub"><p class="where">CALM Hub</p><img class="shot" src="img/hub/5-architect.png" alt="CALM Hub, version 1.1: the new line from Trade API to Client Ledger"></figure>
-        <figure class="gh"><p class="where">GitHub</p><img class="shot" src="img/github/5-architect.png" alt="The architect's pull request, approved by a person"></figure>
-      </div>
-      <aside class="notes">Matthew. Live: as the architect, I open a pull request that changes the architecture file: one new relationship, the Trade API writes end-of-day snapshots to the Client Ledger. Changing the architecture is changing the rules, so it needs a person too. Approved, merged, and CALM Hub has version 1.1 with the new line. Pause. What happens to a harmless Trade API change now?</aside>
-    </section>
-
-    <section data-chapter="3" data-speaker="Matthew">
-      <h2>6. The same harmless change, again <a class="live" data-repo>live</a></h2>
-      <p class="sub">A new endpoint on the Trade API, like change 1. <b>Now the Trade API connects to the ledger, so it needs a person.</b></p>
-      <div class="moment">
-        <figure class="hub"><p class="where">CALM Hub</p><img class="shot" src="img/hub/6-climax.png" alt="CALM Hub, version 1.1: Trade API blocked, requires a human approval, on the new line to the Client Ledger"></figure>
-        <figure class="gh"><p class="where">GitHub</p><img class="shot" src="img/github/6-climax.png" alt="The Architecture controls comment: Trade API now connects to the Client Ledger, so a person must approve"></figure>
-      </div>
-      <aside class="notes">Matthew. Live: the agent opens "Trade count endpoint on trade-api". Exactly the kind of change that went straight through at the start. Red: Trade API now connects to the Client Ledger, so a human must approve, and CALM Hub shows it on the new line. Nobody touched the rule, the check or the pipeline. Let it land.</aside>
-    </section>
-
-    <section class="dark" data-chapter="3" data-speaker="Matthew">
-      <p class="big">Nobody touched the pipeline.</p>
-      <p class="after">The architect changed the architecture, and the rule followed.<br>When the architecture changes, the controls follow.</p>
-      <aside class="notes">Matthew. Say it plainly. Nobody touched the pipeline, the rule, or a list of services. The architect changed the architecture, and the rule followed it. When the architecture changes, the controls follow.</aside>
+    <section class="dark" data-chapter="3" data-speaker="Matthew and Aaron">
+      <p class="big">Let's see it live.</p>
+      <p class="after">An agent opens pull requests on a real GitHub repository. The architecture decides which ones need a person.</p>
+      <p class="after"><a data-repo>github.com/rocketstack-matt/osffny-sdlc-calm</a></p>
+      <aside class="notes">Matthew. Switch to the browser: the repository's pull requests, with CALM Hub in presentation mode in a second tab; npm run demo drives it. The cast: the agent, a GitHub App that writes code and opens pull requests; a review bot that reviews every commit; the check, Architecture controls, which reads the architecture; Aaron, who approves when a person is needed; and me, the architect. One. "Account summary endpoint on trade-api": reviewed, every control met, green, merge; CALM Hub shows it on the Trade API box. This is the fast lane. Two. "Position total endpoint on position-service": same kind of change, red, because the Position Service connects to the Client Ledger; the check names who can approve. Nobody wrote "Position Service is risky" anywhere: the architecture did that. Three, Aaron: open it on your laptop, read the real diff, approve with GitHub's own button; green in a few seconds, merge; CALM Hub shows who approved which commit. Four. The shortcut: the Trade API reads the ledger's file directly. Red: that connection is not in the architecture, so it does not exist. If the business really needs it, the fix is an architect, not a cleverer agent. Five. As the architect, I add one relationship to the architecture: the Trade API writes end-of-day snapshots to the Client Ledger. Changing the architecture is changing the rules, so Aaron approves; merge; CALM Hub moves to version 1.1. Six. "Trade count endpoint on trade-api", the kind of change that went straight through at the start. Red: the Trade API now connects to the Client Ledger. Then say it plainly: nobody touched the pipeline, the rule or a list of services. The architect changed the architecture, and the rule followed it. When the architecture changes, the controls follow.</aside>
     </section>
 
     <section data-chapter="3" data-speaker="Matthew">

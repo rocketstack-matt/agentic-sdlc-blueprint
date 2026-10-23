@@ -37,6 +37,7 @@ html, body, .reveal-viewport { background: #fff; }
 .reveal section.dark .chapters .on { color: #fff; }
 .reveal .big { font-size: 96px; font-weight: 700; line-height: 1.1; max-width: 1640px; }
 .reveal .big em { font-style: normal; color: #7ee2a8; }
+.reveal section.dark a { color: #7ee2a8; }
 .reveal .after { font-size: 44px; line-height: 1.35; margin-top: 40px; color: #b6c2d1; max-width: 1500px; }
 
 
@@ -309,3 +310,9 @@ html, body, .reveal-viewport { background: #fff; }
 .reveal .v9-next { display: flex; align-items: center; gap: 30px; margin: 40px 0 0; padding: 22px 32px; border-radius: 16px; background: #eef4fe; border-left: 10px solid var(--calm); }
 .reveal .v9-next img { height: 72px; width: auto; }
 .reveal .v9-next p { font-size: 40px; line-height: 1.3; margin: 0; color: #1f1a2e; }
+
+/* A section divider on the conference artwork: kicker, title and one line, white. */
+.reveal section.section-slide { color: #fff; padding: 0; }
+.reveal section.section-slide .tag { position: absolute; left: 120px; top: 360px; font-size: 28px; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.85; }
+.reveal section.section-slide h2 { position: absolute; left: 120px; top: 410px; width: 1680px; font-size: 96px; }
+.reveal section.section-slide p:not(.tag) { position: absolute; left: 120px; top: 560px; width: 1500px; font-size: 44px; line-height: 1.3; }

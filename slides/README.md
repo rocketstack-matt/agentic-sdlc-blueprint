@@ -4,11 +4,10 @@
 present: reveal.js is vendored. Keys: arrows to move, `s` for the speaker view with notes and a timer, `esc` for the
 overview.
 
-- **Live** (`index.html`): the demo slides carry a red "live" badge that links to the demo repository's pull
-  requests; the presenters switch to the browser for each moment and come back to the slide, which shows the same
-  moment as a screenshot.
-- **Slides only** (`backup.html`, or `index.html?backup`): the same deck without the badges. Every moment is a
-  screenshot, so the talk works with no network.
+- **Live** (`index.html`): one slide, "Let's see it live.", hands over to the browser, where the demo runs on the
+  repository's pull requests and CALM Hub (`npm run demo`); its speaker notes are the run sheet for the six moments.
+- **Slides only** (`backup.html`, or `index.html?backup`): the same deck. It has no screenshots of the demo, so
+  without a network the demo is told from the notes.
 
 One story in four chapters, shown in the strip across the top of every slide: the problem (Aaron), the idea
 (Matthew), live on GitHub (Matthew, with Aaron approving), and why it matters (Aaron). The first chapter is the bot's
