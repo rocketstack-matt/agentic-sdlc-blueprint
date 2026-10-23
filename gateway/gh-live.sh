@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # gh-live.sh: the whole GitHub demo from one command, from the blueprint's root: npm run demo
 #   npm run demo                start afresh: reset the demo repository and CALM Hub, start the gateway in the
-#                               background, check everything, open GitHub and CALM Hub, and play the demo
+#                               background, check everything, open GitHub, and play the demo
 #   npm run demo -- --resume    carry on where the demo stopped, without a reset
 # CALM Hub and its UI are started if they are not running, and left running. The gateway stops when the demo ends.
 # Logs: gateway/.live/
@@ -65,9 +65,7 @@ echo "watching (pid $GATEWAY; log: gateway/.live/gateway.log)"
 if ! $RESUME; then
   step "5. Pre-flight"
   node gateway/gh-preflight.mjs || fail "not ready: fix what is marked ✗ above, then run npm run demo again"
-  ARCH=$(node -p "require('./.gh/hub-state.json').architectureId")
-  open "https://github.com/${DEMO_REPO:-rocketstack-matt/osffny-sdlc-calm}/pulls"
-  open "$HUB_UI/#/${CALM_HUB_NAMESPACE:-finos.agentic-sdlc}/architectures/$ARCH/1.0.0?present=1"
+  open "https://github.com/${DEMO_REPO:-rocketstack-matt/osffny-sdlc-calm}/pulls" # CALM Hub opens on the first moment
 fi
 
 step "The demo"

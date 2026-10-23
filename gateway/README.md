@@ -61,7 +61,7 @@ commit they approved and no other, so a push after it fails the check again.
 On the day, from the blueprint's root:
 
     npm run demo                  # everything below, in order: starts CALM Hub and its UI if they are down, resets,
-                                  # runs the gateway in the background, checks, opens GitHub and CALM Hub, plays the demo
+                                  # runs the gateway in the background, checks, opens GitHub, plays the demo
     npm run demo -- --resume      # carry on where it stopped, without a reset
 
 \`gh-demo\`'s keys: Enter for the next moment, \`m\` to merge, \`a\` to approve from the laptop (rehearsals, or if Aaron
@@ -74,15 +74,19 @@ are in \`gateway/.live/\`. The same steps by hand, from \`gateway/\`:
     node gateway/gh-preflight.mjs        # everything checked; prints the two links to open
     node gateway/gh-demo.mjs             # the demo: Enter for each moment, m to merge, o / h to open GitHub / CALM Hub
 
-The moments `gh-demo` plays, in order (moment 3 is Aaron approving; there is nothing to press for it):
+The moments `gh-demo` plays, in order (moment 4 is Aaron approving; there is nothing to press for it):
 
-1. A harmless change: green in about 15 seconds; press Merge.
-2. A change near the ledger: red, naming @aaronsearle. 3. Aaron approves on GitHub: green in about 8 seconds; press
+1. The architecture: CALM Hub opens in presentation mode with the Client Ledger and its rule in the details pane.
+2. A harmless change: green in about 15 seconds; press Merge.
+3. A change near the ledger: red, naming @aaronsearle. 4. Aaron approves on GitHub: green in about 8 seconds; press
    Merge.
-4. The shortcut: red, not in the architecture. The next key closes it.
-5. The architect changes the architecture (opened as you): red until Aaron approves; press Merge, and move CALM Hub to
+5. The shortcut: red, not in the architecture. The next key closes it.
+6. The architect changes the architecture (opened as you): red until Aaron approves; press Merge, and move CALM Hub to
    1.1.0.
-6. The same harmless change: now red.
+7. The same harmless change: now red.
+
+CALM Hub opens a node from its link with the `node` parameter (`?present=1&node=client-ledger`), which is on the local
+branch `feat/hub-ui-presentation-mode` of the architecture-as-code checkout, like presentation mode.
 
 `gh-demo` remembers where it got to, so it can be stopped and started again; `gh-reset` starts everything afresh. The
 moments can also be played by hand with `node gateway/gh-propose.mjs` (see `gh-demo.mjs` for the arguments).

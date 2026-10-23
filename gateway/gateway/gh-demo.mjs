@@ -22,23 +22,33 @@ const propose = (...args) => {
   return Number(out.match(/#(\d+)/)?.[1]);
 };
 
-// The talk's moments. Moment 3 is Aaron approving on GitHub; nothing to press for it.
+// The talk's moments. Moment 4 is Aaron approving on GitHub; nothing to press for it.
 const MOMENTS = [
-  { n: 1, title: 'A harmless change', next: 'Green in a few seconds: press Merge on GitHub (or m).',
+  { n: 1, title: 'The architecture', next: 'CALM Hub: the trade capture system, with the Client Ledger and its rule open. Enter for the first pull request.',
+    run: (s) => { openHub('1.0.0', 'client-ledger'); return s.current; } },
+  { n: 2, title: 'A harmless change', next: 'Green in a few seconds: press Merge on GitHub (or m).',
     run: (s) => { s.prs.harmless = propose('demo/changes/account-summary.json'); return s.prs.harmless; } },
-  { n: 2, title: 'A change near the ledger', next: 'Red: needs a person. Moment 3: Aaron approves on GitHub; it turns green. Then press Merge (or m).',
+  { n: 3, title: 'A change near the ledger', next: 'Red: needs a person. Moment 4: Aaron approves on GitHub; it turns green. Then press Merge (or m).',
     run: (s) => { s.prs.ledger = propose('demo/changes/position-total.json'); return s.prs.ledger; } },
-  { n: 4, title: 'The shortcut', next: 'Red: that connection is not in the architecture. The next key closes it.',
+  { n: 5, title: 'The shortcut', next: 'Red: that connection is not in the architecture. The next key closes it.',
     run: (s) => { s.prs.shortcut = propose('demo/changes/ledger-shortcut.json'); return s.prs.shortcut; } },
-  { n: 5, title: 'The architect changes the architecture', next: 'Red until Aaron approves; then press Merge (or m), and move CALM Hub to 1.1.0 (or h).',
+  { n: 6, title: 'The architect changes the architecture', next: 'Red until Aaron approves; then press Merge (or m), and move CALM Hub to 1.1.0 (or h).',
     run: async (s) => {
       if (s.prs.shortcut) await (await as('owner')).patch(`/repos/${REPO}/pulls/${s.prs.shortcut}`, { state: 'closed' });
       s.prs.architect = propose('demo/changes/architect-ledger-connection.json', '--as', 'owner');
       return s.prs.architect;
     } },
-  { n: 6, title: 'The same harmless change, again', next: 'Red: now it needs a person. Back to the slides.',
+  { n: 7, title: 'The same harmless change, again', next: 'Red: now it needs a person. Back to the slides.',
     run: (s) => { s.prs.climax = propose('demo/changes/trade-count.json'); return s.prs.climax; } },
 ];
+
+// CALM Hub in presentation mode at a version of the demo's architecture (the latest when none is given), with a
+// node open in the details pane when one is named.
+function openHub(version, node) {
+  const hub = JSON.parse(readFileSync(join(GH, 'hub-state.json'), 'utf8'));
+  const at = version ?? Object.values(hub.versions).sort().at(-1);
+  execFileSync('open', [`${HUB_UI}/#/${NS}/architectures/${hub.architectureId}/${at}?present=1${node ? `&node=${node}` : ''}`]);
+}
 
 const url = (n) => `https://github.com/${REPO}/pull/${n}`;
 const say = (text) => console.log(text);
@@ -82,7 +92,7 @@ run(async () => {
       state.step += 1;
       save(state);
       lastSeen = '';
-      say(`  ${url(state.current)}\n  ${moment.next}`);
+      say(`${state.current ? `  ${url(state.current)}\n` : ''}  ${moment.next}`);
     },
     async m() {
       if (!state.current) return say('no pull request yet');
@@ -100,11 +110,7 @@ run(async () => {
       say(`  approved #${state.current} as @${who}`);
     },
     async o() { if (state.current) execFileSync('open', [url(state.current)]); },
-    async h() {
-      const hub = JSON.parse(readFileSync(join(GH, 'hub-state.json'), 'utf8'));
-      const version = Object.values(hub.versions).sort().at(-1);
-      execFileSync('open', [`${HUB_UI}/#/${NS}/architectures/${hub.architectureId}/${version}?present=1`]);
-    },
+    async h() { openHub(); },
     async s() { status(); },
     async q() { process.exit(0); },
   };
