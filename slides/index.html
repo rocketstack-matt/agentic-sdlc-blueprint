@@ -36,36 +36,7 @@
           </ul>
         </div>
       </div>
-      <aside class="notes">Aaron. A pull request like this merged somewhere this week. Written by an agent, reviewed by an agent, every check green. Nobody looked at it. Was that OK? You can't tell from this screen, and that's the problem. To know whether this change was risky, you'd need to know what that code talks to. Let me show you.</aside>
-    </section>
-
-    <section data-chapter="1" data-speaker="Aaron">
-      <h2>Meet a trade capture system</h2>
-      <p class="sub">Traders send trades in; the Client Ledger keeps every client's positions.</p>
-      <figure class="map" data-version="1.0"></figure>
-      <aside class="notes">Aaron. This is the system we'll use all talk. A trader sends trades to the Trade API. The Trade API stores them, and asks the Position Service to update positions. The Position Service writes to the Client Ledger, gold, on the right: the bank's book of record, every client's holdings. If the ledger is wrong, the bank is wrong.</aside>
-    </section>
-
-    <section data-chapter="1" data-speaker="Aaron">
-      <h2>Most changes are harmless. Some are not.</h2>
-      <p class="sub">The same new endpoint: harmless on the Trade API, risky on the Position Service, because it writes the ledger.</p>
-      <figure class="map" data-version="1.0" data-ok="trade-api" data-bad="position-service" data-hot="position-service>client-ledger" data-pins="trade-api:ok:Harmless,position-service:bad:Risky"></figure>
-      <aside class="notes">Aaron. Most changes are like the green one: a new endpoint on the Trade API, nowhere near the ledger. You want those through fast; if a person approves every one, they stop reading. The red one is the same kind of change on the Position Service, and the Position Service writes to the ledger. Nothing in the change says "ledger". It's risky because of where it sits in the architecture.</aside>
-    </section>
-
-    <section data-chapter="1" data-speaker="Aaron">
-      <div class="middle">
-        <p class="sub">So banks have a rule like this:</p>
-        <div><p class="quote sticky">Any change to a service that connects to the Client Ledger needs a person to approve it.</p></div>
-      </div>
-      <aside class="notes">Aaron. So every bank has a rule like this one. Any change to a service that connects to the Client Ledger needs a person to approve it. Your auditors know it, your regulator expects it. This is the rule we'll follow for the rest of the talk.</aside>
-    </section>
-
-    <section class="dark" data-chapter="1" data-speaker="Aaron">
-      <p class="after" style="margin:0 0 30px">Who checks that rule today?</p>
-      <p class="big">A reviewer.<br>From memory.</p>
-      <p class="after">And now one agent opens forty pull requests a day, and has never read the wiki.</p>
-      <aside class="notes">Aaron. Who actually checks that rule today? Honestly: a reviewer, from memory. Somebody who happens to know the Position Service writes to the ledger, or a CODEOWNERS file someone wrote two years ago. None of it notices when the system changes. And now one agent can open forty pull requests a day; it has never read your wiki and it takes the shortest path to green. Memory doesn't scale. The rule needs to check itself.</aside>
+      <aside class="notes">Aaron. A pull request like this merged somewhere this week. Written by an agent, reviewed by an agent, every check green. Nobody looked at it. Was that OK? You can't tell from this screen, and that's the problem. To know whether this change was risky, you'd need to know what that code talks to, and which rules apply to it. The industry has written those rules down, together, and that's where I come in.</aside>
     </section>
 
     <section data-chapter="1" data-speaker="Aaron">
@@ -211,7 +182,7 @@
         <li class="v8-evidence"><span>And most importantly, we must evidence that it took place:</span>"<b>Review records MUST include</b> the review mode, decision, reviewer identity or approved automated-review tool identity, timestamp, policy inputs sufficient to justify the selected review mode"</li>
       </ol>
       <p class="caption muted">SDLC-PREV-001 Code Review, version 1.0, approved by the working group October 2026. <span style="white-space: nowrap">sdlc-common-controls.finos.org</span></p>
-      <aside class="notes">Aaron. The control as we write it today, approved by the working group this month at version 1.0. A deterministic, machine-evaluable policy chooses the review mode: the rule we started with, a person for any change that touches the ledger, is exactly that. Non-deterministic review can be a human or an approved cognitive review engine: we already admit machine reviewers, by name. The pipeline must block admission when the review outcome is absent, expired, revoked, or no longer bound to the change set. Outcomes are bound to an immutable identity, a commit. The author may not satisfy the review of their own change. And most importantly, the review records must show the mode, the decision, who reviewed, when, and the policy inputs that chose the mode: we have to evidence that it took place. Read those six again and they are a specification for a gate.</aside>
+      <aside class="notes">Aaron. The control as we write it today, approved by the working group this month at version 1.0. A deterministic, machine-evaluable policy chooses the review mode: a rule like "any change to a service that writes the client ledger needs a person to approve it" is exactly that, and it's the rule Matthew follows from here. Non-deterministic review can be a human or an approved cognitive review engine: we already admit machine reviewers, by name. The pipeline must block admission when the review outcome is absent, expired, revoked, or no longer bound to the change set. Outcomes are bound to an immutable identity, a commit. The author may not satisfy the review of their own change. And most importantly, the review records must show the mode, the decision, who reviewed, when, and the policy inputs that chose the mode: we have to evidence that it took place. Read those six again and they are a specification for a gate.</aside>
     </section>
 
     <section data-chapter="1" data-speaker="Aaron">
@@ -239,7 +210,7 @@
     <section class="dark" data-chapter="2" data-speaker="Matthew">
       <p class="big">Your architecture already knows which changes are <em>risky</em>.</p>
       <p class="after">It's just trapped in a picture.</p>
-      <aside class="notes">Matthew. Here's the idea. Your architecture already knows which changes are risky: it knows the Position Service writes to the ledger. The trouble is that it's trapped in a picture on a wiki, and a picture can't check anything.</aside>
+      <aside class="notes">Matthew. Here's the idea. Your architecture already knows which changes are risky: it knows which services write to the client ledger, the bank's book of record. The trouble is that it's trapped in a picture on a wiki, and a picture can't check anything.</aside>
     </section>
 
     <section data-chapter="2" data-speaker="Matthew">
@@ -254,7 +225,7 @@
           <p class="rule-note">It names a box, not a list of services.</p>
         </div>
       </div>
-      <aside class="notes">Matthew. So write the architecture down as data. FINOS CALM is architecture as code: every box and every line in a file a machine can read, versioned in git next to the code. This is it in CALM Hub. And CALM lets any box carry controls, so the rule lives on the Client Ledger itself: any change to a service that connects to it needs a human approver. Look at what it doesn't say: it never names the Position Service. It names a relationship. So when the architecture changes, what the rule applies to changes with it. Remember that.</aside>
+      <aside class="notes">Matthew. So write the architecture down as data. FINOS CALM is architecture as code: every box and every line in a file a machine can read, versioned in git next to the code. This is a small trade capture system in CALM Hub: traders send trades to the Trade API, which stores them and asks the Position Service to update positions, and the Position Service writes to the Client Ledger, the bank's book of record. And CALM lets any box carry controls, so the rule lives on the Client Ledger itself: any change to a service that connects to it needs a human approver. Look at what it doesn't say: it never names the Position Service. It names a relationship. So when the architecture changes, what the rule applies to changes with it. Remember that.</aside>
     </section>
 
     <section data-chapter="2" data-speaker="Matthew">
@@ -466,62 +437,6 @@ const REPO_URL = 'https://github.com/rocketstack-matt/osffny-sdlc-calm/pulls?q=i
 // Live mode (the default) shows the "live" badges that link to the demo's pull requests. backup.html, or ?backup,
 // is the same deck with screenshots only.
 const backup = new URLSearchParams(location.search).has('backup');
-
-// ---- The architecture diagram (before CALM comes in) -------------------------------------------------------------------------------------------------
-// One system, drawn the same way on each slide of the first chapter. Attributes: data-version (1.0, or 1.1 with the architect's line),
-// data-ok / data-bad (boxes), data-hot / data-new / data-illegal (lines, as from>to), data-pins (box:kind:text, ...),
-// data-rule (the rule pinned to the Client Ledger).
-const BOXES = {
-  'trade-api': { x: 200, y: 250, title: 'Trade API', sub: 'takes trades' },
-  'position-service': { x: 640, y: 450, title: 'Position Service', sub: 'keeps positions' },
-  'trade-store': { x: 200, y: 560, title: 'Trade Store', sub: 'stores trades' },
-  'client-ledger': { x: 1120, y: 250, title: 'Client Ledger', sub: 'the book of record', ledger: true },
-};
-const W = 340, H = 130;
-const LINES = {
-  'trader>trade-api': 'M140 315 L190 315',
-  'trade-api>position-service': 'M540 330 C 600 330, 575 515, 630 515',
-  'trade-api>trade-store': 'M370 380 L370 550',
-  'position-service>client-ledger': 'M980 515 C 1150 515, 1290 470, 1290 390',
-  'trade-api>client-ledger': 'M540 290 L1110 290',
-};
-const COLOURS = { line: '#8c959f', hot: '#cf222e', new: '#0969da', illegal: '#cf222e' };
-let mapCount = 0;
-function drawMap(fig) {
-  const d = fig.dataset;
-  const uid = `m${(mapCount += 1)}`; // marker ids must be unique in the document, or hidden slides' markers win
-  const list = (v) => (v ? v.split(/\s+/).filter(Boolean) : []);
-  const ok = list(d.ok), bad = list(d.bad), hot = list(d.hot), fresh = list(d.new), illegal = list(d.illegal);
-  const lines = Object.keys(LINES).filter((k) => k !== 'trade-api>client-ledger' || d.version === '1.1' || fresh.includes(k) || illegal.includes(k));
-  const marker = (name, colour) => `<marker id="${uid}-${name}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="${colour}"/></marker>`;
-  let svg = `<svg viewBox="0 170 1500 550" role="img" aria-label="The trade capture system"><defs>${Object.entries(COLOURS).map(([k, c]) => marker(k, c)).join('')}</defs>`;
-  for (const k of lines) {
-    const kind = illegal.includes(k) ? 'illegal' : fresh.includes(k) ? 'new' : hot.includes(k) ? 'hot' : 'line';
-    const width = kind === 'line' ? 6 : 10;
-    svg += `<path d="${LINES[k]}" fill="none" stroke="${COLOURS[kind]}" stroke-width="${width}" ${kind === 'illegal' ? 'stroke-dasharray="24 16"' : ''} marker-end="url(#${uid}-${kind})"/>`;
-    if (kind === 'illegal') svg += '<circle cx="826" cy="290" r="34" fill="#cf222e"/><text x="826" y="304" text-anchor="middle" font-size="44" font-weight="700" fill="#fff">✗</text>';
-  }
-  svg += '<g font-family="Helvetica Neue, Helvetica, Arial"><circle cx="90" cy="285" r="26" fill="none" stroke="#59636e" stroke-width="6"/><path d="M45 362 C 45 320, 135 320, 135 362" fill="none" stroke="#59636e" stroke-width="6"/><text x="90" y="410" text-anchor="middle" font-size="30" fill="#59636e">Trader</text>';
-  for (const [id, b] of Object.entries(BOXES)) {
-    const state = ok.includes(id) ? 'ok' : bad.includes(id) ? 'bad' : b.ledger ? 'ledger' : 'plain';
-    const [fill, stroke] = { ok: ['#dafbe1', '#1a7f37'], bad: ['#ffebe9', '#cf222e'], ledger: ['#fff8c5', '#d4a72c'], plain: ['#ffffff', '#afb8c1'] }[state];
-    svg += `<rect x="${b.x}" y="${b.y}" width="${W}" height="${H}" rx="18" fill="${fill}" stroke="${stroke}" stroke-width="${state === 'plain' ? 5 : 8}"/>`;
-    svg += `<text x="${b.x + W / 2}" y="${b.y + 62}" text-anchor="middle" font-size="38" font-weight="700" fill="#1f2328">${b.title}</text>`;
-    svg += `<text x="${b.x + W / 2}" y="${b.y + 104}" text-anchor="middle" font-size="28" fill="#59636e">${b.sub}</text>`;
-  }
-  svg += '</g></svg>';
-  let html = svg;
-  const at = (x, y) => `left:${(x / 1500) * 100}%;top:${((y - 170) / 550) * 100}%`;
-  for (const p of (d.pins ?? '').split(',').filter(Boolean)) {
-    const [id, kind, text] = p.split(':');
-    const b = BOXES[id];
-    html += `<span class="pin ${kind}" style="${at(b.x + W / 2, b.y - 16)}">${text}</span>`;
-  }
-  if (d.rule) html += `<span class="note" style="${at(1290, 230)}"><b>Rule on this box</b>Any change to a service that connects to me needs a person to approve it.</span>`;
-  if (d.version) html += `<span class="version">Architecture v${d.version}</span>`;
-  fig.innerHTML = html;
-}
-document.querySelectorAll('figure.map').forEach(drawMap);
 
 // ---- Chapters, links, mode ------------------------------------------------------------------------------------
 const CHAPTERS = ['The problem', 'The idea', 'Live on GitHub', 'Why it matters'];

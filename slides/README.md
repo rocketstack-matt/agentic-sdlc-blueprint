@@ -11,9 +11,8 @@ overview.
   screenshot, so the talk works with no network.
 
 One story in four chapters, shown in the strip across the top of every slide: the problem (Aaron), the idea
-(Matthew), live on GitHub (Matthew, with Aaron approving), and why it matters (Aaron). Until CALM comes in, the trade
-capture system is a simple diagram drawn by the script in `index.html` from each slide's data attributes. From then
-on it is CALM Hub itself, in presentation mode with the decision overlay, beside the pull request on GitHub where the
+(Matthew), live on GitHub (Matthew, with Aaron approving), and why it matters (Aaron). The first chapter is the bot's
+pull request and the FINOS SDLC Common Controls Catalog. From CALM on, the trade capture system is CALM Hub itself, in presentation mode with the decision overlay, beside the pull request on GitHub where the
 **Architecture controls** check explains the same decision. The demo itself is in
 [`gateway/`](../gateway/README.md#the-github-demo). Presentation mode and the overlay are on the local branch
 `feat/hub-ui-presentation-mode` of the architecture-as-code checkout next to this repo; the Hub UI must run from it.
