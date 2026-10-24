@@ -148,8 +148,8 @@ reports the **Architecture controls** check that `main` requires.
 
 Running it against your own repository needs a one-off setup: three GitHub Apps, branch protection and the `gh` CLI
 logged in. After that, `npm run demo:github` starts CALM Hub if needed, resets the repository, starts the gateway,
-runs a pre-flight check and plays the demo one key at a time.
-[`gateway/README.md`](gateway/README.md#the-github-demo) has the details.
+runs a pre-flight check and plays the demo one key at a time. `npm run demo:record` does the same start and records
+the whole demo to a video instead. [`gateway/README.md`](gateway/README.md#the-github-demo) has the details.
 
 ## Try the controls yourself
 

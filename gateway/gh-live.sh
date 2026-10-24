@@ -3,6 +3,8 @@
 #   npm run demo:github                start afresh: reset the demo repository and CALM Hub, start the gateway in the
 #                                      background, check everything, open GitHub, and play the demo
 #   npm run demo:github -- --resume    carry on where the demo stopped, without a reset
+#   npm run demo:record                the same start, then record the whole demo to video instead of playing it
+#                                      (gh-record.mjs; the video is in gateway/.live/recording/)
 # CALM Hub and its UI are started if they are not running, and left running. The gateway stops when the demo ends.
 # Logs: gateway/.live/
 set -euo pipefail
@@ -13,7 +15,9 @@ CALM="$(cd ../.. && pwd)/architecture-as-code"
 LOGS="$PWD/.live"
 mkdir -p "$LOGS"
 RESUME=false
+RECORD=false
 [ "${1:-}" = "--resume" ] && RESUME=true
+[ "${1:-}" = "--record" ] && RECORD=true
 
 step() { printf '\n\033[1m%s\033[0m\n' "$*"; }
 fail() { printf '\n\033[31m%s\033[0m\n' "$*"; exit 1; }
@@ -65,7 +69,13 @@ echo "watching (pid $GATEWAY; log: gateway/.live/gateway.log)"
 if ! $RESUME; then
   step "5. Pre-flight"
   node gateway/gh-preflight.mjs || fail "not ready: fix what is marked ✗ above, then run npm run demo:github again"
-  open "https://github.com/${DEMO_REPO:-rocketstack-matt/osffny-sdlc-calm}/pulls" # CALM Hub opens on the first moment
+  $RECORD || open "https://github.com/${DEMO_REPO:-rocketstack-matt/osffny-sdlc-calm}/pulls" # CALM Hub opens on the first moment
+fi
+
+if $RECORD; then
+  step "Recording the demo (about seven minutes)"
+  node gateway/gh-record.mjs
+  exit
 fi
 
 step "The demo"

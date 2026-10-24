@@ -62,6 +62,7 @@ On the day, from the blueprint's root:
     npm run demo:github              # everything below, in order: starts CALM Hub and its UI if they are down, resets,
                                      # runs the gateway in the background, checks, opens GitHub, plays the demo
     npm run demo:github -- --resume  # carry on where it stopped, without a reset
+    npm run demo:record              # the same start, then record the whole demo to video instead of playing it
 
 \`gh-demo\`'s keys: Enter for the next moment, \`m\` to merge, \`a\` to approve from the laptop (rehearsals, or if Aaron
 cannot), \`o\` / \`h\` to open GitHub / CALM Hub, \`s\` where we are, \`q\` to quit (which stops the gateway too). Logs
@@ -86,6 +87,14 @@ The moments `gh-demo` plays, in order (moment 4 is Aaron approving; there is not
 
 CALM Hub opens a node from its link with the `node` parameter (`?present=1&node=client-ledger`), which is on the local
 branch `feat/hub-ui-presentation-mode` of the architecture-as-code checkout, like presentation mode.
+
+`npm run demo:record` plays the same moments with [`gh-record.mjs`](gateway/gh-record.mjs) and films them, for a
+backup or to share: a title card, the pull request on GitHub and the decision in CALM Hub for each, with captions. It
+also opens the Client Ledger's control as JSON to show its ergo rule. The agent, the approvals and the merges are
+real; the approval comes from an approver logged in to the `gh` CLI on the laptop. The waits are cut out, so the video
+is about four minutes: `gateway/.live/recording/osffny-demo.mp4`, with a still of every scene beside it. It needs
+ffmpeg (`brew install ffmpeg`) and Playwright in the architecture-as-code checkout, and takes about seven minutes.
+The video in the main README is one of these recordings, copied to `slides/media/` so GitHub Pages serves it.
 
 `gh-demo` remembers where it got to, so it can be stopped and started again; `gh-reset` starts everything afresh. The
 moments can also be played by hand with `node gateway/gh-propose.mjs` (see `gh-demo.mjs` for the arguments).

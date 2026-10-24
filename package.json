@@ -17,7 +17,8 @@
     "calm:context": "node agent/calm-context.mjs",
     "gates": "node gates/check.mjs",
     "demo": "bash gateway/run-demo.sh",
-    "demo:github": "bash gateway/gh-live.sh"
+    "demo:github": "bash gateway/gh-live.sh",
+    "demo:record": "bash gateway/gh-live.sh --record"
   },
   "devDependencies": {
     "@finos/calm-cli": "^1.60.1",
