@@ -37,11 +37,11 @@ Four parts make that work:
 ## How the demo works
 
 ```
-                                                         ┌──────────────────────────────────────┐
-                                                         │ The architecture on main (CALM)      │
-                                                         │ controls on its nodes and relations, │
-                                                         │ each carrying its rule for ergo      │
-                                                         └──────────────────┬───────────────────┘
+                                                       ┌──────────────────────────────────────────┐
+                                                       │ The architecture on main (CALM)          │
+                                                       │ controls on its nodes and relationships, │
+                                                       │ each carrying its rule for ergo          │
+                                                       └────────────────────┬─────────────────────┘
                                                                             │ read on every decision
 ┌──────────────┐  opens   ┌──────────────┐                                  ▼
 │ Coding agent │────────► │ Pull request │  author, reviews, ┌──────────────────────────────┐
