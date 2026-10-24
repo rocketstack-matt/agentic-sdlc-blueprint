@@ -36,31 +36,33 @@ Four parts make that work:
 
 ## How the demo works
 
-```
-                                                       ┌──────────────────────────────────────────┐
-                                                       │ The architecture on main (CALM)          │
-                                                       │ controls on its nodes and relationships, │
-                                                       │ each carrying its rule for ergo          │
-                                                       └────────────────────┬─────────────────────┘
-                                                                            │ read on every decision
-┌──────────────┐  opens   ┌──────────────┐                                  ▼
-│ Coding agent │────────► │ Pull request │  author, reviews, ┌──────────────────────────────┐
-│ (GitHub App) │          │   on GitHub  │  approval, diff   │ Merge gateway                │
-└──────────────┘          │              │─────────────────► │ 1. works out the facts:      │
-┌──────────────┐ reviews  │              │                   │    which nodes and           │
-│ Review bot   │────────► │              │                   │    connections it touches    │
-│ (GitHub App) │          │              │  "Architecture    │ 2. ergo evaluates the        │
-└──────────────┘          │              │   controls" check │    architecture's rules      │
-┌──────────────┐ approves │              │  and a comment    │ 3. posts the decision        │
-│ Approver     │────────► │              │ ◄─────────────────│                              │
-│ (a person)   │ only when└──────┬───────┘                   └──────────────┬───────────────┘
-└──────────────┘ asked           │                                          │ decorators
-                                 │ main requires the check:                 ▼
-                                 │ a person presses Merge             ┌──────────────────────┐
-                                 ▼ only on green                      │ CALM Hub             │
-                          ┌──────────────┐                            │ each decision on the │
-                          │     main     │                            │ architecture version │
-                          └──────────────┘                            └──────────────────────┘
+```mermaid
+flowchart TB
+    agent["Coding agent<br/><small>GitHub App</small>"]
+    bot["Review bot<br/><small>GitHub App</small>"]
+    person["Approver<br/><small>a person</small>"]
+    arch["The architecture on main<br/><small>CALM controls, each carrying<br/>its rule for ergo</small>"]
+    pr["Pull request on GitHub"]
+    gw["Merge gateway<br/><small>works out the facts,<br/>ergo evaluates the rules</small>"]
+    main["main"]
+    hub["CALM Hub<br/><small>each decision on the<br/>architecture version</small>"]
+
+    agent -- opens --> pr
+    bot -- reviews --> pr
+    person -. "approves, only when asked" .-> pr
+    pr <-- "reads the change<br/>posts the Architecture controls check" --> gw
+    arch -- "read on every decision" --> gw
+    pr -- "Merge, only on green" --> main
+    gw -- "one decorator per control" --> hub
+
+    classDef actor fill:#f6f8fa,stroke:#8c959f,color:#1f2328
+    classDef architecture fill:#ddf4ff,stroke:#0969da,color:#1f2328
+    classDef gate fill:#0d1b2a,stroke:#0969da,stroke-width:2px,color:#ffffff
+    classDef evidence fill:#fff8c5,stroke:#d4a72c,color:#1f2328
+    class agent,bot,person,pr,main actor
+    class arch architecture
+    class gw gate
+    class hub evidence
 ```
 
 - **The agent and the review bot** are GitHub Apps. The agent writes the code and opens the pull requests; the bot
