@@ -85,8 +85,8 @@ The moments `gh-demo` plays, in order (moment 4 is Aaron approving; there is not
    1.1.0.
 7. The same harmless change: now red.
 
-CALM Hub opens a node from its link with the `node` parameter (`?present=1&node=client-ledger`), which is on the local
-branch `feat/hub-ui-presentation-mode` of the architecture-as-code checkout, like presentation mode.
+CALM Hub opens a node from its link with the `node` parameter (`?present=1&node=client-ledger`); the parameter and
+presentation mode are both in CALM Hub itself.
 
 `npm run demo:record` plays the same moments with [`gh-record.mjs`](gateway/gh-record.mjs) and films them, for a
 backup or to share: a title card, the pull request on GitHub and the decision in CALM Hub for each, with captions. It

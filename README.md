@@ -141,8 +141,9 @@ Open http://localhost:5173 and find **Trade Capture (governed)** in the `finos.a
 1.0.0 and 1.1.0 are the architecture before and after the architect's change, and each version carries the
 decisions made against it as decorators.
 
-The talk used a CALM Hub UI branch that draws those decisions on the diagram, with a larger-text presentation mode.
-It has not been contributed upstream yet. Without it you can still see each decision in the version's decorators.
+The talk used a CALM Hub UI branch that draws those decisions on the diagram. That overlay has not been contributed
+upstream yet; without it you can still see each decision in the version's decorators. The larger-text presentation
+mode the talk used is in CALM Hub itself.
 
 ## The demo on GitHub pull requests (presenters)
 
