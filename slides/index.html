@@ -332,6 +332,49 @@
       <aside class="notes">Matthew. And this is what goes back onto the architecture. ergo's report for a pull request you'll see in a moment, saved as a CALM decorator: a standard way to attach facts to an architecture without editing it, so the architecture file stays the architecture. It says which version of the architecture it was decided against, which boxes and lines it's about, which rule and which catalog control, ergo's own finding in plain words, the exact commit, and the hash of the policy that decided. One per rule, per decision. It's a draft CALM Standard we're proposing, so any tool can write one and any tool can read one, and CALM Hub draws them on the diagram. Let's see it.</aside>
     </section>
 
+    <section>
+      <h2>How a CALM control feeds ergo</h2>
+      <p class="sub">The control's <b>config</b> is the ergo policy. Nothing is translated or copied.</p>
+      <div class="feed">
+        <div class="feed-src">
+          <p class="where">In the architecture file, on the Client Ledger</p>
+          <pre class="json feed-json">{ <span class="k">"unique-id"</span>: <span class="s">"client-ledger"</span>,
+  <span class="k">"controls"</span>: {
+    <span class="k">"client-ledger-human-approval"</span>: {
+      <span class="k">"requirements"</span>: [{
+        <span class="k">"requirement-url"</span>: <span class="s">".../sdlc-prev-001-code-review"</span>,
+        <span class="k">"config"</span>: {
+<span class="feed-hl">          <span class="k">"ergo"</span>: {
+            <span class="k">"subjects"</span>: {
+              <span class="s">"connection to the client ledger, changed"</span>: {
+                <span class="k">"applies_to"</span>: {
+                  <span class="k">"into_the_ledger"</span>: <span class="c">destination = client-ledger</span>,
+                  <span class="k">"from_a_changed_node"</span>: <span class="c">source in the change</span> }}},
+            <span class="k">"requirements"</span>: {
+              <span class="s">"client-ledger-human-approval"</span>: {
+                <span class="k">"subject"</span>: <span class="s">"connection to the client ledger, changed"</span>,
+                <span class="k">"checks"</span>: {
+                  <span class="k">"human_approved"</span>: <span class="c">a person approved</span> }}}}</span></pre>
+          <p class="feed-note">Controls can sit on the architecture, a node, a relationship or a flow. A generic collector reads every one and merges their <code>ergo</code> blocks into one policy.</p>
+        </div>
+        <div class="feed-arrow"><span>the policy</span></div>
+        <div class="feed-engine">
+          <div class="feed-in"><b>The input</b><span>the architecture, and the pull request: boxes touched, author, reviewer, approver</span></div>
+          <div class="feed-down" aria-hidden="true"></div>
+          <div class="feed-box"><img src="img/logos/ergo-wordmark-white.svg" alt="ergo"><span>on Open Policy Agent</span></div>
+          <div class="feed-down" aria-hidden="true"></div>
+          <div class="feed-out">
+            <p class="ergo-label">The report</p>
+            <table>
+              <tr><td>position-service → client-ledger</td><td class="bad">✗ absent</td></tr>
+              <tr><td>trade-api → trade-store</td><td class="muted">out of scope</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <aside class="notes">Matthew. So how does a control on the architecture become a decision? This is the Client Ledger in the architecture file. It carries one CALM control, client-ledger-human-approval. Its requirement points at the catalog control it implements, SDLC-PREV-001, and its config holds the rule, written for ergo. The subject: connections into the Client Ledger from a box the pull request changes. The check: a person approved it. That block, highlighted, is the ergo policy. We don't translate it or copy it anywhere. Controls can sit on the whole architecture, on a node, on a relationship or on a flow; a small generic collector walks all of them and merges their ergo blocks into one policy. ergo, running on Open Policy Agent, evaluates that policy against the input: the architecture itself, and the facts of the pull request, which boxes it touched, who wrote it, who reviewed it, who approved it. Out comes the report: the Position Service's connection into the ledger is in scope and nobody approved, so absent; the Trade API's connection to the trade store is out of scope. Change the architecture and the policy changes with it, because the policy is the architecture. That's what you'll see in the demo.</aside>
+    </section>
+
     <section class="dark">
       <p class="big">Let's see it live.</p>
       <p class="after">An agent opens pull requests on a real GitHub repository. The architecture decides which ones need a person.</p>

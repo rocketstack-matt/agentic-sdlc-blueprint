@@ -307,3 +307,32 @@ html, body, .reveal-viewport { background: #fff; }
 .reveal .qr-links img { width: 300px; height: 300px; border: 2px solid var(--line); border-radius: 16px; padding: 10px; background: #fff; box-sizing: border-box; }
 .reveal .qr-links b { font-size: 34px; margin-top: 22px; }
 .reveal .qr-links span { font-size: 22px; line-height: 1.3; color: var(--muted); margin-top: 8px; }
+
+/* "How a CALM control feeds ergo": the control's JSON on the left, its ergo block flowing into the engine. */
+.reveal .feed { display: grid; grid-template-columns: 900px 150px 1fr; align-items: center; flex: 1; min-height: 0; }
+.reveal .feed-src { min-width: 0; }
+.reveal pre.json.feed-json { font-size: 19px; line-height: 1.4; padding: 20px 30px; }
+.reveal pre.json .c { color: var(--muted); font-style: italic; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+.reveal pre.json .feed-hl { display: block; background: var(--gold-bg); outline: 3px solid #d4a72c; outline-offset: 3px; border-radius: 2px; margin: 8px -10px 2px; padding: 0 10px; }
+.reveal .feed-note { font-size: 23px; line-height: 1.35; color: var(--muted); margin-top: 16px; }
+.reveal .feed-note code { font-size: 21px; color: var(--ink); }
+.reveal .feed-arrow { position: relative; height: 70px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; }
+.reveal .feed-arrow span { font-size: 22px; font-weight: 700; color: var(--gold); position: absolute; top: -10px; white-space: nowrap; }
+.reveal .feed-arrow::before { content: ""; position: absolute; left: 10px; right: 26px; bottom: 22px; height: 8px; background: #d4a72c; border-radius: 4px; }
+.reveal .feed-arrow::after { content: ""; position: absolute; right: 4px; bottom: 10px; border-left: 30px solid #d4a72c; border-top: 16px solid transparent; border-bottom: 16px solid transparent; }
+.reveal .feed-engine { display: flex; flex-direction: column; align-items: stretch; }
+.reveal .feed-in { background: var(--blue-bg); border: 3px solid var(--blue); border-radius: 16px; padding: 14px 22px; }
+.reveal .feed-in b { display: block; font-size: 26px; color: var(--blue); margin-bottom: 4px; }
+.reveal .feed-in span { font-size: 23px; line-height: 1.3; }
+.reveal .feed-down { height: 44px; position: relative; }
+.reveal .feed-down::before { content: ""; position: absolute; left: calc(50% - 4px); top: 4px; bottom: 16px; width: 8px; background: var(--muted); border-radius: 4px; }
+.reveal .feed-down::after { content: ""; position: absolute; left: calc(50% - 14px); bottom: 2px; border-top: 18px solid var(--muted); border-left: 14px solid transparent; border-right: 14px solid transparent; }
+.reveal .feed-box { background: #080f1a; border-radius: 18px; padding: 26px 22px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.reveal .feed-box img { height: 70px; }
+.reveal .feed-box span { color: #b6c2d1; font-size: 24px; }
+.reveal .feed-out { background: #080f1a; color: #f7f7ef; border-radius: 16px; padding: 14px 22px; }
+.reveal .feed-out table { width: 100%; border-collapse: collapse; font-family: "SF Mono", Menlo, monospace; font-size: 18px; }
+.reveal .feed-out td { padding: 8px 4px; border-bottom: 1px solid #1c2633; white-space: nowrap; }
+.reveal .feed-out td.bad { color: #ff8182; font-weight: 700; text-align: right; }
+.reveal .feed-out td.muted { color: #8b95a3; text-align: right; }
+.reveal .feed-out .ergo-label { font-size: 22px; font-weight: 700; color: #d5ff4d; margin-bottom: 6px; }

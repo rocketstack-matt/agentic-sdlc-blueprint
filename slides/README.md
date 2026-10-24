@@ -6,7 +6,7 @@ open the file from disk or any static server. Keys: arrows to move, `s` for the 
 
 The story runs in two chapters, shown in a strip across the top of the slides that carry one: the problem (Aaron: the
 SDLC Common Controls Catalog and the bot's pull request) and the idea (Matthew: the architecture, CALM controls, ergo
-and its report). "Let's see it live." hands over to the browser, where `npm run demo:github` plays the demo on GitHub and CALM
+and its report). "How a CALM control feeds ergo" shows the control's config going straight into the engine. "Let's see it live." then hands over to the browser, where `npm run demo:github` plays the demo on GitHub and CALM
 Hub (see [`gateway/`](../gateway/README.md#the-github-demo)); that slide's speaker notes are the run sheet. The deck
 ends on the links, with QR codes, for questions.
 
