@@ -21,8 +21,7 @@ ajv.addSchema(JSON.parse(readFileSync(join(STANDARDS, 'decorators.json'), 'utf8'
 const check = ajv.compile(standard);
 
 export function validateDecorator(decorator) {
-  const { $schema, ...instance } = decorator;
-  const valid = check(instance);
+  const valid = check(decorator);
   return { valid, errors: valid ? [] : check.errors.map((e) => `${e.instancePath || '/'} ${e.message}`) };
 }
 

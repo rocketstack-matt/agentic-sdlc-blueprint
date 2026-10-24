@@ -54,9 +54,10 @@ change will be checked against both. Read this before writing anything.
   is written by `gh-reset.mjs`. Do not reset it or open, approve, merge or close its pull requests unless asked: the
   presenters rehearse and present on it.
 - **[FINOS architecture-as-code](https://github.com/finos/architecture-as-code)** (CALM, CALM Hub), checked out next
-  to this repository as `../architecture-as-code`. The control-evaluation decorator Standard and the CALM Hub UI the
-  deck shows (presentation mode, the decision overlay) are on local branches there; the Hub UI must run from
-  `feat/hub-ui-presentation-mode`. Do not push those branches or raise pull requests for them unless asked.
+  to this repository as `../architecture-as-code`. Presentation mode and node deep links are in CALM Hub upstream;
+  the decision overlay the deck shows is on a local branch there, so the Hub UI must run from
+  `feat/hub-ui-presentation-mode`. Do not push those branches or raise pull requests for them unless asked. The
+  control-evaluation decorator Standard is released in [FINOS calm-schema](https://github.com/finos/calm-schema).
 
 ## Commands
 
