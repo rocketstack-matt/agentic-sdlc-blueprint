@@ -8,7 +8,10 @@ the SDLC controls from the [FINOS SDLC Common Controls Catalog](https://sdlc-com
 written on it. A merge gateway checks every change against those controls and records each decision back on the
 architecture.
 
-[![Watch the demo, 3 min 40: an AI agent's pull requests on GitHub, checked against the controls on a CALM architecture, every decision recorded in CALM Hub](slides/media/demo-poster.jpg)](https://rocketstack-matt.github.io/agentic-sdlc-blueprint/slides/media/osffny-demo.mp4)
+Read [the slides](https://rocketstack-matt.github.io/agentic-sdlc-blueprint/slides/) first: they set up the story
+the demo plays out. Then watch the demo:
+
+[![Watch the demo: an AI agent's pull requests on GitHub, checked against the controls on a CALM architecture, every decision recorded in CALM Hub](slides/media/demo-poster.jpg)](https://rocketstack-matt.github.io/agentic-sdlc-blueprint/slides/media/osffny-demo.mp4)
 
 This repository is the working demo behind the talk *Governing the Agentic SDLC* (Open Source in Finance Forum,
 New York, 4 November 2026; Matthew Bain and Aaron Searle). The slides are in [`slides/`](slides/), published at
