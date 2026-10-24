@@ -146,6 +146,11 @@ tools/          regenerates the catalog's CALM Hub control documents from its so
 AGENTS.md       the instructions every coding agent gets
 ```
 
+The pattern, the Standards and the catalog's control documents have `https://hub.calm.finos.org/...` URLs as their
+identities, but nothing fetches them from a hub. [`architecture/url-mapping.json`](architecture/url-mapping.json)
+maps each URL to its file in `architecture/`, and `npm run calm:validate`, the gates and the docs build pass it to
+`calm` with `-u`. The files in this repository are the source of truth.
+
 ## Limitations
 
 - **The approval is simulated.** In the local demo the approver types a code shown with the diff. In a bank that
