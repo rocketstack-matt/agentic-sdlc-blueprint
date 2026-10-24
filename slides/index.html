@@ -254,7 +254,7 @@
           <p>A named rule written into the architecture file, next to the thing it governs. It points at the requirement it implements, here a control from the SDLC catalog, and carries its own settings.</p>
         </div>
         <ol class="cc-where">
-          <li><b>On the architecture</b><span>applies to every change</span><code>"controls": { "sdlc-prev-001-code-review": … }</code></li>
+          <li class="on"><b>On the architecture</b><span>applies to every change</span><code>"controls": { "sdlc-prev-001-code-review": … }</code></li>
           <li class="on"><b>On a node</b><span>the Client Ledger's rule</span><code>client-ledger › "controls": { "client-ledger-human-approval": … }</code></li>
           <li><b>On a relationship</b><span>a rule for one connection</span><code>a relationship › "controls": { … }</code></li>
           <li><b>On a flow</b><span>a rule for one business journey</span><code>a flow › "controls": { … }</code></li>
@@ -390,8 +390,16 @@
         <div class="card"><img class="keep" src="img/logos/calm.svg" alt="FINOS CALM"><h3>Where it applies</h3><p>FINOS CALM: the architecture as code, the rules on its boxes, the decisions back on it as decorators.</p></div>
         <div class="card"><img class="keep" src="img/logos/ergo-wordmark-dark.svg" alt="ergo"><h3>How to decide</h3><p>An open source project that checks rules written as data and says why.</p></div>
       </div>
-      <p class="caption" style="margin-top:50px">Everything you saw is real: the repository, the pull requests, the approvals, the checks and CALM Hub.</p>
-      <aside class="notes">Aaron. Why should you care? Developers get a fast lane: most changes fly through, and a blocked one says why. Architects get a diagram that can't go stale, because every change is checked against it. And risk and audit get the evidence as a by-product: regulators treat unsubstantiated controls as absent controls. And none of this is a product. The catalog says what to control. CALM says where it applies, and holds the decisions. ergo, an open source project, decides and explains. Everything you saw was real: a real repository, real pull requests, real approvals.</aside>
+      <div class="seen">
+        <h3>The SDLC controls you just saw enforced</h3>
+        <ol>
+          <li><b>SDLC-PREV-001 Code Review</b><span>Reviewed by a bot that is not the author; a person approves changes near the Client Ledger and changes to the architecture</span></li>
+          <li><b>SDLC-PREV-004 Requirements Repository</b><span>Every change names an approved spec and touches only the services that spec declares</span></li>
+          <li><b>SDLC-PREV-017 Service Dependency Control</b><span>Every connection the code makes is in the architecture: the shortcut to the ledger was blocked</span></li>
+        </ol>
+      </div>
+      <p class="caption" style="margin-top:36px">Everything you saw is real: the repository, the pull requests, the approvals, the checks and CALM Hub.</p>
+      <aside class="notes">Aaron. Three controls from the catalog were enforced live in that demo. Code review: every change reviewed by someone other than its author, and a person approving anything near the Client Ledger or any change to the architecture. Requirements: every change names an approved spec and stays inside the services it declares. Service dependency: every connection in the code exists in the architecture, which is why the shortcut was blocked. Why should you care? Developers get a fast lane: most changes fly through, and a blocked one says why. Architects get a diagram that can't go stale, because every change is checked against it. And risk and audit get the evidence as a by-product: regulators treat unsubstantiated controls as absent controls. And none of this is a product. The catalog says what to control. CALM says where it applies, and holds the decisions. ergo, an open source project, decides and explains. Everything you saw was real: a real repository, real pull requests, real approvals.</aside>
     </section>
 
 

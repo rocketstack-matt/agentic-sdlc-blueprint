@@ -55,6 +55,13 @@ html, body, .reveal-viewport { background: #fff; }
 .reveal .card h3 { font-size: 40px; font-weight: 700; margin-bottom: 14px; line-height: 1.15; }
 .reveal .card p { font-size: 30px; line-height: 1.35; color: var(--muted); }
 .reveal .card .who { font-family: "SF Mono", Menlo, monospace; font-size: 22px; color: var(--ink); background: #fff; border: 2px solid var(--line); border-radius: 999px; padding: 4px 14px; display: inline-block; margin-bottom: 18px; }
+/* The catalog controls the demo enforced, under the three parts; the catalog's purple. */
+.reveal .seen { margin-top: 44px; }
+.reveal .seen h3 { font-size: 32px; font-weight: 700; color: #4600d2; margin-bottom: 16px; }
+.reveal .seen ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
+.reveal .seen li { background: #f4efff; border-left: 8px solid #4600d2; border-radius: 0 14px 14px 0; padding: 16px 22px; }
+.reveal .seen li b { display: block; font-size: 26px; line-height: 1.2; margin-bottom: 6px; }
+.reveal .seen li span { display: block; font-size: 22px; line-height: 1.35; color: var(--muted); }
 .reveal .card img { height: 64px; margin-bottom: 18px; filter: brightness(0); }
 .reveal .card img.keep { filter: none; }
 
