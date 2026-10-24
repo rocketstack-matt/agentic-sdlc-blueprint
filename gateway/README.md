@@ -92,8 +92,8 @@ branch `feat/hub-ui-presentation-mode` of the architecture-as-code checkout, lik
 backup or to share: a title card, the pull request on GitHub and the decision in CALM Hub for each, with captions. It
 also opens the Client Ledger's control as JSON to show its ergo rule. The agent, the approvals and the merges are
 real; the approval comes from an approver logged in to the `gh` CLI on the laptop. The waits are cut out, so the video
-is about four minutes: `gateway/.live/recording/osffny-demo.mp4`, with a still of every scene beside it. It needs
-ffmpeg (`brew install ffmpeg`) and Playwright in the architecture-as-code checkout, and takes about seven minutes.
+is about five minutes: `gateway/.live/recording/osffny-demo.mp4`, with a still of every scene beside it. It needs
+ffmpeg (`brew install ffmpeg`) and Playwright in the architecture-as-code checkout, and takes about nine minutes.
 The video in the main README is one of these recordings, copied to `slides/media/` so GitHub Pages serves it.
 
 `gh-demo` remembers where it got to, so it can be stopped and started again; `gh-reset` starts everything afresh. The

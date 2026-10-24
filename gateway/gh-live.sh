@@ -73,7 +73,7 @@ if ! $RESUME; then
 fi
 
 if $RECORD; then
-  step "Recording the demo (about seven minutes)"
+  step "Recording the demo (about nine minutes)"
   node gateway/gh-record.mjs
   exit
 fi

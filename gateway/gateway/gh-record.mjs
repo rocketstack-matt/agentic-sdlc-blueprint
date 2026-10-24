@@ -18,9 +18,12 @@ const NS = process.env.CALM_HUB_NAMESPACE ?? 'finos.agentic-sdlc';
 const OUT = join(ROOT, '.live', 'recording');
 const FRAMES = join(OUT, 'frames');
 const W = 1600, H = 900, FPS = 30;
+// How long each finished scene stays on screen, as a multiple of the times below. Waits are cut, so this sets the pace.
+const PACE = 1.5;
 
 const log = (...a) => console.log(new Date().toISOString().slice(11, 19), ...a);
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const dwell = (ms) => sleep(ms * PACE);
 const fail = (message) => { console.error(message); process.exit(1); };
 // Our own timer around anything that could hang: a stuck request or browser call must fail, not stop the recording.
 const within = (p, what, ms = 20000) => {
@@ -106,11 +109,17 @@ const context = await browser.newContext({ viewport: { width: W, height: H } });
 const page = await context.newPage();
 const probe = await (await browser.newContext()).newPage();
 const frames = [];
+let untimed = 0;
 const cdp = await context.newCDPSession(page);
 cdp.on('Page.screencastFrame', ({ data, metadata, sessionId }) => {
   const file = join(FRAMES, `${String(frames.length).padStart(6, '0')}.jpg`);
   writeFileSync(file, Buffer.from(data, 'base64'));
-  frames.push({ at: metadata.timestamp, file }); // seconds since the epoch, when the frame was captured
+  // When the frame was captured, in seconds since the epoch; Chrome may leave it out, so then when it arrived. Never
+  // before the previous frame: a frame out of order would otherwise drop itself and the one before it from the video.
+  const captured = metadata.timestamp ?? Date.now() / 1000;
+  if (metadata.timestamp === undefined || captured < (frames.at(-1)?.at ?? 0)) untimed++;
+  const at = Math.max(captured, frames.at(-1)?.at ?? 0);
+  frames.push({ at, file });
   cdp.send('Page.screencastFrameAck', { sessionId }).catch(() => {});
 });
 await cdp.send('Page.startScreencast', { format: 'jpeg', quality: 90, maxWidth: W, maxHeight: H, everyNthFrame: 1 });
@@ -138,7 +147,7 @@ const CARD = (title, sub, kicker) => `<!doctype html><html><body style="margin:0
 async function card(title, sub, kicker, ms = 5000) {
   await within(page.setContent(CARD(title, sub, kicker)), 'card');
   await still('card');
-  await sleep(ms);
+  await dwell(ms);
 }
 async function caption(text) {
   await within(page.evaluate((text) => {
@@ -216,7 +225,7 @@ async function inHub(n, nth, version, node, text, { evaluations = false } = {}) 
   for (let i = 0; i < 60 && (await hubDecisions(sha)) < nth; i++) await sleep(1500);
   await hub(version, node, text, evaluations ? () => within(page.getByRole('button', { name: 'Expand metadata panel' }).click(), 'expand') : undefined);
   await still(`hub-${node}`);
-  await sleep(evaluations ? 9000 : 8000);
+  await dwell(evaluations ? 9000 : 8000);
 }
 async function mergeOnCamera(n, text) {
   hold();
@@ -224,7 +233,7 @@ async function mergeOnCamera(n, text) {
   await fresh(n, { merged: true });
   await openPR(n, text);
   await scrollTo('end');
-  await sleep(3000);
+  await dwell(3000);
 }
 // The details pane's JSON is a Monaco editor: scroll it so a line is near the top.
 async function reveal(text) {
@@ -252,7 +261,7 @@ try {
   await card('1. The architecture', 'The trade capture system in CALM Hub. The Client Ledger carries a control: any change to a service that connects to it needs a human approval.', 'Moment 1');
   await hub('1.0.0', 'client-ledger', 'The control lives on the Client Ledger node in the architecture');
   await still('hub-architecture');
-  await sleep(6000);
+  await dwell(6000);
   await caption('Pull out the details pane and open the node as CALM JSON');
   await sleep(1500);
   await widenDetails(400);
@@ -262,15 +271,15 @@ try {
   await reveal('"controls"');
   await caption('The control is part of the architecture: CALM JSON, versioned with it');
   await still('json-control');
-  await sleep(6000);
+  await dwell(6000);
   await reveal('"ergo"');
   await caption('It carries its own rule for ergo: which connections are in scope');
   await still('json-ergo');
-  await sleep(7000);
+  await dwell(7000);
   await reveal('"checks"');
   await caption('…and what must be true: a person approved, who is not the author or the reviewer');
   await still('json-checks');
-  await sleep(8000);
+  await dwell(8000);
   hold();
   await page.getByRole('separator', { name: 'Resize details panel' }).dblclick(); // the width is remembered: reset it
   await sleep(300);
@@ -281,7 +290,7 @@ try {
   hold();
   const harmless = propose('demo/changes/account-summary.json');
   await decision(harmless, 'success', 'The agent opened it, the review bot reviewed it: green, every control is met');
-  await sleep(7000);
+  await dwell(7000);
   await inHub(harmless, 1, '1.0.0', 'trade-api', 'CALM Hub: the decision is recorded on the Trade API, every control met');
   await mergeOnCamera(harmless, 'Merged, with no person involved');
 
@@ -290,7 +299,7 @@ try {
   hold();
   const ledger = propose('demo/changes/position-total.json');
   await decision(ledger, 'failure', 'Red: the Position Service connects to the Client Ledger, so a person must approve');
-  await sleep(8000);
+  await dwell(8000);
   await inHub(ledger, 1, '1.0.0', 'position-service', 'CALM Hub: blocked, on the Position Service and its connection to the ledger');
 
   log('4. a person approves');
@@ -298,7 +307,7 @@ try {
   hold();
   await approve(ledger);
   await decision(ledger, 'success', 'Approved by a person: the control is met, the check goes green');
-  await sleep(6000);
+  await dwell(6000);
   await inHub(ledger, 2, '1.0.0', 'position-service', 'CALM Hub: approved, and who approved it, on the architecture');
   await mergeOnCamera(ledger, 'Merged, with the approval on record');
 
@@ -307,7 +316,7 @@ try {
   hold();
   const shortcut = propose('demo/changes/ledger-shortcut.json');
   await decision(shortcut, 'failure', 'Red: that connection is not in the architecture, so it cannot merge');
-  await sleep(8000);
+  await dwell(8000);
   await inHub(shortcut, 1, '1.0.0', 'trade-api', 'CALM Hub: blocked on the Trade API, a connection the architecture does not have');
 
   log('6. the architect changes the architecture');
@@ -316,13 +325,13 @@ try {
   await api('owner', 'PATCH', `/repos/${REPO}/pulls/${shortcut}`, { state: 'closed' });
   const architect = propose('demo/changes/architect-ledger-connection.json', '--as', 'owner');
   await decision(architect, 'failure', 'A change to the architecture itself: red until a person approves');
-  await sleep(7000);
+  await dwell(7000);
   // A decision about the whole system has no node to draw on: it is in the evaluations.
   await inHub(architect, 1, '1.0.0', 'trade-capture', 'CALM Hub: the decision on the system, in the evaluations', { evaluations: true });
   hold();
   await approve(architect);
   await decision(architect, 'success', 'A person approved: the architecture gets the Trade API to Client Ledger connection');
-  await sleep(6000);
+  await dwell(6000);
   const versions = Object.keys(hubState().versions).length;
   await mergeOnCamera(architect, 'Merged: the architecture on main now has the new connection');
   hold();
@@ -330,14 +339,14 @@ try {
   const latest = Object.values(hubState().versions).sort().at(-1);
   await hub(latest, 'trade-api', `Version ${latest} in CALM Hub: the Trade API now connects to the Client Ledger`);
   await still('hub-new-version');
-  await sleep(8000);
+  await dwell(8000);
 
   log('7. the same harmless change, again');
   await card('7. The same harmless change, again', 'The agent adds another endpoint to the Trade API, the same kind of change as moment 2.', 'Moment 7');
   hold();
   const climax = propose('demo/changes/trade-count.json');
   await decision(climax, 'failure', 'Now red: the Trade API connects to the ledger, so a person must approve');
-  await sleep(8000);
+  await dwell(8000);
   await inHub(climax, 1, latest, 'trade-api', `CALM Hub, version ${latest}: blocked on the Trade API and its new connection to the ledger`);
   await card('Nobody touched the pipeline', 'The architect changed the architecture. The controls followed.', null, 7000);
 } catch (e) {
@@ -367,5 +376,5 @@ try {
     '-t', total.toFixed(3), '-c:v', 'libx264', '-preset', 'slow', '-crf', '20', '-movflags', '+faststart', mp4]);
   rmSync(FRAMES, { recursive: true, force: true });
   rmSync(listFile);
-  log(`recorded: ${mp4}`);
+  log(`recorded: ${mp4} (${frames.length} frames, ${untimed} with no capture time or out of order)`);
 }
