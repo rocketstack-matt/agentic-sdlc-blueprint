@@ -34,6 +34,51 @@ Four parts make that work:
 | **The gate** | The merge gateway, plus `npm run gates` for CI | [`gateway/`](gateway/), [`gates/`](gates/) |
 | **The evidence** | Every decision saved as a CALM control-evaluation decorator, on CALM Hub when it is running | [`gateway/`](gateway/) |
 
+## How the demo works
+
+```
+                                                         ┌──────────────────────────────────────┐
+                                                         │ The architecture on main (CALM)      │
+                                                         │ controls on its nodes and relations, │
+                                                         │ each carrying its rule for ergo      │
+                                                         └──────────────────┬───────────────────┘
+                                                                            │ read on every decision
+┌──────────────┐  opens   ┌──────────────┐                                  ▼
+│ Coding agent │────────► │ Pull request │  author, reviews, ┌──────────────────────────────┐
+│ (GitHub App) │          │   on GitHub  │  approval, diff   │ Merge gateway                │
+└──────────────┘          │              │─────────────────► │ 1. works out the facts:      │
+┌──────────────┐ reviews  │              │                   │    which nodes and           │
+│ Review bot   │────────► │              │                   │    connections it touches    │
+│ (GitHub App) │          │              │  "Architecture    │ 2. ergo evaluates the        │
+└──────────────┘          │              │   controls" check │    architecture's rules      │
+┌──────────────┐ approves │              │  and a comment    │ 3. posts the decision        │
+│ Approver     │────────► │              │ ◄─────────────────│                              │
+│ (a person)   │ only when└──────┬───────┘                   └──────────────┬───────────────┘
+└──────────────┘ asked           │                                          │ decorators
+                                 │ main requires the check:                 ▼
+                                 │ a person presses Merge             ┌──────────────────────┐
+                                 ▼ only on green                      │ CALM Hub             │
+                          ┌──────────────┐                            │ each decision on the │
+                          │     main     │                            │ architecture version │
+                          └──────────────┘                            └──────────────────────┘
+```
+
+- **The agent and the review bot** are GitHub Apps. The agent writes the code and opens the pull requests; the bot
+  reviews every commit.
+- **The merge gateway** is a third GitHub App, running on the presenter's laptop. On every change to a pull request it
+  reads the architecture on `main`, not on the branch, so a change cannot loosen its own rules. It reports the
+  **Architecture controls** check, with a comment that says why in plain words.
+- **A person approves** with GitHub's own review, only when the check asks for one. The approval counts for that
+  commit only, so a push after it fails the check again.
+- **The architect** changes the architecture with a pull request too. It needs a person's approval, and from then on
+  the gateway reads the new version.
+- **CALM Hub** gets one CALM decorator per control for every decision, on the architecture version it was decided
+  against.
+- **`npm run gates`** runs the same evaluator in CI on every pull request to this repository.
+
+The local demo (`npm run demo`) plays the same roles with scripts instead of GitHub: `propose.mjs` is the agent,
+`review.mjs` the review bot, `approve.mjs` the person and `merge.mjs` the gateway.
+
 ## Run it locally
 
 You need **Node 22+** and **git**. No API keys, no cloud account, no containers.
