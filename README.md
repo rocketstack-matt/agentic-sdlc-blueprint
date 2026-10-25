@@ -219,15 +219,13 @@ flowchart LR
 ### What could be contributed upstream
 
 The engine needs no change: ergo already evaluates any policy it is given, and explains every decision. What is
-specific to CALM is the glue around it, and most of it is general enough to live upstream.
+specific to CALM is the glue around it, and it is general enough to live in ergo itself.
 
 | Candidate | Upstream home | Status |
 | --- | --- | --- |
-| The control evaluation decorator Standard, for any engine's results | [finos/calm-schema](https://github.com/finos/calm-schema/tree/main/standards/control-evaluation) | Released (1.0, [calm-schema#43](https://github.com/finos/calm-schema/pull/43)) |
-| CALM Hub showing those decorators on the diagram, with a decision overlay for presentations | [finos/architecture-as-code](https://github.com/finos/architecture-as-code) | In review ([#3451](https://github.com/finos/architecture-as-code/pull/3451), [#3452](https://github.com/finos/architecture-as-code/pull/3452), [#3453](https://github.com/finos/architecture-as-code/pull/3453)) |
 | **A CALM input for ergo**: the bridge that reads the ergo policies out of a CALM architecture's controls, so any ergo user can keep their rules on the architecture | ergo, once it is contributed to FINOS | Not started. `controls.rego` is the starting point. The `meta.calm-control` link and the check that every control has a policy would come with it |
 | **A CALM output for ergo**: turning an ergo report into control-evaluation decorators, so every ergo decision can be recorded on the architecture it was made against | ergo | Not started. `buildDecorators` in `decorators.mjs` is the starting point |
-| **The ergo-control Standard**: the shape of a control that carries an ergo policy, including `meta.stage` | finos/calm-schema, beside the control evaluation Standard, or ergo's own docs | Not started. Today its identity is a `finos.agentic-sdlc` URL that only [`architecture/url-mapping.json`](architecture/url-mapping.json) resolves |
+| **The ergo-control Standard**: the shape of a control that carries an ergo policy, including `meta.stage` | ergo, documented with the CALM input | Not started. Today its identity is a `finos.agentic-sdlc` URL that only [`architecture/url-mapping.json`](architecture/url-mapping.json) resolves |
 
 What stays here is specific to this demo: how the facts are found (files mapped to nodes by path, connections found
 by environment bindings and imports), the merge gateway and the GitHub Apps.
