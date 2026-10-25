@@ -9,7 +9,8 @@ import { CHECK, CLONE, GH, REPO, appSlug, approvers, as, tokenOf } from './githu
 const HUB = process.env.CALM_HUB_URL?.replace(/\/$/, '');
 const HUB_UI = process.env.HUB_UI ?? 'http://localhost:5173';
 const NS = process.env.CALM_HUB_NAMESPACE ?? 'finos.agentic-sdlc';
-const HUB_BRANCH = 'feat/hub-ui-presentation-mode';
+// The decision overlay draws each decision on the diagram. It is in CALM Hub from finos/architecture-as-code#3452.
+const OVERLAY = 'calm-hub-ui/src/visualizer/components/reactflow/DecisionCallout.tsx';
 let failed = 0;
 const check = async (what, fn) => {
   try {
@@ -33,9 +34,9 @@ run(async () => {
     const res = await fetch(HUB_UI, { signal: AbortSignal.timeout(3000) });
     must(res.ok, `${HUB_UI} answered ${res.status}`);
     const checkout = join(BLUEPRINT, '..', 'architecture-as-code');
-    const branch = execFileSync('git', ['-C', checkout, 'branch', '--show-current'], { encoding: 'utf8' }).trim();
-    must(branch === HUB_BRANCH, `the UI's checkout is on ${branch}, not ${HUB_BRANCH} (presentation mode and the overlay)`);
-    return `${HUB_UI}, from ${HUB_BRANCH}`;
+    const branch = execFileSync('git', ['-C', checkout, 'branch', '--show-current'], { encoding: 'utf8' }).trim() || 'a detached HEAD';
+    must(existsSync(join(checkout, OVERLAY)), `the UI's checkout (${branch}) has no decision overlay: update it to upstream main`);
+    return `${HUB_UI}, from ${branch}`;
   });
   for (const role of ['agent', 'reviewer', 'gateway']) {
     await check(`GitHub App: ${role}`, async () => {
