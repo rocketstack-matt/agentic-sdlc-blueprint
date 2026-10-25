@@ -185,6 +185,53 @@ the whole demo to a video instead. [`gateway/README.md`](gateway/README.md#the-g
 CI (`npm run gates`) evaluates the controls that apply before merge. The merge gateway evaluates them all with the
 same evaluator, once the review and any approval are known.
 
+## How CALM and ergo fit together
+
+The rule a control enforces is written in the control itself, as an [ergo](https://ergo.kosli.com) policy in the
+control's `config`. Nothing translates the architecture into a policy or keeps a second copy of the rules: the
+evaluator reads the policies out of the architecture on every decision.
+
+```mermaid
+flowchart LR
+    arch["CALM architecture<br/><small>controls with config.ergo<br/>on the architecture, nodes,<br/>relationships and flows</small>"]
+    facts["Facts about the change<br/><small>files, the nodes they belong to,<br/>connections in the code, spec,<br/>review, approval</small>"]
+    bridge["controls.rego<br/><small>collects every config.ergo<br/>into one ergo policy</small>"]
+    ergo["ergo<br/><small>evaluates it and explains<br/>every check</small>"]
+    verdict["Verdict<br/><small>CI or merge gateway</small>"]
+    dec["control-evaluation<br/>decorators<br/><small>one per control,<br/>on the architecture version</small>"]
+
+    arch --> bridge
+    bridge --> ergo
+    facts -- "input" --> ergo
+    ergo -- report --> verdict
+    ergo -- report --> dec
+```
+
+| Piece | What it does | Where |
+| --- | --- | --- |
+| **The ergo-control Standard** | Says what a control carrying an ergo policy looks like: `config.ergo` holds ergo `subjects` and `requirements`. Each requirement's `meta` names the CALM control it implements (`calm-control`), the catalog control (`control-id`) and when it blocks (`stage`: `change` in CI, `merge` in the gateway, once the review and approval are known) | [`architecture/standards/ergo-control.standard.json`](architecture/standards/ergo-control.standard.json) |
+| **The facts** | Works out what the change is: the files, the nodes that own them, the connections the code makes, the spec, and at merge the review and approval. ergo reads them as `$$input.change` and `$$input.spec`, and the architecture as `$$input.architecture` | `changeInput` in [`gates/lib/calm.mjs`](gates/lib/calm.mjs), the gateway in [`gateway/gateway/`](gateway/gateway/) |
+| **The bridge** | About 60 lines of Rego. Collects the `config.ergo` of every control on the architecture, its nodes, relationships and flows, merges them into one ergo policy, and runs `ergo.report`. Reports a problem, which blocks, for a control with neither a policy nor `evaluated-by: pipeline`, or whose policy names no requirement for it | [`gates/policy/controls.rego`](gates/policy/controls.rego) |
+| **ergo** | The engine, copied unchanged from [kosli-dev/ergo](https://github.com/kosli-dev/ergo) at `d924f4d` | [`gates/policy/ergo.rego`](gates/policy/ergo.rego) |
+| **The module** | `ergo.rego` and `controls.rego` built into one Wasm module (`build.sh`, byte-reproducible, checked in CI) and run in Node with `@open-policy-agent/opa-wasm`, so the gates need no `opa` binary | [`gates/policy/controls.wasm`](gates/policy/), [`gates/lib/controls.mjs`](gates/lib/controls.mjs) |
+| **The decorators** | Turns ergo's report into one control-evaluation decorator per control: met, not met or not applicable, the elements it applies to, ergo's failed checks as findings, the actors, and hashes of the policy and the report | [`gateway/gateway/decorators.mjs`](gateway/gateway/decorators.mjs) |
+
+### What could be contributed upstream
+
+The engine needs no change: ergo already evaluates any policy it is given, and explains every decision. What is
+specific to CALM is the glue around it, and most of it is general enough to live upstream.
+
+| Candidate | Upstream home | Status |
+| --- | --- | --- |
+| The control evaluation decorator Standard, for any engine's results | [finos/calm-schema](https://github.com/finos/calm-schema/tree/main/standards/control-evaluation) | Released (1.0, [calm-schema#43](https://github.com/finos/calm-schema/pull/43)) |
+| CALM Hub showing those decorators on the diagram, with a decision overlay for presentations | [finos/architecture-as-code](https://github.com/finos/architecture-as-code) | In review ([#3451](https://github.com/finos/architecture-as-code/pull/3451), [#3452](https://github.com/finos/architecture-as-code/pull/3452), [#3453](https://github.com/finos/architecture-as-code/pull/3453)) |
+| **A CALM input for ergo**: the bridge that reads the ergo policies out of a CALM architecture's controls, so any ergo user can keep their rules on the architecture | ergo, once it is contributed to FINOS | Not started. `controls.rego` is the starting point. The `meta.calm-control` link and the check that every control has a policy would come with it |
+| **A CALM output for ergo**: turning an ergo report into control-evaluation decorators, so every ergo decision can be recorded on the architecture it was made against | ergo | Not started. `buildDecorators` in `decorators.mjs` is the starting point |
+| **The ergo-control Standard**: the shape of a control that carries an ergo policy, including `meta.stage` | finos/calm-schema, beside the control evaluation Standard, or ergo's own docs | Not started. Today its identity is a `finos.agentic-sdlc` URL that only [`architecture/url-mapping.json`](architecture/url-mapping.json) resolves |
+
+What stays here is specific to this demo: how the facts are found (files mapped to nodes by path, connections found
+by environment bindings and imports), the merge gateway and the GitHub Apps.
+
 ## Layout
 
 ```
