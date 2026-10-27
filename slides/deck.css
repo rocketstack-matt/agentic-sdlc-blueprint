@@ -309,11 +309,13 @@ html, body, .reveal-viewport { background: #fff; }
 
 /* The last content slide: the ask, then a QR code for each link. */
 .reveal .big.ask-line { font-size: 76px; }
-.reveal .qr-links { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; margin-top: 60px; }
+.reveal .qr-links { display: grid; grid-template-columns: repeat(6, 1fr); gap: 28px; margin-top: 70px; }
 .reveal .qr-links .qr { display: flex; flex-direction: column; align-items: center; text-align: center; color: var(--ink); text-decoration: none; }
-.reveal .qr-links img { width: 300px; height: 300px; border: 2px solid var(--line); border-radius: 16px; padding: 10px; background: #fff; box-sizing: border-box; }
-.reveal .qr-links b { font-size: 34px; margin-top: 22px; }
-.reveal .qr-links span { font-size: 22px; line-height: 1.3; color: var(--muted); margin-top: 8px; }
+.reveal .qr-links img { width: 250px; height: 250px; border: 2px solid var(--line); border-radius: 16px; padding: 8px; background: #fff; box-sizing: border-box; }
+.reveal .qr-links .feedback img { border: 4px solid var(--blue); }
+.reveal .qr-links .feedback b { color: var(--blue); }
+.reveal .qr-links b { font-size: 30px; margin-top: 20px; }
+.reveal .qr-links span { font-size: 19px; line-height: 1.3; color: var(--muted); margin-top: 8px; }
 
 /* "How a CALM control feeds ergo": the control's JSON on the left, its ergo block flowing into the engine. */
 .reveal .feed { display: grid; grid-template-columns: 900px 150px 1fr; align-items: center; flex: 1; min-height: 0; }
