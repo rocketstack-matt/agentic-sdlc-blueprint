@@ -188,7 +188,9 @@ same evaluator, once the review and any approval are known.
 
 The rule a control enforces is written in the control itself, as an [ergo](https://ergo.kosli.com) policy in the
 control's `config`. Nothing translates the architecture into a policy or keeps a second copy of the rules: the
-evaluator reads the policies out of the architecture on every decision.
+evaluator reads the policies out of the architecture on every decision. For a step-by-step walkthrough of one pull
+request, and how the same design applies to a legacy application, see
+[`docs/how-calm-and-ergo-work.md`](docs/how-calm-and-ergo-work.md).
 
 ```mermaid
 flowchart LR
@@ -239,6 +241,7 @@ gates/          npm run gates: the evaluator, the ergo policy module and their t
 gateway/        the merge gateway, the local demo (run-demo.sh) and the GitHub demo (gh-*.mjs)
 agent/          architecture context for coding agents: a CLI, a read-only MCP server, the guardrails
 slides/         the talk deck
+docs/           how CALM and ergo work together, and how that applies to a legacy application
 tools/          regenerates the catalog's CALM Hub control documents from its source
 AGENTS.md       the instructions every coding agent gets
 ```
@@ -257,7 +260,8 @@ maps each URL to its file in `architecture/`, and `npm run calm:validate`, the g
 - **Identities are names.** The agent and reviewer identities are strings in signed records, not platform-issued
   workload identities.
 - **Connections are found by convention.** The service dependency control looks at environment bindings and imports
-  between services. A real estate needs richer signals, such as infrastructure code, service mesh config or traces.
+  between services. A real estate needs richer signals, such as infrastructure code, service mesh config or traces:
+  see [mapping this onto a legacy application](docs/how-calm-and-ergo-work.md#mapping-this-onto-a-legacy-application).
 - **Evidence storage is up to you.** Evidence goes to disk, a CI artefact and optionally CALM Hub. Immutability and
   retention are yours to provide.
 - **Placing a control is a modelling decision.** The pattern can require a control, but it cannot know which node
