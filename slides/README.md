@@ -10,6 +10,10 @@ and its report). "How a CALM control feeds ergo" shows the control's config goin
 Hub (see [`gateway/`](../gateway/README.md#the-github-demo)); that slide's speaker notes are the run sheet. The deck
 ends on the links, with QR codes, for questions.
 
+[`governing-the-agentic-sdlc.pptx`](governing-the-agentic-sdlc.pptx) is a PowerPoint copy for organisers and offline
+use: one 4K picture of each slide, with the speaker notes and clickable links. It is a snapshot, so export it again
+after changing the deck.
+
 - `node slides/check.mjs` is the deck's test: slide count, notes on every slide, every picture present, no em-dashes.
 - `node slides/overflow-check.mjs` fails when anything runs off a slide.
 - `node slides/qa-screenshots.mjs` renders every slide to `slides/qa/`.
