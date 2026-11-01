@@ -20,12 +20,12 @@
         <p class="tag">When the architecture changes, the controls follow.</p>
         <p class="who">Matthew Bain and Aaron Searle<br>OSFF New York, 4 November 2026</p>
       </div>
-      <aside class="notes">Aaron. Thirty five minutes, one story. I'll start with the controls the industry has written down together, and the problem agents make for them. Matthew will show you a way out, live, on GitHub. The line to remember is on the slide: when the architecture changes, the controls follow.</aside>
+      <aside class="notes">Aaron.<ul><li>Two parts about how two finos projects can <em>work together</em></li><li>First talking about our SDLC common controls catalog</li><li>Second part is how Calm can be used to gate and evidence those controls</li><li>In a way that both agents can use as well as humans</li></ul></aside>
     </section>
 
     <section class="logo-slide">
       <img src="img/logos/sdlc-common-controls.svg" alt="FINOS SDLC Common Controls Catalog">
-      <aside class="notes">Aaron. I'll start with the FINOS SDLC Common Controls Catalog, the project I proposed in FINOS: the controls the industry has written down together, and the one this talk follows to the gate.</aside>
+      <aside class="notes">Aaron.<ul><li>Catalog</li><li>Accross the industry</li><li>Reduce toil</li><li>Fragmentation</li><li>Duplication</li><li>All doing the same thing, same rules, risks</li></ul></aside>
     </section>
 
     <section>
@@ -44,7 +44,7 @@
         <div><h3>First batch approved, starting to be consumed</h3><p>Code Review (v1.0) and Version Control (v1.2) are approved by the working group, with the Insider Threat risk. Nineteen more controls have passed first reading.</p></div>
       </div>
       <p class="v4-foot">Open to anyone: calls every two weeks, alternating with a three-hour workshop. <b>sdlc-common-controls+subscribe@lists.finos.org</b></p>
-      <aside class="notes">Aaron, first person. I filed this in July 2025. We had just spent months at my own firm interpreting the same regulatory guidance every other bank was interpreting, writing controls every other bank was writing, and paying auditors to test them. Duplication, drift, fragmentation. The proposal was a catalog, not a policy: a shared library of controls and risks that institutions pick from and reference. Toby Weston and I introduced it at this conference, OSFF New York, last year, as an idea and a working group. A year on, it is not a proposal any more. FINOS approved the contribution in July, and the catalog is now an Incubating project, an open standard under the Community Specification, live on its own site. It is built across the industry: maintainers from Morgan Stanley, Deutsche Bank, UBS and Kosli, banks like Fidelity and TD alongside vendors like JFrog, Anchore, Chainloop and GitLab, and 87 pull requests merged. This month we reached a milestone: the first controls are approved by the working group. Code review, the control this talk follows, is at version 1.0, with version control and the insider threat risk; nineteen more controls have passed first reading and are on their way. Every card is versioned with a snapshot, so you can cite the exact text in a policy or an audit response. And we have started on agents: the first agentic risk and control, unapproved agentic processes and their provenance, are proposals the working group is discussing now. If you own controls at your firm, come and join us: the calls are open.</aside>
+      <aside class="notes">Aaron.<ul><li>It has been over a year since we have started</li><li>Range of contributors, Toby Weston, Mike &amp; Alex Kosli</li><li>Morgan Stanley, Deutsche Bank, UBS and Kosli, banks like Fidelity and TD alongside vendors like JFrog, Anchore, Chainloop and GitLab</li><li>Incubating which was announce a few months ago</li><li>A set of controls that are ready for you to consume</li><li></li><li>TODO: add more you know this</li></ul></aside>
     </section>
 
     <section>
@@ -128,7 +128,7 @@
     <p class="v3-row"><span><span class="v3-swatch"></span><b>Filled</b>: code review, the one control this talk follows to the gate, and the three risks it answers to.</span><a class="v3-link" href="https://sdlc-common-controls.finos.org">sdlc-common-controls.finos.org</a></p>
     <p>Built by a FINOS working group. Every control maps to NIST SP 800-53r5 and, where relevant, EU DORA, NIST SSDF and SLSA.</p>
   </div>
-      <aside class="notes">Aaron. Fifteen months on, this is what we have: eleven risks, the outcomes we are trying to avoid; twenty-two mitigations, the controls, each placed in the lifecycle phase it applies to; every one mapped to NIST SP 800-53 and, where it fits, to DORA, SSDF and SLSA. The filled control is code review, the one this talk follows all the way to the gate, with the three risks it answers to: vulnerable software in production, unauthorised change, and audit evidence failure.</aside>
+      <aside class="notes">Aaron.<ul><li>And here we have our catalog</li><li>Obviously there is alot of changing going on but we have tried to keep that in mind an incorporate it</li><li>Agentic development was in our mind when they were written</li><li>Meeting every two weeks for workshops and discussions, progress is slow but steady.</li><li>Already out of date...</li><li>... new agentic aligned additions</li><li>Code review - and mapped risks...</li></ul></aside>
     </section>
 
     <section>
@@ -156,7 +156,7 @@
         </div>
       </div>
       <p class="v8-join">We are not focusing on these risks today. If you want to help shape, define or use the controls that mitigate them, <b>join us!</b> <span>sdlc-common-controls+subscribe@lists.finos.org</span></p>
-      <aside class="notes">Aaron. Code review is the most overloaded control we have. On paper, the catalog says it mitigates three risks: unauthorised change, vulnerable software reaching production, and failing to evidence the change to an auditor. In practice every firm leans on it for much more. It is our insider threat control: a second person sees every change. It is quality assessment. It is how we check the tests are real and actually test the change. It is how we check the code does what the requirement asked. It is where someone risk assesses the change. And it is socialisation: more than one person knows how the code works. Notice that insider threat is not even on the card's own list, and yet it is the first thing a control owner will say review is for. Now give the review to an agent. Some of those six still happen, some happen better, and some quietly stop. We are not taking on all six today; if you want to help write the controls for them, join us. Today is about the machinery: that the review happened, by the right party, and that we can prove it.</aside>
+      <aside class="notes">Aaron.<ul><li>Why do we define controls?</li><li>To demonstrate mitigation to risks...here are some</li><li>Testing, Quality, Requirements met, Insider threat, Risk assessment</li><li>My least favourite control. Overloaded</li><li>Digression. But if you want to talk or hear more on that come join us!</li></ul></aside>
     </section>
 
     <section>
@@ -171,7 +171,7 @@
         <li class="v8-evidence"><span>And most importantly, we must evidence that it took place:</span>"<b>Review records MUST include</b> the review mode, decision, reviewer identity or approved automated-review tool identity, timestamp, policy inputs sufficient to justify the selected review mode"</li>
       </ol>
       <p class="caption muted">SDLC-PREV-001 Code Review, version 1.0, approved by the working group October 2026. <span style="white-space: nowrap">sdlc-common-controls.finos.org</span></p>
-      <aside class="notes">Aaron. The control as we write it today, approved by the working group this month at version 1.0. A deterministic, machine-evaluable policy chooses the review mode: a rule like "any change to a service that writes the client ledger needs a person to approve it" is exactly that, and it's the rule Matthew follows from here. Non-deterministic review can be a human or an approved cognitive review engine: we already admit machine reviewers, by name. The pipeline must block admission when the review outcome is absent, expired, revoked, or no longer bound to the change set. Outcomes are bound to an immutable identity, a commit. The author may not satisfy the review of their own change. And most importantly, the review records must show the mode, the decision, who reviewed, when, and the policy inputs that chose the mode: we have to evidence that it took place. Read those six again and they are a specification for a gate.</aside>
+      <aside class="notes">Aaron.<ul><li>This is it is written in the catalog</li><li>it seems broadly fine but something fundamental is missing</li><li>How to enforce it, and how to evidence that it happened? For an agent</li><li>How to explose those requirements to the agent or person</li><li>Pipeline must block if a check hasn't been performed</li><li>Evidence must be collected and attributed, was it performed by a person, agent or deterministic logic?</li></ul></aside>
     </section>
 
     <section>
@@ -191,7 +191,7 @@
         </div>
       </div>
       <div class="v9-next"><img src="img/logos/calm.svg" alt="FINOS CALM"><p>Here is one way it could be done: <b>by leveraging FINOS CALM.</b></p></div>
-      <aside class="notes">Aaron. Where the catalog stops, and it stops there on purpose. It says what is expected, in words every institution can share and cite by version. It does not say how to implement it, and it cannot enforce it. The hard part is the agent: it will never read the policy, and if there is a shortcut to green, it will take it. Here is one way it could be done: by leveraging FINOS CALM. Matthew.</aside>
+      <aside class="notes">Aaron.<ul><li>Where the catalog stops. It sets expectations, it doesn't say how.</li><li>There would be too many</li><li>Matt is going to explain how we can leverage CALM</li><li>To create these gates, inform them and provide evidence</li><li>So Matt, how are you going to do this?</li></ul></aside>
     </section>
 
     <section data-chapter="1">
