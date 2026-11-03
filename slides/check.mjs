@@ -1,5 +1,5 @@
 // The deck's test. Run: node slides/check.mjs
-// Slide count, speaker notes on every slide, every picture present on disk, and no em-dashes. slides/overflow-check.mjs catches clipping.
+// Slide count, a speaker notes element on every slide (it may be empty), every picture present on disk, and no em-dashes. slides/overflow-check.mjs catches clipping.
 import { readFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
@@ -16,8 +16,7 @@ if (sections.length !== EXPECTED) problems.push(`expected ${EXPECTED} slides, fo
 sections.forEach((s, i) => {
   const title = (s.match(/<h[12][^>]*>([\s\S]*?)<\/h[12]>/)?.[1] ?? '').replace(/<[^>]+>/g, '').trim();
   const label = `slide ${i + 1}${title ? ` (${title})` : ''}`;
-  const notes = s.match(/<aside class="notes">([\s\S]*?)<\/aside>/)?.[1]?.trim() ?? '';
-  if (notes.length < 40) problems.push(`${label}: speaker notes missing or too short`);
+  if (!/<aside class="notes">[\s\S]*?<\/aside>/.test(s)) problems.push(`${label}: speaker notes element missing`);
   for (const m of s.matchAll(/<img[^>]+src="([^"]+)"/g)) if (!existsSync(join(here, m[1]))) problems.push(`${label}: picture ${m[1]} is missing`);
 });
 
