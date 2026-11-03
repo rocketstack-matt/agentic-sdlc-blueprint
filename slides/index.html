@@ -156,7 +156,7 @@
         </div>
       </div>
       <p class="v8-join">We are not focusing on these risks today. If you want to help shape, define or use the controls that mitigate them, <b>join us!</b> <span>sdlc-common-controls+subscribe@lists.finos.org</span></p>
-      <aside class="notes">Aaron.<ul><li>Why do we define controls?</li><li>To demonstrate mitigation to risks...here are some</li><li>Testing, Quality, Requirements met, Insider threat, Risk assessment</li><li>My least favourite control. Overloaded</li><li>Digression. But if you want to talk or hear more on that come join us!</li></ul></aside>
+      <aside class="notes">Aaron.<ul><li>Why do we define controls? mitigate risks</li><li>Not everyone will use code review for all of these</li><li>Testing, Quality, Requirements met, Insider threat, Risk assessment</li><li>My least favourite control. Overloaded</li><li>Digression.. Complex. But if you want to talk or hear more on that come join us!</li><li>Expectations</li></ul></aside>
     </section>
 
     <section>
@@ -171,7 +171,7 @@
         <li class="v8-evidence"><span>And most importantly, we must evidence that it took place:</span>"<b>Review records MUST include</b> the review mode, decision, reviewer identity or approved automated-review tool identity, timestamp, policy inputs sufficient to justify the selected review mode"</li>
       </ol>
       <p class="caption muted">SDLC-PREV-001 Code Review, version 1.0, approved by the working group October 2026. <span style="white-space: nowrap">sdlc-common-controls.finos.org</span></p>
-      <aside class="notes">Aaron.<ul><li>This is it is written in the catalog</li><li>it seems broadly fine but something fundamental is missing</li><li>How to enforce it, and how to evidence that it happened? For an agent</li><li>How to explose those requirements to the agent or person</li><li>Pipeline must block if a check hasn't been performed</li><li>Evidence must be collected and attributed, was it performed by a person, agent or deterministic logic?</li></ul></aside>
+      <aside class="notes">Aaron.<ul><li>This is it is written in the catalog</li><li>it seems broadly fine but something fundamental is missing</li><li>How to enforce it, and how to evidence that it happened? For an agent</li><li>How to explose those requirements to the agent or person</li><li>Pipeline must block if a check hasn't been performed</li><li>Evidence why?. Evidence must be collected and attributed, was it performed by a person, agent or deterministic logic?</li></ul></aside>
     </section>
 
     <section>
@@ -399,7 +399,7 @@
         </ol>
       </div>
       <p class="caption" style="margin-top:36px">Everything you saw is real: the repository, the pull requests, the approvals, the checks and CALM Hub.</p>
-      <aside class="notes">Aaron.<ul><li>Three controls from the catalog were enforced live in that demo.<ul><li>Code review: every change reviewed by someone other than its author, and a person approving anything near the Client Ledger or any change to the architecture.</li><li>Requirements: every change names an approved spec and stays inside the services it declares.</li><li>Service dependency: every connection in the code exists in the architecture, which is why the shortcut was blocked.</li></ul></li><li>Why should you care?<ul><li>Developers get a fast lane: most changes fly through, and a blocked one says why.</li><li>Architects get a diagram that can't go stale, because every change is checked against it.</li><li>And risk and audit get the evidence as a by-product: regulators treat unsubstantiated controls as absent controls.</li></ul></li><li>And none of this is a product.<ul><li>The catalog says what to control.</li><li>CALM says where it applies, and holds the decisions.</li><li>Ergo decides and explains.</li></ul></li><li>Everything you saw was real: a real repository, real pull requests, real approvals.</li></ul></aside>
+      <aside class="notes">Aaron.<ul><li>Evidence that these three controls took place</li><li>Code Review, Requirements were stored, Service dependency</li><li>Power of architecture made the happy path quicker</li><li>and easier to detect and evidence during development</li><li>and we get a living architecture document at the same time</li><li>SDLC: Expectation, CALM: where and how. Ergo: Explaning how</li></ul></aside>
     </section>
 
 
