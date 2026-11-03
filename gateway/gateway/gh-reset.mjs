@@ -51,14 +51,16 @@ the **Architecture controls** check and the gateway's comment beneath it.
    and it merges. The rule was not in a CODEOWNERS file or anyone's head. The gateway found it on the architecture.
 3. **Read positions straight from the ledger file in trade-api.** A shortcut: the Trade API reaching into the ledger
    directly. The check goes red because that connection is not in the architecture, so it does not exist. The pull
-   request is closed.
+   request stays open.
 4. **Model: trade-api writes end-of-day snapshots to the Client Ledger.** The architect changes the architecture
    itself: the Trade API now connects to the Client Ledger, through a connection that is designed and approved. A
    change to the architecture needs a person, so Aaron approves it and it merges. The architecture is now version
    1.1.0.
-5. **Trade count endpoint on trade-api.** The same kind of harmless change as the first. This time the check goes red
-   and asks for a person, because the Trade API now connects to the Client Ledger. Nobody changed the pipeline, the
-   check or its configuration. The architecture changed, and the control followed it.
+
+   Now go back to the shortcut. Nobody pushed to it, but the gateway decided it again against the new architecture.
+   The connection is no longer refused, because it is in the architecture now. Instead the check asks for a person,
+   because the Trade API now connects to the Client Ledger. Aaron approves and it merges. Nobody changed the
+   pipeline, the check or its configuration. The architecture changed, and the control followed it.
 
 Every decision, allowed or not, is recorded on the architecture as a CALM decorator: which control, on which part of
 the system, for which commit, and who reviewed or approved. During the talk CALM Hub ran on the presenter's laptop,

@@ -171,9 +171,13 @@ ledgerPath: process.env.POSITION_STORE_PATH ?? 'data/positions.json',
 
 The pull request can't fix this by adding the relationship itself, because the gateway reads the architecture from
 `main`. An architect has to change the architecture in a pull request of its own, which needs a human approval. Once
-that merges, `trade-api → client-ledger` exists, so the ledger rule's `applies_to` now matches any change to the
-Trade API. The same kind of harmless Trade API change that merged at the start is now held for a human (moment 7).
-No pipeline was edited.
+that merges, `trade-api → client-ledger` exists, so two things change at once, with nobody touching the shortcut's
+pull request or the pipeline (moment 7):
+
+- The gateway decides the open shortcut again, against the new `main`. SDLC-PREV-017 is now met: the connection is
+  in the architecture.
+- The ledger rule's `applies_to` now matches any change to the Trade API, so the shortcut needs a person. Once Aaron
+  approves, it merges.
 
 ## Mapping this onto a legacy application
 

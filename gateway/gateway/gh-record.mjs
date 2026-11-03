@@ -315,14 +315,13 @@ try {
   await card('5. The shortcut', 'The agent makes the Trade API read the ledger file directly: a connection that is not in the architecture.', 'Moment 5');
   hold();
   const shortcut = propose('demo/changes/ledger-shortcut.json');
-  await decision(shortcut, 'failure', 'Red: that connection is not in the architecture, so it cannot merge');
+  await decision(shortcut, 'failure', 'Red: that connection is not in the architecture, so it cannot merge. It stays open');
   await dwell(8000);
   await inHub(shortcut, 1, '1.0.0', 'trade-api', 'CALM Hub: blocked on the Trade API, a connection the architecture does not have');
 
   log('6. the architect changes the architecture');
-  await card('6. The architect changes the architecture', 'The shortcut is closed. The architect proposes the connection where it belongs: on the architecture, Trade API to Client Ledger.', 'Moment 6', 6000);
+  await card('6. The architect changes the architecture', 'The shortcut stays open. The architect proposes the connection where it belongs: on the architecture, Trade API to Client Ledger.', 'Moment 6', 6000);
   hold();
-  await api('owner', 'PATCH', `/repos/${REPO}/pulls/${shortcut}`, { state: 'closed' });
   const architect = propose('demo/changes/architect-ledger-connection.json', '--as', 'owner');
   await decision(architect, 'failure', 'A change to the architecture itself: red until a person approves');
   await dwell(7000);
@@ -333,6 +332,7 @@ try {
   await decision(architect, 'success', 'A person approved: the architecture gets the Trade API to Client Ledger connection');
   await dwell(6000);
   const versions = Object.keys(hubState().versions).length;
+  const shortcutComments = await gatewayComments(shortcut); // its verdict changes when main does: a new comment
   await mergeOnCamera(architect, 'Merged: the architecture on main now has the new connection');
   hold();
   for (let i = 0; i < 60 && Object.keys(hubState().versions).length <= versions; i++) await sleep(2000);
@@ -341,13 +341,18 @@ try {
   await still('hub-new-version');
   await dwell(8000);
 
-  log('7. the same harmless change, again');
-  await card('7. The same harmless change, again', 'The agent adds another endpoint to the Trade API, the same kind of change as moment 2.', 'Moment 7');
+  log('7. back to the shortcut');
+  await card('7. Back to the shortcut', 'Nobody pushed to it. The gateway decided it again, against the new architecture on main.', 'Moment 7');
   hold();
-  const climax = propose('demo/changes/trade-count.json');
-  await decision(climax, 'failure', 'Now red: the Trade API connects to the ledger, so a person must approve');
-  await dwell(8000);
-  await inHub(climax, 1, latest, 'trade-api', `CALM Hub, version ${latest}: blocked on the Trade API and its new connection to the ledger`);
+  for (let i = 0; i < 60 && (await gatewayComments(shortcut)) <= shortcutComments; i++) await sleep(2000);
+  await decision(shortcut, 'failure', 'The connection is in the architecture now. But the Trade API connects to the ledger, so a person must approve');
+  await dwell(9000);
+  await inHub(shortcut, 2, latest, 'trade-api', `CALM Hub, version ${latest}: the ledger rule now covers the Trade API`);
+  hold();
+  await approve(shortcut);
+  await decision(shortcut, 'success', 'A person approved: every control is met');
+  await dwell(6000);
+  await mergeOnCamera(shortcut, 'Merged: a designed connection, approved by a person');
   await card('Nobody touched the pipeline', 'The architect changed the architecture. The controls followed.', null, 7000);
 } catch (e) {
   failed = true;

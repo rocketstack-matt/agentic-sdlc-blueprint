@@ -66,7 +66,9 @@ On the day, from the blueprint's root:
 
 \`gh-demo\`'s keys: Enter for the next moment, \`m\` to merge, \`a\` to approve from the laptop (rehearsals, or if Aaron
 cannot), \`o\` / \`h\` to open GitHub / CALM Hub, \`s\` where we are, \`q\` to quit (which stops the gateway too). Logs
-are in \`gateway/.live/\`. The same steps by hand, from \`gateway/\`:
+are in \`gateway/.live/\`. You never have to remember what comes next: each time the pull request's check turns red,
+turns green or is merged, `gh-demo` prints the next step in yellow, such as `-> press a`, `-> press m to merge` or
+`-> press Enter for moment 6`, and moment 5 says not to approve or merge. The same steps by hand, from \`gateway/\`:
 
     export CALM_HUB_URL=http://localhost:8080
     node gateway/gh-reset.mjs            # the repo, its protection, CALM Hub and its layout, from the start
@@ -80,10 +82,11 @@ The moments `gh-demo` plays, in order (moment 4 is Aaron approving; there is not
 2. A harmless change: green in about 15 seconds; press Merge.
 3. A change near the ledger: red, naming @aaronsearle. 4. Aaron approves on GitHub: green in about 8 seconds; press
    Merge.
-5. The shortcut: red, not in the architecture. The next key closes it.
+5. The shortcut: red, not in the architecture. It stays open.
 6. The architect changes the architecture (opened as you): red until Aaron approves; press Merge, and move CALM Hub to
    1.1.0.
-7. The same harmless change: now red.
+7. Back to the shortcut, untouched: the gateway decided it again against the new architecture. The connection is in
+   the architecture now, but the Trade API connects to the ledger, so it needs a person. Aaron approves; press Merge.
 
 CALM Hub opens a node from its link with the `node` parameter (`?present=1&node=client-ledger`); the parameter and
 presentation mode are both in CALM Hub itself.

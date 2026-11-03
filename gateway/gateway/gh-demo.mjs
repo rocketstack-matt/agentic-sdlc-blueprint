@@ -23,36 +23,39 @@ const propose = (...args) => {
 };
 
 // The talk's moments. Moment 4 is Aaron approving on GitHub; nothing to press for it. `does` is what Enter will do,
-// shown before the key is pressed; `next` is what to watch for and do once it has.
+// shown before the key is pressed; `next` is what to watch for once it has. `on` says exactly what to press when the
+// current pull request's check turns red (failure), turns green (success) or is merged, printed as it happens.
+const ENTER = (m) => `press Enter for moment ${m}`;
 const MOMENTS = [
   { n: 1, title: 'The architecture',
     does: 'opens CALM Hub on the trade capture system, with the Client Ledger and its rule in the details pane',
-    next: 'Walk the system: Trade API, Position Service, Client Ledger, and the rule on the ledger.',
+    next: `Walk the system: Trade API, Position Service, Client Ledger, and the rule on the ledger. Then ${ENTER(2)}.`,
     run: (s) => { openHub('1.0.0', 'client-ledger'); return s.current; } },
   { n: 2, title: 'A harmless change',
     does: 'the agent opens "Account summary endpoint on trade-api": nowhere near the ledger, so it should go green',
-    next: 'Green in a few seconds: press Merge on GitHub (or m).',
+    next: 'Wait for green: nobody needs to approve.',
+    on: { success: 'press m to merge (or Merge on GitHub)', merged: ENTER(3) },
     run: (s) => { s.prs.harmless = propose('demo/changes/account-summary.json'); return s.prs.harmless; } },
   { n: 3, title: 'A change near the ledger',
     does: 'the agent opens "Position total endpoint on position-service": the Position Service writes the ledger, so it should go red and ask for a person',
-    next: 'Red: needs a person. Moment 4: Aaron approves on GitHub (or a); it turns green. Then press Merge (or m).',
+    next: 'Wait for red: it needs a person. Then moment 4: Aaron approves.',
+    on: { failure: 'moment 4: Aaron approves on GitHub now (or press a to approve from this laptop)', success: 'press m to merge (or Merge on GitHub)', merged: ENTER(5) },
     run: (s) => { s.prs.ledger = propose('demo/changes/position-total.json'); return s.prs.ledger; } },
   { n: 5, title: 'The shortcut',
     does: 'the agent opens a pull request where the Trade API reads the ledger file directly: a connection the architecture does not have, so red',
-    next: 'Red: that connection is not in the architecture. The next Enter closes it.',
+    next: 'Wait for red: that connection is not in the architecture.',
+    on: { failure: `do NOT approve or merge: leave it open, we come back to it in moment 7. ${ENTER(6)}` },
     run: (s) => { s.prs.shortcut = propose('demo/changes/ledger-shortcut.json'); return s.prs.shortcut; } },
   { n: 6, title: 'The architect changes the architecture',
-    does: 'closes the shortcut, and you, as the architect, open a pull request adding Trade API -> Client Ledger to the architecture: red until a person approves',
-    next: 'Red until Aaron approves (or a); then press Merge (or m), and move CALM Hub to 1.1.0 (or h).',
-    run: async (s) => {
-      if (s.prs.shortcut) await (await as('owner')).patch(`/repos/${REPO}/pulls/${s.prs.shortcut}`, { state: 'closed' });
-      s.prs.architect = propose('demo/changes/architect-ledger-connection.json', '--as', 'owner');
-      return s.prs.architect;
-    } },
-  { n: 7, title: 'The same harmless change, again',
-    does: 'the agent opens "Trade count endpoint on trade-api", the same kind of change as moment 2: now red, because the Trade API connects to the ledger',
-    next: 'Red: now it needs a person. Nobody touched the pipeline. Back to the slides.',
-    run: (s) => { s.prs.climax = propose('demo/changes/trade-count.json'); return s.prs.climax; } },
+    does: 'you, as the architect, open a pull request adding Trade API -> Client Ledger to the architecture: red until a person approves. The shortcut stays open',
+    next: 'Wait for red: a change to the architecture needs a person.',
+    on: { failure: 'Aaron approves on GitHub now (or press a to approve from this laptop)', success: 'press m to merge (or Merge on GitHub)', merged: `press h to show CALM Hub at 1.1.0, then ${ENTER(7)}` },
+    run: (s) => { s.prs.architect = propose('demo/changes/architect-ledger-connection.json', '--as', 'owner'); return s.prs.architect; } },
+  { n: 7, title: 'Back to the shortcut',
+    does: 'opens the shortcut pull request again, untouched since moment 5: the gateway has decided it again against the new architecture',
+    next: 'No longer "not in the architecture": that connection is designed now. But the Trade API now connects to the ledger, so it needs a person.',
+    on: { failure: 'Aaron approves on GitHub now (or press a to approve from this laptop)', success: 'press m to merge (or Merge on GitHub)', merged: 'done: nobody touched the pipeline. Back to the slides (q to quit)' },
+    run: (s) => { if (s.prs.shortcut) execFileSync('open', [url(s.prs.shortcut)]); return s.prs.shortcut; } },
 ];
 
 // CALM Hub in presentation mode at a version of the demo's architecture (the latest when none is given), with a
@@ -96,7 +99,11 @@ run(async () => {
       const c = await checkOf(n);
       if (n !== state.current) return; // the next moment started while this one was being checked
       const line = `#${n} ${c.state}${c.title ? `: ${c.title}` : ''}`;
-      if (line !== lastSeen) { lastSeen = line; say(`  ${c.state === 'success' ? '✓' : c.state === 'failure' ? '✗' : '·'} ${line}`); }
+      if (line === lastSeen) return;
+      lastSeen = line;
+      say(`  ${c.state === 'success' ? '✓' : c.state === 'failure' ? '✗' : '·'} ${line}`);
+      const hint = MOMENTS[state.step - 1]?.on?.[c.state];
+      if (hint) say(`  \x1b[1;33m-> ${hint}\x1b[0m`);
     } catch { /* the next tick tries again */ }
   }, 3000).unref?.();
 
@@ -110,7 +117,8 @@ run(async () => {
       save(state);
       lastSeen = '';
       say(`${state.current ? `  ${url(state.current)}\n` : ''}  ${moment.next}`);
-      upNext();
+      // A moment with a pull request says when to press Enter once its check gets there (its `on`); s shows it anyway.
+      if (!moment.on) upNext();
     },
     async m() {
       if (!state.current) return say('no pull request yet');
