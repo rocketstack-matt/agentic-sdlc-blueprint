@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/standards/ergo-control/versions/1.0.0",
+  "$id": "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/standards/ergo-control/versions/2.0.0",
   "title": "Control carrying an ergo policy",
-  "description": "A CALM control whose config holds the policy that enforces it, as ergo subjects and requirements (https://github.com/kosli-dev/ergo). The policy reads the architecture and the change, so the control on the diagram is the check that runs. meta.stage says when a requirement blocks: change (on every change, in CI) or merge (in the merge gateway, where the review and any approval are known).",
+  "description": "A CALM control whose config holds the policy that enforces it, as an ergo policy (https://ergo.kosli.com) written for ergo's spec v0.6: its ergo_spec, subjects and requirements, with checks written as sentences. config.ergo is validated against ergo's own published policy schema for that version; this Standard adds what the CALM side needs. Each requirement's meta names the CALM control it implements and the catalog control, and meta.stage says when it blocks: change (on every change, in CI) or merge (in the merge gateway, where the review and any approval are known).",
   "type": "object",
   "properties": {
     "requirements": {
@@ -27,8 +27,11 @@
         "name": { "type": "string" },
         "description": { "type": "string" },
         "ergo": {
+          "$comment": "ergo's own schema for spec v0.6 says what a policy is; this Standard adds the CALM fields.",
+          "allOf": [{ "$ref": "https://ergo.kosli.com/spec/0.6/policy.schema.json" }],
           "type": "object",
           "properties": {
+            "ergo_spec": { "const": "v0.6" },
             "subjects": { "type": "object", "minProperties": 1 },
             "requirements": {
               "type": "object",
@@ -53,7 +56,7 @@
               }
             }
           },
-          "required": ["subjects", "requirements"]
+          "required": ["ergo_spec", "subjects", "requirements"]
         }
       },
       "required": ["control-id", "name", "ergo"]

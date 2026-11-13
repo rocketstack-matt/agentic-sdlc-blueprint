@@ -39,6 +39,9 @@ test('the ledger rule not met: applies to the ledger connection and its source, 
   assert.ok(d.data.findings.some((f) => f.subject === 'position-service-to-client-ledger' && f.description === 'A human approved this change' && f.cause === 'absent'));
   assert.equal(d.data.findings[0].description, 'A human approved this change');
   assert.deepEqual(d.data.actors, { author: 'author-agent', reviewer: 'review-bot' });
+  // The engine as ergo's report names it, and ergo's own explanation of each failed check.
+  assert.deepEqual([d.data.engine.name, d.data.engine.version], ['ergo-rego', '0.6.0']);
+  assert.equal(d.data.findings[0].message, '$input.change.approval.approver is missing');
 });
 
 test('a met control has no findings and records the approver', async () => {

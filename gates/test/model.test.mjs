@@ -47,3 +47,15 @@ test('an ergo requirement without meta.stage is rejected by the pattern', () => 
   delete doc.controls['sdlc-prev-017-service-dependency'].requirements[0].config.ergo.requirements['service-dependency'].meta.stage;
   assert.equal(validate(doc), false);
 });
+
+test('a check in the old object form is rejected: config.ergo is checked against ergo\'s own 0.6 policy schema', () => {
+  const doc = model();
+  doc.controls['sdlc-prev-017-service-dependency'].requirements[0].config.ergo.requirements['service-dependency'].checks.in_architecture = { op: 'present', path: ['x'] };
+  assert.equal(validate(doc), false);
+});
+
+test('a policy without ergo_spec is rejected by the pattern', () => {
+  const doc = model();
+  delete doc.controls['sdlc-prev-004-requirements-repository'].requirements[0].config.ergo.ergo_spec;
+  assert.equal(validate(doc), false);
+});

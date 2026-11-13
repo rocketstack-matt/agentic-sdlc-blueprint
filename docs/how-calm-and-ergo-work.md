@@ -34,20 +34,24 @@ The Client Ledger's rule, shortened from
     "config": {
       "control-id": "SDLC-PREV-001",
       "ergo": {
+        "ergo_spec": "v0.6",
         "subjects": {
+          "connection": {
+            "from": "every architecture.relationships whose relationship-type.connects exists",
+            "identified_by": "unique-id"
+          },
           "connection to the client ledger, changed": {
-            "of": "connection",
-            "applies_to": {
-              "into_the_ledger":    { "op": "equals", "path": ["relationship-type", "connects", "destination", "node"], "value": "client-ledger" },
-              "from_a_changed_node": { "op": "in", "path": ["relationship-type", "connects", "source", "node"], "values": { "ref": ["$$input", "change", "nodes"] } }
-            }
+            "from": "connection whose relationship-type.connects.destination.node is \"client-ledger\" and whose relationship-type.connects.source.node is in $input.change.nodes"
           }
         },
         "requirements": {
           "client-ledger-human-approval": {
             "meta": { "calm-control": "client-ledger-human-approval", "stage": "merge" },
             "subject": "connection to the client ledger, changed",
-            "checks": { "human_approved": { "op": "non_empty_string", "path": ["$$input", "change", "approval", "approver"] } }
+            "min_subjects": 0,
+            "checks": {
+              "human_approved": { "description": "A human approved this change", "assert": "$input.change.approval.approver is a non-empty string" }
+            }
           }
         }
       }
@@ -57,14 +61,15 @@ The Client Ledger's rule, shortened from
 ```
 
 Read it as: *for every relationship into the Client Ledger whose source node this change touches, a human must have
-approved.* It never names a service. Which services it covers comes from the relationships in the architecture.
+approved.* ergo 0.6 writes each line as a sentence, so the rule reads much as it is said, and `ergo_spec` names the
+version of ergo's spec it is written for. It never names a service. Which services it covers comes from the relationships in the architecture.
 
 Every ergo rule has the same three parts:
 
 | Part | Question it answers | In the ledger rule |
 | --- | --- | --- |
 | **subject** | What is being checked? | relationships in the architecture |
-| **`applies_to`** | Which of those are in scope? | those into the ledger, from a node this change touches |
+| **`from`**, with `whose` | Which of those are in scope? | those into the ledger, from a node this change touches |
 | **checks** | What must be true of each one in scope? | a human approved |
 
 If nothing is in scope, the control is *not applicable*. If everything in scope passes, it is *met*. Otherwise it is
@@ -73,7 +78,7 @@ If nothing is in scope, the control is *not applicable*. If everything in scope 
 ## 2. The facts describe the change
 
 ergo only evaluates data. `changeInput` in [`gates/lib/calm.mjs`](../gates/lib/calm.mjs) works out what the change is
-and hands it over as `$$input`:
+and hands it over as `$input`:
 
 | Fact | What it is | How the demo finds it |
 | --- | --- | --- |
@@ -107,8 +112,8 @@ destination, so an unknown connection is not met: it is treated as not in the ar
 
 [`gates/policy/controls.rego`](../gates/policy/controls.rego) is about 60 lines of Rego. On every decision it walks
 the controls on the architecture, its nodes, relationships and flows, merges every `config.ergo` into one ergo policy
-and runs it. It also reports a problem, which blocks, for any control that has neither a rule nor
-`evaluated-by: pipeline`. There is no second copy of the rules anywhere: change the control in the architecture and
+and runs it, passing on the `ergo_spec` the controls declare. It also reports a problem, which blocks, for any control
+that has neither a rule nor `evaluated-by: pipeline`, and for controls that disagree on `ergo_spec`. There is no second copy of the rules anywhere: change the control in the architecture and
 the next decision uses it.
 
 ## 4. ergo decides
@@ -163,8 +168,10 @@ ledgerPath: process.env.POSITION_STORE_PATH ?? 'data/positions.json',
          "subject": "trade-api->client-ledger",
          "check": "in_architecture",
          "description": "The architecture has this connection",
-         "cause": "absent"
-       }]
+         "cause": "value",
+         "message": "item 1 of $input.architecture.relationships: rel.relationship-type.connects.destination.node is \"trade-store\", and destination is \"client-ledger\"; …"
+       }],
+       "engine": { "name": "ergo-rego", "version": "0.6.0" }
      }
    }
    ```
@@ -176,7 +183,7 @@ pull request or the pipeline (moment 7):
 
 - The gateway decides the open shortcut again, against the new `main`. SDLC-PREV-017 is now met: the connection is
   in the architecture.
-- The ledger rule's `applies_to` now matches any change to the Trade API, so the shortcut needs a person. Once Aaron
+- The ledger rule's `from` line now matches any change to the Trade API, so the shortcut needs a person. Once Aaron
   approves, it merges.
 
 ## Mapping this onto a legacy application

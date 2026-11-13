@@ -19,7 +19,7 @@
                 "type": "object",
                 "patternProperties": {
                   "^.*$": {
-                    "$ref": "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/standards/ergo-control/versions/1.0.0"
+                    "$ref": "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/standards/ergo-control/versions/2.0.0"
                   }
                 }
               }
@@ -70,7 +70,7 @@
       "description": "SDLC-PREV-001 Code Review: its ergo policy is evaluated by the merge gateway.",
       "allOf": [
         {
-          "$ref": "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/standards/ergo-control/versions/1.0.0"
+          "$ref": "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/standards/ergo-control/versions/2.0.0"
         },
         {
           "properties": {
@@ -93,7 +93,7 @@
       "description": "SDLC-PREV-004 Requirements Repository: its ergo policy is evaluated on every change.",
       "allOf": [
         {
-          "$ref": "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/standards/ergo-control/versions/1.0.0"
+          "$ref": "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/standards/ergo-control/versions/2.0.0"
         },
         {
           "properties": {
@@ -116,7 +116,7 @@
       "description": "SDLC-PREV-017 Service Dependency Control: every connection the code makes must be in the model.",
       "allOf": [
         {
-          "$ref": "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/standards/ergo-control/versions/1.0.0"
+          "$ref": "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/standards/ergo-control/versions/2.0.0"
         },
         {
           "properties": {

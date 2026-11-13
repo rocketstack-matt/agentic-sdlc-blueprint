@@ -7,6 +7,7 @@
   "https://hub.calm.finos.org/calm/namespaces/finos.sdlc-common-controls/standards/sdlc-control-requirement/versions/1.0.0": "hub/sdlc-control-requirement.standard.json",
   "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/standards/governed-node/versions/1.0.0": "standards/governed-node.standard.json",
   "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/standards/env-binding-interface/versions/1.0.0": "standards/env-binding-interface.standard.json",
-  "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/standards/ergo-control/versions/1.0.0": "standards/ergo-control.standard.json",
-  "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/patterns/governed-service/versions/1.0.0": "governed-service.pattern.json"
+  "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/standards/ergo-control/versions/2.0.0": "standards/ergo-control.standard.json",
+  "https://hub.calm.finos.org/calm/namespaces/finos.agentic-sdlc/patterns/governed-service/versions/1.0.0": "governed-service.pattern.json",
+  "https://ergo.kosli.com/spec/0.6/policy.schema.json": "standards/ergo-policy-0.6.schema.json"
 }

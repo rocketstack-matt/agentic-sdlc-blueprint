@@ -265,17 +265,17 @@
 
     <section data-chapter="2">
       <h2 class="ergo-title"><img src="img/logos/ergo-wordmark-dark.svg" alt="ergo"><span>the gate shows its working</span></h2>
-      <p class="sub">An open source library for <b>Open Policy Agent</b>. The policy is written as data, inside the CALM control, and every decision comes with its evidence.</p>
+      <p class="sub">An open source library for <b>Open Policy Agent</b>. The policy is written as plain sentences, inside the CALM control, and every decision comes with its evidence.</p>
       <div class="ergo-slide">
         <div class="ergo-col">
           <p class="where">The rule, readable</p>
-          <pre class="json ergo-policy"><span class="k">subject</span>: <span class="s">connection to the client ledger, changed</span>
-  <span class="k">of</span>: <span class="s">every connection in the architecture</span>
-  <span class="k">applies_to</span>:
-    <span class="k">into_the_ledger</span>: <span class="s">destination = client-ledger</span>
-    <span class="k">from_a_changed_node</span>: <span class="s">source in change.nodes</span>
+          <pre class="json ergo-policy"><span class="k">ergo_spec</span>: <span class="s">v0.6</span>
+<span class="k">subject</span>: <span class="s">connection to the client ledger, changed</span>
+  <span class="k">from</span>: <span class="s">connection</span>
+    <span class="s">whose …destination.node is "client-ledger"</span>
+    <span class="s">and whose …source.node is in $input.change.nodes</span>
 <span class="k">checks</span>:
-  <span class="k">human_approved</span>: <span class="s">"A human approved this change"</span>
+  <span class="k">human_approved</span>: <span class="s">…approver is a non-empty string</span>
   <span class="k">approver_is_not_the_author</span>
   <span class="k">approval_for_this_commit</span></pre>
           <p class="ergo-note">Plain Rego would hide this in rules only a policy engineer reads. Here an architect or an auditor can read it.</p>
@@ -295,7 +295,7 @@
           <p class="ergo-note">One row per subject and check: the values it read, and why it passed, failed or was out of scope. Same policy and input, the same report, byte for byte. That report is what goes back onto the architecture.</p>
         </div>
       </div>
-      <aside class="notes">Matthew.<ul><li>How does the check decide? With ergo, an open source project, and it does two things for us.<ul><li>First, the policy is readable. ergo is a library for Open Policy Agent, the engine most of you already run for policy as code.</li><li>Instead of Rego that only a policy engineer can read, the rule is written as data: what you're judging, what's in scope and what must hold.</li><li>We have been able to embed ergo rules directly into CALM Controls.</li></ul></li><li>Ergo itself has been created by Kosli one of the contributors to the SDLC Controls Catalog and they have submitted a proposal to contribute it to FINOS, I’ll be sharing a link to their site at the end of the presentation.</li><li>Ergo is very new, I’m going to share the code for this demo after the talk so you should know the version of the ergo language we used in this demo is now out of date.</li></ul></aside>
+      <aside class="notes">Matthew.<ul><li>How does the check decide? With ergo, an open source project, and it does two things for us.<ul><li>First, the policy is readable. ergo is a library for Open Policy Agent, the engine most of you already run for policy as code.</li><li>Instead of Rego that only a policy engineer can read, the rule is written as plain sentences: what you're judging, what's in scope and what must hold.</li><li>We have been able to embed ergo rules directly into CALM Controls.</li></ul></li><li>Ergo itself has been created by Kosli one of the contributors to the SDLC Controls Catalog and they have submitted a proposal to contribute it to FINOS, I’ll be sharing a link to their site at the end of the presentation.</li><li>Ergo is very new. The code for this demo is shared after the talk, and it now runs ergo 0.6, where every rule is a sentence, like the one on this slide.</li></ul></aside>
     </section>
 
     <!-- ============================================================ 3. Live on GitHub (Matthew) -->
@@ -316,9 +316,11 @@
       <span class="k">"subject"</span>: <span class="s">"trade-api-to-client-ledger"</span>,
       <span class="k">"check"</span>: <span class="s">"human_approved"</span>,
       <span class="k">"description"</span>: <span class="s hl">"A human approved this change"</span>,
-      <span class="k">"cause"</span>: <span class="s hl">"absent"</span> }],
+      <span class="k">"cause"</span>: <span class="s hl">"absent"</span>,
+      <span class="k">"message"</span>: <span class="s">"$input.change.approval.approver is missing"</span> }],
     <span class="k">"change"</span>: { <span class="k">"commit"</span>: <span class="s">"a27142e…"</span>, <span class="k">"spec"</span>: <span class="s">"SPEC-001"</span> },<span class="num">5</span>
-    <span class="k">"engine"</span>: { <span class="k">"name"</span>: <span class="s">"ergo"</span>, <span class="k">"policy-sha256"</span>: <span class="s">"76c558b1…"</span> }<span class="num">6</span>
+    <span class="k">"engine"</span>: { <span class="k">"name"</span>: <span class="s">"ergo-rego"</span>, <span class="k">"version"</span>: <span class="s">"0.6.0"</span>,
+                <span class="k">"policy-sha256"</span>: <span class="s">"205ae4bd…"</span> }<span class="num">6</span>
   }
 }</pre>
         <ol class="legend">
@@ -327,10 +329,10 @@
           <li><b>Which rule</b>, and the catalog control it comes from</li>
           <li><b>ergo's report</b>, in its own words: what was checked, and why it failed</li>
           <li><b>Which change</b>: the exact commit and its spec</li>
-          <li><b>Which policy</b> decided, by its hash</li>
+          <li><b>Which ergo</b> decided, and its policy, by its hash</li>
         </ol>
       </div>
-      <aside class="notes">Matthew.<ul><li>And this is what goes back onto the architecture. ergo's report for a pull request you'll see in a moment, saved as a CALM decorator: a standard way to attach facts to an architecture without editing it, so the architecture file stays the architecture and doesn’t need to be reapproved.</li><li>It says which version of the architecture it was decided against, which boxes and lines it's about, which rule and which catalog control, ergo's own finding in plain words, the exact commit, and the hash of the policy that decided. One per rule, per decision.</li><li>CALM Hub draws them on the diagram. Let's see it.</li></ul></aside>
+      <aside class="notes">Matthew.<ul><li>And this is what goes back onto the architecture. ergo's report for a pull request you'll see in a moment, saved as a CALM decorator: a standard way to attach facts to an architecture without editing it, so the architecture file stays the architecture and doesn’t need to be reapproved.</li><li>It says which version of the architecture it was decided against, which boxes and lines it's about, which rule and which catalog control, ergo's own finding in plain words, the exact commit, and the ergo version and policy hash that decided. One per rule, per decision.</li><li>CALM Hub draws them on the diagram. Let's see it.</li></ul></aside>
     </section>
 
     <section data-chapter="2">
@@ -346,11 +348,11 @@
         <span class="k">"requirement-url"</span>: <span class="s">".../sdlc-prev-001-code-review"</span>,
         <span class="k">"config"</span>: {
 <span class="feed-hl">          <span class="k">"ergo"</span>: {
+            <span class="k">"ergo_spec"</span>: <span class="s">"v0.6"</span>,
             <span class="k">"subjects"</span>: {
               <span class="s">"connection to the client ledger, changed"</span>: {
-                <span class="k">"applies_to"</span>: {
-                  <span class="k">"into_the_ledger"</span>: <span class="c">destination = client-ledger</span>,
-                  <span class="k">"from_a_changed_node"</span>: <span class="c">source in the change</span> }}},
+                <span class="k">"from"</span>: <span class="c">connection whose destination is client-ledger</span>
+                        <span class="c">and whose source is in the change</span> }},
             <span class="k">"requirements"</span>: {
               <span class="s">"client-ledger-human-approval"</span>: {
                 <span class="k">"subject"</span>: <span class="s">"connection to the client ledger, changed"</span>,
@@ -388,7 +390,7 @@
       <div class="cards">
         <div class="card"><img class="keep" src="img/logos/sdlc-common-controls.svg" alt="SDLC Common Controls Catalog"><h3>What to control</h3><p>The SDLC Common Controls Catalog, written once by the industry.</p></div>
         <div class="card"><img class="keep" src="img/logos/calm.svg" alt="FINOS CALM"><h3>Where it applies</h3><p>FINOS CALM: the architecture as code, the rules on its boxes, the decisions back on it as decorators.</p></div>
-        <div class="card"><img class="keep" src="img/logos/ergo-wordmark-dark.svg" alt="ergo"><h3>How to decide</h3><p>An open source project that checks rules written as data and says why.</p></div>
+        <div class="card"><img class="keep" src="img/logos/ergo-wordmark-dark.svg" alt="ergo"><h3>How to decide</h3><p>An open source project that checks rules written as plain sentences and says why.</p></div>
       </div>
       <div class="seen">
         <h3>The SDLC controls you just saw enforced</h3>
