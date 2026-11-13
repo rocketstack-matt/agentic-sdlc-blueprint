@@ -1,5 +1,7 @@
 // Evaluates the controls the CALM model carries. The policy is data in the model; controls.wasm is the generic
-// module (ergo plus gates/policy/controls.rego) that turns it into a report. stage 'change' blocks only on
+// module (ergo plus gates/policy/controls.rego) that turns it into a report. The gates and the gateways pass the
+// module as the base holds it (baseEngine in calm.mjs), so a model's policies are evaluated by the engine they were
+// written for; without one, the working tree's module is used. stage 'change' blocks only on
 // requirements whose meta.stage is 'change' (CI); stage 'merge' blocks on all of them (the merge gateway).
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -14,17 +16,22 @@ const parseTime = (v) => {
   return JSON.rawJSON(String(BigInt(Date.parse(time + zone)) / 1000n * 1000000000n + BigInt(fraction.padEnd(9, '0').slice(0, 9))));
 };
 
-let loaded;
-const policy = async () => (loaded ??= await loadPolicy(readFileSync(WASM), undefined, { 'time.parse_rfc3339_ns': parseTime }));
+const loaded = new Map();
+const policy = (bytes, sha) => {
+  if (!loaded.has(sha)) loaded.set(sha, loadPolicy(bytes, undefined, { 'time.parse_rfc3339_ns': parseTime }));
+  return loaded.get(sha);
+};
 
-export async function evaluateControls(input, { stage } = {}) {
+export async function evaluateControls(input, { stage, wasm } = {}) {
   let policySha = null;
   const deny = (error) => ({ allowed: false, failing: [], pending: [], violations: [], problems: [], controls: {}, policySha, error });
   try {
-    policySha = sha256(readFileSync(WASM));
+    // wasm is the module's bytes, or a function that returns them (called here, so a module that can't be read denies).
+    const bytes = (typeof wasm === 'function' ? wasm() : wasm) ?? readFileSync(WASM);
+    policySha = sha256(bytes);
     // Anything else ('Merge', undefined) would silently block only on change-stage requirements.
     if (stage !== 'change' && stage !== 'merge') return deny(`unknown stage ${JSON.stringify(stage)}: expected 'change' or 'merge'`);
-    const result = (await policy()).evaluate(input, 'controls/result')[0]?.result;
+    const result = (await policy(bytes, policySha)).evaluate(input, 'controls/result')[0]?.result;
     if (!result?.report?.requirements) return deny('the policy returned no report');
     const { report, violations, problems, controls } = result;
     const entries = Object.entries(report.requirements);
