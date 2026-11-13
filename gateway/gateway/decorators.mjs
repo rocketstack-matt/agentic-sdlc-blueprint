@@ -30,7 +30,6 @@ export function validateDecorator(decorator) {
 export const FIRST_CHECKS = ['human_approved', 'not_the_author', 'in_architecture', 'in_spec', 'names_a_spec', 'approval_for_this_diff'];
 export const checkRank = (v) => (FIRST_CHECKS.includes(v.check) ? FIRST_CHECKS.indexOf(v.check) : FIRST_CHECKS.length);
 
-const ENGINE = { name: 'ergo', version: 'd924f4d' };
 const sha256 = (text) => createHash('sha256').update(text).digest('hex');
 const isSha = (s) => typeof s === 'string' && /^[a-f0-9]{64}$/.test(s);
 
@@ -49,6 +48,8 @@ export function buildDecorators({ outcome, input, decisionId, target, evaluatedA
   const sourceOf = Object.fromEntries((arch.relationships ?? []).filter((r) => r['relationship-type']?.connects).map((r) => [r['unique-id'], r['relationship-type'].connects.source.node]));
   const systemNode = arch.nodes.find((n) => n['node-type'] === 'system')?.['unique-id'];
   const reportSha = sha256(JSON.stringify(outcome.report));
+  // The engine as its report names itself, like ergo-rego 0.6.0, so a decision says which ergo made it.
+  const engine = { name: outcome.report.engine?.name || 'ergo', ...(outcome.report.engine?.version ? { version: outcome.report.engine.version } : {}) };
   const actors = Object.fromEntries(Object.entries({ author: change.author, reviewer: change.review?.reviewer, approver: change.approval?.approver }).filter(([, v]) => typeof v === 'string' && v));
 
   return Object.entries(outcome.controls ?? {}).flatMap(([key, on]) => {
@@ -70,6 +71,7 @@ export function buildDecorators({ outcome, input, decisionId, target, evaluatedA
       description: v.description || v.check,
       ...(v.expression ? { expression: v.expression } : {}),
       ...(v.cause ? { cause: v.cause } : {}),
+      ...(v.message ? { message: v.message } : {}),
     }));
     if (status === 'not-met' && !findings.length) findings = [{ subject: key, description: 'The control was not met' }];
 
@@ -88,7 +90,7 @@ export function buildDecorators({ outcome, input, decisionId, target, evaluatedA
         change: { commit: change.commit, ...(isSha(change.diff_sha256) ? { 'diff-sha256': change.diff_sha256 } : {}), ...(change.spec ? { spec: change.spec } : {}) },
         ...(status === 'not-met' ? { findings } : {}),
         ...(Object.keys(actors).length ? { actors } : {}),
-        engine: { ...ENGINE, ...(isSha(outcome.policySha) ? { 'policy-sha256': outcome.policySha } : {}) },
+        engine: { ...engine, ...(isSha(outcome.policySha) ? { 'policy-sha256': outcome.policySha } : {}) },
         'report-sha256': reportSha,
       },
     }];

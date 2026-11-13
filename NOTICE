@@ -3,5 +3,5 @@ Copyright 2026 Matthew Bain and contributors
 
 This product references FINOS CALM, the FINOS SDLC Common Controls Catalog and the FINOS AI Governance Framework.
 
-gates/policy/ergo.rego is copied unchanged from ergo (https://github.com/kosli-dev/ergo) at commit d924f4d,
+gates/policy/ergo.rego is copied unchanged from ergo (https://github.com/kosli-dev/ergo) at release rego-v0.6.0,
 licensed under the Apache License 2.0.

@@ -30,7 +30,20 @@ entries := array.concat(
 
 with_ergo := [e | some e in entries; e.config.ergo]
 
+# Every control's policy declares the version of ergo's spec it is written for. They are merged into one policy, so
+# they must agree: the version is passed on when they all give the same one, and ergo reports a policy without one
+# as written wrong.
+specs := {object.get(e.config.ergo, "ergo_spec", null) | some e in with_ergo}
+
+default ergo_spec := null
+
+ergo_spec := s if {
+	count(specs) == 1
+	some s in specs
+}
+
 policy := {
+	"ergo_spec": ergo_spec,
 	"subjects": {name: s | some e in with_ergo; some name, s in e.config.ergo.subjects},
 	"requirements": {name: q | some e in with_ergo; some name, q in e.config.ergo.requirements},
 }
@@ -41,14 +54,19 @@ covered contains m if {
 }
 
 problems := array.concat(
-	[concat("", ["control ", e.key, " has neither config.ergo nor evaluated-by: pipeline"]) |
-		some e in entries
-		not e.config.ergo
-		not e.config["evaluated-by"] == "pipeline"
-	],
-	[concat("", ["control ", e.key, " has no requirement whose meta.calm-control names it"]) |
-		some e in with_ergo
-		not covered[e.key]
+	array.concat(
+		[concat("", ["control ", e.key, " has neither config.ergo nor evaluated-by: pipeline"]) |
+			some e in entries
+			not e.config.ergo
+			not e.config["evaluated-by"] == "pipeline"
+		],
+		[concat("", ["control ", e.key, " has no requirement whose meta.calm-control names it"]) |
+			some e in with_ergo
+			not covered[e.key]
+		],
+	),
+	[concat("", ["the controls disagree on ergo_spec: ", concat(", ", sort([sprintf("%v", [s]) | some s in specs]))]) |
+		count(specs) > 1
 	],
 )
 

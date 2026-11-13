@@ -84,11 +84,55 @@ test('S9 touching a node the spec does not declare: denied in CI', async () => {
   const r = await ci(input({ ...tradeApiChange, files: [...tradeApiChange.files, { path: 'services/position-service/src/app.ts', node: 'position-service' }], nodes: ['trade-api', 'position-service'] }, model(), { ...spec, nodes: ['trade-api'] }));
   assert.equal(r.allowed, false);
   assert.ok(has(r, { requirement: 'requirements-scope', subject: 'position-service', check: 'in_spec' }));
+  // One row per node, with the node itself as the subject (issue 4, gap 2): trade-api passes, position-service fails.
+  const rows = r.report.results.filter((x) => x.requirement === 'requirements-scope' && x.check === 'in_spec');
+  assert.deepEqual(rows.map((x) => [x.subject.id, x.passed]).sort(), [['position-service', false], ['trade-api', true]]);
+  const v = r.violations.find((x) => x.requirement === 'requirements-scope');
+  assert.equal(v.message, 'node the change touches is "position-service", and $input.spec.nodes is ["trade-api"]');
 });
 
-test('docs-only change needs no spec: allowed in CI', async () => {
-  const r = await ci(input({ commit: 'c0ffee1', author: 'someone', files: [{ path: 'README.md', node: null }], nodes: [], connections: [] }, model(), { id: null, approved: false, nodes: [] }));
+test('docs-only change needs no spec: allowed in CI, and the spec rule is not applicable', async () => {
+  const r = await ci(input({ commit: 'c0ffee1', author: 'someone', files: [{ path: 'README.md', node: null }, { path: 'docs/how-calm-and-ergo-work.md', node: null }], nodes: [], connections: [] }, model(), { id: null, approved: false, nodes: [] }));
   assert.equal(r.allowed, true, JSON.stringify(r.violations, null, 2));
+  // The change is scoped by "some file is not documentation" (issue 4, gap 1), so a docs-only change is out of scope.
+  assert.equal(status(r, 'change-names-approved-spec'), 'not_applicable');
+});
+
+test('a change with one file outside the docs needs a spec', async () => {
+  const r = await ci(input({ commit: 'c0ffee1', author: 'someone', files: [{ path: 'docs/a.md', node: null }, { path: 'services/trade-api/src/app.ts', node: 'trade-api' }], nodes: ['trade-api'], connections: [] }, model(), { id: null, approved: false, nodes: [] }));
+  assert.equal(r.allowed, false);
+  assert.equal(status(r, 'change-names-approved-spec'), 'not_met');
+});
+
+test('a connection matches only when one relationship has both its source and its destination', async () => {
+  // trade-api connects to position-service, and position-service to client-ledger: neither is trade-api -> client-ledger.
+  const r = await ci(input({ ...tradeApiChange, connections: [{ id: 'trade-api->client-ledger', source: 'trade-api', destination: 'client-ledger' }] }));
+  assert.equal(r.allowed, false);
+  assert.ok(has(r, { requirement: 'service-dependency', check: 'in_architecture', cause: 'value' }));
+});
+
+test('every policy is well formed for the engine: no $well_formed row fails', async () => {
+  const r = await merge(input({ ...ledgerChange, approval }));
+  const bad = r.report.results.filter((x) => x.check === '$well_formed' && !x.passed);
+  assert.deepEqual(bad, []);
+  assert.deepEqual([r.report.ergo, r.report.engine], ['v0.6', { name: 'ergo-rego', version: '0.6.0' }]);
+});
+
+test('controls that disagree on ergo_spec are a problem, and the policy is denied', async () => {
+  const doc = model();
+  doc.controls['sdlc-prev-017-service-dependency'].requirements[0].config.ergo.ergo_spec = 'v0.5';
+  const r = await merge(input({ ...tradeApiChange }, doc));
+  assert.equal(r.allowed, false);
+  assert.ok(r.problems.some((p) => p === 'the controls disagree on ergo_spec: v0.5, v0.6'), JSON.stringify(r.problems));
+});
+
+test('a control without ergo_spec is denied: ergo reads the policy as written wrong', async () => {
+  const doc = model();
+  for (const c of Object.values(doc.controls)) delete c.requirements[0].config.ergo?.ergo_spec;
+  delete doc.nodes.find((n) => n['unique-id'] === 'client-ledger').controls['client-ledger-human-approval'].requirements[0].config.ergo.ergo_spec;
+  const r = await merge(input({ ...tradeApiChange }, doc));
+  assert.equal(r.allowed, false);
+  assert.ok(r.report.results.some((x) => x.check === '$well_formed' && !x.passed));
 });
 
 test('unowned file needs a spec: denied in CI without one', async () => {
@@ -158,7 +202,7 @@ test('a control without ergo on a relationship is a problem, naming the control'
 test('two controls defining the same subject differently: denied, not thrown', async () => {
   const doc = model();
   doc.controls['duplicate'] = structuredClone(doc.controls['sdlc-prev-001-code-review']);
-  doc.controls['duplicate'].requirements[0].config.ergo.subjects['change under review'].id = ['diff_sha256'];
+  doc.controls['duplicate'].requirements[0].config.ergo.subjects['change under review'].identified_by = 'diff_sha256';
   const r = await merge(input(tradeApiChange, doc));
   assert.equal(r.allowed, false);
   assert.match(r.error ?? '', /conflict/);
