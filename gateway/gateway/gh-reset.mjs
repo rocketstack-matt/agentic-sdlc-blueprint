@@ -10,7 +10,9 @@ import { CHECK, CLONE, GH, REPO, as, inClone, loadConfig, remote } from './githu
 import { hubEnabled, publishArchitecture, resetHub } from './hub.mjs';
 import { ARCHITECTURE, BLUEPRINT, label, run } from './lib.mjs';
 
-const KEEP = ['architecture', 'services', 'test', 'specs/README.md', 'specs/SPEC-001-account-summary.md', 'specs/SPEC-003-ledger-snapshots.md', 'tsconfig.json'];
+// The engine is kept too: the gateway evaluates each pull request with the engine on main (baseEngine), and denies
+// when main has none.
+const KEEP = ['architecture', 'services', 'test', 'specs/README.md', 'specs/SPEC-001-account-summary.md', 'specs/SPEC-003-ledger-snapshots.md', 'tsconfig.json', 'gates/policy/controls.wasm'];
 
 const README = `# Trade capture, governed by its architecture
 

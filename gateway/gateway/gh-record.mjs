@@ -204,6 +204,9 @@ async function hub(version, node, text, then) {
   hold();
   await go(page, `${HUB_UI}/#/${NS}/architectures/${hubState().architectureId}/${version}?present=1&node=${node}`);
   await sleep(3500);
+  // While the browser is busy filming, CALM Hub's fit on load can leave the diagram panned: fit it again, off camera.
+  await within(page.getByRole('button', { name: 'fit view' }).click(), 'fit view');
+  await sleep(1200);
   if (then) { await then(); await sleep(1200); }
   await caption(text);
   resume();
@@ -273,11 +276,11 @@ try {
   await still('json-control');
   await dwell(6000);
   await reveal('"ergo"');
-  await caption('It carries its own rule for ergo: which connections are in scope');
+  await caption('It carries its own rule for ergo 0.6, in plain sentences: which connections are in scope');
   await still('json-ergo');
   await dwell(7000);
   await reveal('"checks"');
-  await caption('…and what must be true: a person approved, who is not the author or the reviewer');
+  await caption('…and what must be true, each check one sentence: a person approved, not the author or the reviewer');
   await still('json-checks');
   await dwell(8000);
   hold();
