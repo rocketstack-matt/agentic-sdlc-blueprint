@@ -4,7 +4,7 @@ import { execFileSync } from 'node:child_process';
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
-import { ROOT, ARCHITECTURE, baseArchitecture, baseArchitectureText, changeInput, changedFiles, loadArchitecture, observedConnections, sha256 } from '../lib/calm.mjs';
+import { ROOT, ARCHITECTURE, ENGINE, baseArchitecture, baseArchitectureText, baseEngine, changeInput, changedFiles, loadArchitecture, observedConnections, sha256 } from '../lib/calm.mjs';
 import { evaluateControls } from '../lib/controls.mjs';
 
 test('the connections the code makes today are the three the model has', () => {
@@ -55,6 +55,45 @@ test('base architecture comes from the base ref even when it differs from the wo
 
 test('a base model that cannot be read is an error, not a fallback to the working tree', () => {
   assert.throws(() => baseArchitecture('no-such-ref-xyz'), /no-such-ref-xyz.*could not be read/);
+});
+
+test('the base engine is controls.wasm as git holds it at base', () => {
+  assert.deepEqual(baseEngine('HEAD'), execFileSync('git', ['show', `HEAD:${ENGINE}`], { maxBuffer: 256 * 1024 * 1024 }));
+});
+
+test('the base engine decides, not the change\'s own engine', async () => {
+  // A commit (not on any branch, working tree untouched) whose controls.wasm is not a module: evaluated with that
+  // base's engine, the change is denied, though HEAD's engine allows it.
+  const git = (args, opts = {}) => execFileSync('git', args, { encoding: 'utf8', ...opts }).trim();
+  const blob = git(['hash-object', '-w', '--stdin'], { input: 'not a wasm module' });
+  const index = join(mkdtempSync(join(tmpdir(), 'facts-')), 'index');
+  const env = { ...process.env, GIT_INDEX_FILE: index };
+  try {
+    git(['read-tree', 'HEAD'], { env });
+    git(['update-index', '--cacheinfo', `100644,${blob},${ENGINE}`], { env });
+    const tree = git(['write-tree'], { env });
+    const commit = git(['commit-tree', tree, '-p', 'HEAD', '-m', 'engine probe'], { env: { ...env, GIT_AUTHOR_NAME: 'facts-test', GIT_AUTHOR_EMAIL: 'facts-test@example.invalid', GIT_COMMITTER_NAME: 'facts-test', GIT_COMMITTER_EMAIL: 'facts-test@example.invalid' } });
+    assert.equal(baseEngine(commit).toString(), 'not a wasm module');
+    const input = { architecture: baseArchitecture(commit), change: { commit: 'c1', author: 'a', files: [{ path: 'README.md', node: null }], nodes: [], connections: [] }, spec: { id: null, approved: false, nodes: [] } };
+    assert.equal((await evaluateControls(input, { stage: 'change', wasm: () => baseEngine('HEAD') })).allowed, true);
+    const withBase = await evaluateControls(input, { stage: 'change', wasm: () => baseEngine(commit) });
+    assert.equal(withBase.allowed, false);
+    assert.ok(withBase.error);
+    assert.equal(withBase.policySha, sha256('not a wasm module'));
+  } finally {
+    rmSync(dirname(index), { recursive: true, force: true });
+  }
+});
+
+test('an engine that cannot be read at base denies, naming the ref', async () => {
+  const input = { architecture: loadArchitecture(), change: { commit: 'c1', author: 'a', files: [], nodes: [], connections: [] }, spec: { id: null, approved: false, nodes: [] } };
+  const r = await evaluateControls(input, { stage: 'change', wasm: () => baseEngine('no-such-ref-xyz') });
+  assert.equal(r.allowed, false);
+  assert.match(r.error, /no-such-ref-xyz.*could not be read/);
+});
+
+test('a base model with no ergo policy goes with the working tree\'s engine (bootstrap only)', () => {
+  assert.deepEqual(baseEngine('5b09598'), readFileSync(join(ROOT, ENGINE)));
 });
 
 test('a relative import into another node is a connection', () => {

@@ -10,7 +10,7 @@ import { createHash, randomUUID } from 'node:crypto';
 import { appendFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { baseArchitectureText, changeInput } from '../../gates/lib/calm.mjs';
+import { baseArchitectureText, baseEngine, changeInput } from '../../gates/lib/calm.mjs';
 import { evaluateControls } from '../../gates/lib/controls.mjs';
 import { buildDecorators, checkRank, validateDecorator } from './decorators.mjs';
 import { CHECK, CLONE, GH, REPO, appSlug, approver, as, diffIn, identityOf, inClone } from './github.mjs';
@@ -146,7 +146,7 @@ async function decide(gw, pr, state, { force = false, dry = false } = {}) {
 
   let mergeable = true;
   try { inClone('merge-tree', '--write-tree', main, head); } catch { mergeable = false; }
-  let outcome = mergeable ? await evaluateControls(input, { stage: 'merge' }) : { allowed: false, error: 'The change does not merge cleanly into main', controls: {} };
+  let outcome = mergeable ? await evaluateControls(input, { stage: 'merge', wasm: () => baseEngine(main, CLONE) }) : { allowed: false, error: 'The change does not merge cleanly into main', controls: {} };
 
   const decisionId = randomUUID();
   const evaluatedAt = new Date().toISOString();

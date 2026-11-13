@@ -7,7 +7,7 @@ import { spawnSync } from 'node:child_process';
 import { mkdirSync, mkdtempSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { ROOT, ARCHITECTURE, architectureSha, baseArchitecture, baseArchitectureText, changeBase, changeInput, currentSpecId, gitInfo, sha256 } from './lib/calm.mjs';
+import { ROOT, ARCHITECTURE, architectureSha, baseArchitecture, baseArchitectureText, baseEngine, changeBase, changeInput, currentSpecId, gitInfo, sha256 } from './lib/calm.mjs';
 import { evaluateControls } from './lib/controls.mjs';
 
 const run = (cmd, args) => spawnSync(cmd, args, { cwd: ROOT, encoding: 'utf8', env: { ...process.env, NODE_NO_WARNINGS: '1' } });
@@ -34,7 +34,8 @@ const runners = {
     const text = baseArchitectureText(base);
     const arch = JSON.parse(text);
     const input = changeInput({ arch, base });
-    const outcome = await evaluateControls(input, { stage: 'change' });
+    // Main's policies, evaluated by main's engine: the change's own engine decides only the changes after it.
+    const outcome = await evaluateControls(input, { stage: 'change', wasm: () => baseEngine(base) });
     evidence.architecture.evaluatedSha256 = sha256(text);
     evidence.policySha256 = outcome.policySha;
     const report = JSON.stringify({ comparedTo: base, commit: input.change.commit, spec: input.spec.id, evaluatedArchitectureSha256: evidence.architecture.evaluatedSha256, workingTreeArchitectureSha256: evidence.architecture.workingTreeSha256, policySha256: outcome.policySha, outcome }, null, 2);

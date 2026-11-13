@@ -4,7 +4,7 @@
 import { randomUUID } from 'node:crypto';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { baseArchitectureText, changeInput } from '../../gates/lib/calm.mjs';
+import { baseArchitectureText, baseEngine, changeInput } from '../../gates/lib/calm.mjs';
 import { evaluateControls } from '../../gates/lib/controls.mjs';
 import { buildDecorators, checkRank, validateDecorator } from './decorators.mjs';
 import { hubEnabled, postDecorator, publishArchitecture } from './hub.mjs';
@@ -88,7 +88,7 @@ run(async () => {
     // A change with nothing left to merge (already in main) is not a change; one that conflicts with main cannot merge.
     if (input.change.files.length === 0) outcome = refused('nothing to merge: the change is already in main');
     else if (!mergesCleanly(change.commit)) outcome = refused('the change does not merge cleanly into main');
-    else outcome = await evaluateControls(input, { stage: 'merge' });
+    else outcome = await evaluateControls(input, { stage: 'merge', wasm: () => baseEngine(main, paths.repo) });
   }
 
   const decisionId = randomUUID();

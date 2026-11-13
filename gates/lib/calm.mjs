@@ -163,13 +163,30 @@ const baseArchitectureSource = (base, root = ROOT) => {
   } catch (e) {
     throw new Error(`The base model at ${base}:${ARCHITECTURE} could not be read: ${e.message.trim()}`);
   }
-  if (carriesPolicy(arch)) return { text, arch };
+  if (carriesPolicy(arch)) return { text, arch, bootstrapped: false };
   text = readFileSync(join(root, ARCHITECTURE), 'utf8');
-  return { text, arch: JSON.parse(text) };
+  return { text, arch: JSON.parse(text), bootstrapped: true };
 };
 export const baseArchitecture = (base = changeBase(), root = ROOT) => baseArchitectureSource(base, root).arch;
 /** The exact text of the model baseArchitecture returns (git's bytes at base, or the working tree's file when bootstrapping), so its hash can be reproduced. */
 export const baseArchitectureText = (base = changeBase(), root = ROOT) => baseArchitectureSource(base, root).text;
+
+export const ENGINE = 'gates/policy/controls.wasm';
+/**
+ * The policy engine that goes with baseArchitecture: controls.wasm as git holds it at base. The base's policies are
+ * written for the base's engine, so they are evaluated by it, never by the change's own copy. A change that upgrades
+ * the engine, and rewrites the policies for it, is decided by the engine and policies it replaces, and its own pair
+ * decides the changes after it. When bootstrapping (the working tree's model is used) the working tree's engine goes
+ * with it. If the engine cannot be read at base this throws, so the caller denies.
+ */
+export const baseEngine = (base = changeBase(), root = ROOT) => {
+  if (baseArchitectureSource(base, root).bootstrapped) return readFileSync(join(root, ENGINE));
+  try {
+    return execFileSync('git', ['show', `${base}:${ENGINE}`], { cwd: root, maxBuffer: 256 * 1024 * 1024, stdio: ['ignore', 'pipe', 'pipe'] });
+  } catch (e) {
+    throw new Error(`The base engine at ${base}:${ENGINE} could not be read: ${String(e.stderr || e.message).trim()}`);
+  }
+};
 
 /**
  * The facts the controls are evaluated on, for the change between base and head (default: the working tree).
